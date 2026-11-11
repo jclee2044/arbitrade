@@ -1,0 +1,139 @@
+// UI driver for ui_smoke.py. It is run only after Playwright use is approved.
+import assert from 'node:assert/strict'
+import { createRequire } from 'node:module'
+import { createInterface } from 'node:readline/promises'
+import { resolve } from 'node:path'
+import { mkdir } from 'node:fs/promises'
+
+const require = createRequire(new URL('../frontend/package.json', import.meta.url))
+const { chromium } = require('playwright-core')
+const output = resolve(process.argv[2] || '/tmp/arbitrade-ui-results')
+const live = process.argv[3] === 'live'
+await mkdir(output, { recursive: true })
+const lines = createInterface({ input: process.stdin })[Symbol.asyncIterator]()
+async function request(action) {
+  process.stdout.write(JSON.stringify({ action }) + '\n')
+  const reply = await lines.next()
+  assert(!reply.done, 'Test coordinator disconnected')
+  return JSON.parse(reply.value)
+}
+async function until(check, description, timeout = 10000) {
+  const deadline = Date.now() + timeout
+  while (Date.now() < deadline) {
+    if (await check()) return
+    await new Promise((done) => setTimeout(done, 100))
+  }
+  throw new Error(`Timed out: ${description}`)
+}
+const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, chromiumSandbox: true })
+const context = await browser.newContext({ viewport: { width: 1280, height: 1000 } })
+const page = await context.newPage()
+const errors = []
+const checks = []
+const sockets = new Set()
+page.on('pageerror', (error) => errors.push(error.message))
+page.on('websocket', (socket) => {
+  // Vite also opens a development/HMR socket; count only chart transport.
+  if (new URL(socket.url()).pathname !== '/api/live') return
+  sockets.add(socket)
+  socket.on('close', () => sockets.delete(socket))
+})
+const utc = (timestamp) => new Date(timestamp).toISOString().replace('T', ' ').slice(0, 16) + ' UTC'
+const inspector = async () => {
+  const labels = await page.locator('.candle-values dt').allTextContents()
+  const values = await page.locator('.candle-values dd').allTextContents()
+  return Object.fromEntries(labels.map((label, i) => [label, values[i]]))
+}
+async function compare(snapshot, index = snapshot.candles.length - 1) {
+  const candle = snapshot.candles[index]
+  const completion = snapshot.coverage[index]
+  assert(candle, 'Expected a candle from stored observations')
+  const selection = String(Date.parse(candle.timestamp) / 1000)
+  await until(async () => await page.locator('#candle-time option').count() === snapshot.candles.length,
+    'matching number of candle options')
+  await page.locator('#candle-time').selectOption(selection)
+  const expected = {
+    'Date and time': utc(candle.timestamp), Open: String(candle.open), High: String(candle.high),
+    Low: String(candle.low), Close: String(candle.close),
+    Volume: candle.volume === null ? 'Unknown' : `${candle.volume.toLocaleString('en-US')} shares`,
+    Interval: completion.ended ? 'Ended' : 'Still forming',
+    Coverage: completion.coverage_complete ? 'Complete' : 'Partial',
+  }
+  await until(async () => JSON.stringify(await inspector()) === JSON.stringify(expected), 'inspector equals stored backend candle')
+  assert.equal(await page.locator('#timeframe').inputValue(), snapshot.interval)
+  await page.getByRole('heading', { name: `AAPL · ${snapshot.interval} candles`, exact: true }).waitFor()
+  assert.equal(await page.getByRole('alert').count(), 0)
+}
+try {
+  await page.goto('http://127.0.0.1:5173', { waitUntil: 'networkidle' })
+  assert.equal(await page.locator('#timeframe').inputValue(), '1m')
+  await page.getByRole('button', { name: 'Check connection', exact: true }).click()
+  await page.getByText('Backend connected:', { exact: false }).waitFor()
+  checks.push('Clicked Check connection; visible backend-connected result; default 1m')
+  if (!live) {
+    await page.getByText('Waiting for stored or live observations', { exact: false }).waitFor()
+  } else {
+    await page.locator('#candle-time').waitFor({ timeout: 45000 })
+  }
+  let snapshots = await request('seed')
+  await compare(snapshots['1m'])
+  await page.getByText(live ? 'Source: Yahoo Finance' : 'Source: CONSTRUCTED replay', { exact: false }).waitFor()
+  checks.push(live ? 'Actual Yahoo stored quote/time/OHLCV equals visible inspector' : 'Labeled constructed input; exact OHLCV and still-forming label')
+  const initialCount = await page.locator('#candle-time option').count()
+  await page.screenshot({ path: resolve(output, 'initial.png'), fullPage: true })
+  if (!live) {
+    snapshots = await request('same')
+    await compare(snapshots['1m'])
+    assert.equal(await page.locator('#candle-time option').count(), initialCount)
+    await page.screenshot({ path: resolve(output, 'same-minute.png'), fullPage: true })
+    checks.push('Same-minute close and volume replaced without a duplicate candle')
+    snapshots = await request('rollover')
+    await compare(snapshots['1m'])
+    assert.equal(await page.locator('#candle-time option').count(), initialCount + 1)
+    await page.screenshot({ path: resolve(output, 'rollover-forming.png'), fullPage: true })
+    await compare(snapshots['1m'], snapshots['1m'].candles.length - 2)
+    await page.screenshot({ path: resolve(output, 'prior-minute-ended.png'), fullPage: true })
+    checks.push('Next minute adds a candle; preceding minute visibly ended')
+  }
+  for (const interval of ['5m', '15m', '1h', '1d', '1m']) {
+    await page.locator('#timeframe').selectOption(interval)
+    await compare(snapshots[interval])
+    await page.screenshot({ path: resolve(output, `timeframe-${interval}.png`), fullPage: true })
+  }
+  checks.push('All timeframe selectors load matching backend history; daily included')
+  const status = page.locator('section [role=status]')
+  await until(async () => /Source age: \d+ seconds/.test(await status.textContent()), 'source age shown')
+  const firstAge = (await status.textContent()).match(/Source age: (\d+)/)[1]
+  await until(async () => (await status.textContent()).match(/Source age: (\d+)/)?.[1] !== firstAge, 'source age advances')
+  await request('disconnect')
+  await until(async () => /Chart: Connected to FastAPI.*Feed: disconnected/.test(await status.textContent()), 'upstream loss shown with connected chart transport')
+  await until(() => sockets.size === 1, 'one surviving chart WebSocket')
+  checks.push('Source age advances; disconnected upstream displayed while chart WebSocket remains open')
+  const canvas = page.locator('.chart canvas').first()
+  await canvas.waitFor({ state: 'visible' })
+  const box = await canvas.boundingBox()
+  assert(box.width > 200 && box.height > 50, 'Rendered chart canvas has useful dimensions')
+  await page.screenshot({ path: resolve(output, 'disconnected-desktop.png'), fullPage: true })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await compare(snapshots['1m'])
+  const mobileChart = await page.locator('.chart').boundingBox()
+  assert(mobileChart.x >= 0 && mobileChart.x + mobileChart.width <= 391)
+  await page.screenshot({ path: resolve(output, 'mobile.png'), fullPage: true })
+  assert.deepEqual(errors, [], 'No uncaught browser JavaScript errors')
+  checks.push('Desktop/mobile chart renders; screenshots saved; no uncaught JavaScript errors')
+  process.stdout.write(JSON.stringify({ action: 'done', checks }) + '\n')
+} catch (error) {
+  if (live && checks.length > 0 && errors.length === 0 && await page.locator('#candle-time').count() === 0) {
+    await page.screenshot({ path: resolve(output, 'pending-live.png'), fullPage: true })
+    process.stdout.write(JSON.stringify({ action: 'pending', checks, reason: 'No in-session candle received within the live browser deadline' }) + '\n')
+  } else {
+    await page.screenshot({ path: resolve(output, 'failure.png'), fullPage: true }).catch(() => {})
+    process.stdout.write(JSON.stringify({ action: 'failed', checks, reason: error.message }) + '\n')
+    console.error(error.stack)
+    process.exitCode = 1
+  }
+} finally {
+  await context.close()
+  await browser.close()
+  process.stdin.destroy()
+}

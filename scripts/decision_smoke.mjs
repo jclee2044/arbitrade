@@ -1,0 +1,65 @@
+import assert from 'node:assert/strict'
+import { resolve } from 'node:path'
+import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
+const output=process.argv[2]
+const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,chromiumSandbox:true})
+const page=await browser.newPage({viewport:{width:1400,height:1200}})
+const errors=[],checks=[]
+page.on('pageerror',error=>errors.push(error.message))
+const button=name=>page.getByRole('button',{name,exact:true})
+async function until(test) {
+ for(let index=0;index<150;index++){if(await test())return;await new Promise(done=>setTimeout(done,100))}
+ throw new Error('Timed out waiting for decision UI')
+}
+try {
+ await page.goto('http://127.0.0.1:15173',{waitUntil:'networkidle'})
+ await page.locator('#sma-short').fill('2');await page.locator('#sma-long').fill('3')
+ await button('Apply SMA windows').click()
+ await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:04:00Z')/1000))
+ await button('Freeze selected candle').click()
+ await page.locator('#snapshot-id').waitFor()
+ const snapshotId=(await page.locator('#snapshot-id').textContent()).replace('Snapshot ID: ','')
+ const saved=await(await page.request.get(`http://127.0.0.1:15173/api/decision-snapshots/${snapshotId}?include_records=true`)).json()
+ assert.equal(saved.snapshot.candle.close,19)
+ assert.equal(saved.snapshot.indicators.short,16);assert.equal(saved.snapshot.indicators.long,13)
+ assert.equal(saved.snapshot.indicators.crossover,'up')
+ assert.equal(saved.snapshot.account.cash,'948');assert.equal(saved.snapshot.account.shares,4)
+ assert.equal(saved.snapshot.chart.candles.at(-1).close,19)
+ assert.equal(await page.locator('.decision-result').count(),0)
+ assert.deepEqual(await page.locator('.snapshot-facts dd').allTextContents(),['19','16','13','up','948','4','1'])
+ await page.getByText('Complete test-data snapshot · Ineligible for paper orders.',{exact:true}).waitFor()
+ await page.locator('.decision-chart canvas').first().waitFor({state:'visible'})
+ await page.locator('.frozen-snapshot').screenshot({path:resolve(output,'snapshot-before-model.png')})
+ checks.push('Freeze and render saved 15:04 candle at close-time before provider call; close19, SMA16/13/up, cash948/shares4')
+ await button('Request model proposal').click()
+ await until(async()=>(await page.locator('#decision-status').textContent()).includes('Status: valid'))
+ assert.equal(await page.locator('#decision-proposal').textContent(),'Model proposal: hold')
+ const decisionId=(await page.locator('#decision-id').textContent()).replace('Decision ID: ','')
+ const decision=await(await page.request.get(`http://127.0.0.1:15173/api/decisions/${decisionId}`)).json()
+ assert.equal(decision.snapshot_id,snapshotId);assert.equal(decision.proposal,'hold');assert.equal(decision.model_call_kind,'controlled')
+ assert.equal(decision.market_data_kind,'constructed');assert.equal(decision.paper_order_eligible,false)
+ assert.match(await page.locator('#decision-explanation').textContent(),/Model proposal: hold\. Backend facts.*SMA 2=16(?:\.0)?, SMA 3=13(?:\.0)?.*shares 4/)
+ await page.locator('.decision-panel').screenshot({path:resolve(output,'valid-hold.png')})
+ checks.push('Named hold is valid decision, persisted by ID; UI separates controlled model from constructed data and backend facts; no paper execution')
+ await button('Request model proposal').click()
+ await until(async()=>(await page.locator('#decision-status').textContent()).includes('Status: timeout'))
+ const timeoutId=(await page.locator('#decision-id').textContent()).replace('Decision ID: ','')
+ assert.equal((await(await page.request.get(`http://127.0.0.1:15173/api/decisions/${timeoutId}`)).json()).error_code,'controlled_provider_timeout')
+ await page.locator('.decision-result').screenshot({path:resolve(output,'controlled-timeout.png')})
+ await button('Request model proposal').click()
+ await until(async()=>(await page.locator('#decision-status').textContent()).includes('Status: malformed_answer'))
+ assert.equal(await page.locator('#decision-proposal').textContent(),'Model proposal: None')
+ const missing=await(await page.request.post('http://127.0.0.1:15173/api/decisions',{data:{}})).json()
+ assert.equal(missing.status,'missing_input')
+ checks.push('Controlled timeout, malformed named answer and missing input have separate durable statuses and no proposal')
+ assert.deepEqual((await(await page.request.get(`http://127.0.0.1:15173/api/decision-snapshots/${snapshotId}`)).json()).snapshot,saved.snapshot)
+ await page.setViewportSize({width:390,height:844})
+ await page.locator('.decision-panel').screenshot({path:resolve(output,'decision-mobile.png')})
+ const box=await page.locator('.decision-panel').boundingBox();assert(box.x>=0&&box.x+box.width<=391)
+ assert.deepEqual(errors,[])
+ checks.push('Saved snapshot remains identical after all calls; desktop/mobile render with no uncaught page errors')
+ console.log(JSON.stringify({checks,snapshot_id:snapshotId,decision_id:decisionId,timeout_id:timeoutId}))
+} catch(error) {
+ await page.screenshot({path:resolve(output,'failure.png'),fullPage:true}).catch(()=>{})
+ throw error
+} finally {await browser.close()}

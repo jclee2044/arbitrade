@@ -1,0 +1,24 @@
+{
+  "input": "ACTUAL Yahoo",
+  "checks": [
+    "Clicked Check connection; visible backend-connected result; default 1m"
+  ],
+  "result": "PENDING",
+  "reason": "No in-session candle received within the live browser deadline",
+  "latest_observation": {
+    "ticker": "AAPL",
+    "price": 348.16,
+    "source_time_raw": "1794361100000",
+    "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+    "source_time_utc": "2026-11-11T01:38:20+00:00",
+    "backend_received_at_utc": "2026-11-11T01:38:22.244791+00:00",
+    "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+    "volume_fields": {}
+  },
+  "recording": {
+    "observation_id": 3,
+    "receipt_id": 3,
+    "exact_repeat": false
+  },
+  "feed_status": "stale"
+}

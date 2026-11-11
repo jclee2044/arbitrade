@@ -1,0 +1,1 @@
+{"failure":"Error: Timed out waiting for expected UI/state\n    at until (file:///home/jlrj/Documents/arbitrade/scripts/workstation_smoke.mjs:12:116)\n    at async file:///home/jlrj/Documents/arbitrade/scripts/workstation_smoke.mjs:52:2","checks":["Recorded replay: added SMA2=(13+19)/2=16; edited same saved SMA to window3=(7+13+19)/3=13 on 15:04 candle"]}

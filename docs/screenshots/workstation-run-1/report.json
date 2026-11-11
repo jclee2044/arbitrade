@@ -1,0 +1,7 @@
+{
+  "result": "FAIL",
+  "market": "offline deterministic",
+  "model": "stubbed analyst/reviewer",
+  "checks": [],
+  "failure": "[Errno 1] Operation not permitted"
+}

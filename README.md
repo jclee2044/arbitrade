@@ -1,0 +1,379 @@
+# Arbitrade
+
+A local market chart with a Python backend, FastAPI transport and Vue frontend.
+Candle-close AI proposals can be reviewed manually or applied by explicitly enabled paper automation. Work inside `/home/jlrj/Documents/arbitrade`.
+Git currently reports that this folder is not a repository; no commit was made.
+
+## Run
+
+Use the existing `/usr/bin/python` environment and approved local packages:
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+```
+
+In a second terminal:
+
+```bash
+npm --prefix frontend run dev
+```
+
+Open [the dashboard](http://127.0.0.1:5173). Stop both commands with Ctrl+C. Run one backend
+worker: its lifespan owns one shared AAPL Yahoo subscription, continuously
+records quotes and closes the feed on shutdown. Multiple browser connections
+share that subscription. Independent backend workers would each subscribe.
+No authentication or credentials are used for Yahoo quotes.
+
+The chart defaults to AAPL / 1m and supports 5m, 15m, 1h and daily. Switching
+opens a new WebSocket with matching stored history, followed by backend-derived
+updates. The page displays the source, latest source timestamp and age,
+upstream feed status separately from the browser connection, and forming/ended
+and coverage labels for the inspected candle. Unknown volume is shown as
+Unknown with a gap in the histogram; it is never replaced by zero.
+
+Only regular NASDAQ-session candles are charted. Extended-session quotes remain
+stored but are excluded by the existing calendar aggregation. A connected feed
+can be stale; no matching quote in 30 source-time seconds marks it stale.
+There is no backfill: gaps stay gaps. Daily volume can remain unknown if an
+available minute lacks a valid cumulative-volume baseline.
+
+Default database: `backend/data/observations.sqlite3`. Set
+`ARBITRADE_DATABASE=/absolute/path/observations.sqlite3` to use another file
+for both the live receiver and HTTP observation history. Automated fixture checks use disposable databases. A separately labeled live
+decision check saves its snapshot/result in the state database without placing
+trades. Prior observations are retained.
+
+## Replay saved observations
+
+Choose **Replay**, select the saved symbol and inclusive receipt-time range,
+then **Load / restart replay** and **Next observation** or **Play replay**.
+The chart shows Replay, progress, original source time and receipt time.
+Selections preserve arrival order and corrections without writing saved data.
+Start the backend with `ARBITRADE_LIVE_FEED=off` to disconnect Yahoo.
+
+```bash
+ARBITRADE_LIVE_FEED=off PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.replay_smoke --output /tmp/arbitrade-replay-results
+```
+
+The replay SmokeTest starts and cleans up isolated feed-off services on
+18000/15173 and uses real Chromium. Actual saved AAPL close **348.58** and
+Unknown volume matched twice; recorded counts stayed unchanged. A separate
+`--constructed` run verifies close **103**, volume **11**, late correction and
+repeat handling. The replay feature passed 44 backend tests and the frontend build when added.
+[Replay behavior, API, test data and limits](docs/replay.md).
+
+## Moving averages
+
+Choose positive whole-number **Short SMA window** and **Long SMA window** values,
+with short smaller than long, then click **Apply SMA windows**. Defaults are
+20/50; applying changes restarts a replay. Python calculates both lines from
+ended candle closes. Warm-up and forming candles show Unavailable. Ties retain
+the previous side; confirmed changes produce arrows and an accessible crossover
+list. Vue draws the results. The existing coverage label remains separate from
+whether an interval has ended.
+
+The 2/3 hand reference passes in batch and step-by-step browser replay: upward
+at **16/13**, downward at **4/9**; a forming candle produces no confirmed signal.
+The SMA feature passed 48 backend tests, the frontend build and its UI SmokeTest when added.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.sma_smoke --output /tmp/arbitrade-sma-results
+```
+
+This uses isolated services on 18000/15173 and a labeled disposable test database.
+[Calculation rules, API and reference table](docs/moving-averages.md).
+
+## Named chart indicators
+
+Use **Chart indicators** to choose a type, name an instance and set its window.
+SMA and rolling price range share a Python calculation interface. Each instance
+keeps its own settings in `backend/data/chart-config.sqlite3`, separately from
+recorded observations, and returns when the same symbol/timeframe is reopened.
+`ARBITRADE_CONFIG_DATABASE` selects another settings file. Inspect values for
+the selected candle; warm-up/forming candles remain Unavailable. Range lines
+use a separate pane, with values in quote-price difference units.
+
+The API supplies type/settings metadata to Vue. The constructed browser check
+passed: **Range 2 = 5**, **Range 3 = 6** at the third candle; refresh restored
+both, and zero-window validation kept the valid instances. The named-indicator feature passed 52 backend tests, the frontend build and its UI SmokeTest when added. The existing
+SMA crossover browser regression also passes.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke --output /tmp/arbitrade-indicator-results
+```
+
+[Indicator inputs, units, extension contract, persistence and API](docs/chart-indicators.md).
+
+## Paper trading
+
+The **Paper trading · Simulation only** panel shows cash, AAPL shares and order
+history. Buy whole shares, sell part, or close the position. Hold/wait create no
+orders. Starting cash is **$1,000**; fees are zero. A valid order remains pending
+until the next eligible new regular-session observed price arrives. Cash/shares
+are rechecked at execution; order, fill and account changes commit atomically.
+**Retry last request** reuses its stable ID and cannot duplicate the order/fill.
+
+Paper accounts reuse the existing `backend/data/chart-config.sqlite3`, separate
+from recorded market data. The live account survives restart. Each replay
+connection has a separate account and can execute only on newly revealed
+observations; restarting replay creates a new $1,000 account. Live orders wait
+when Yahoo is disabled.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arbitrade-paper-results
+```
+
+Browser/SQLite check passed: buy 4 at $100 → **$600 / 4**, sell 1 at $110 →
+**$710 / 3**, close at $105 → **$1,025 / 0**. Retry added no duplicate; empty sale
+was rejected; exactly **3 fills** survived an actual backend restart. The initial paper feature passed 59 backend tests and the frontend build when added. [Fill rules, API, persistence and test
+command](docs/paper-trading.md).
+
+## Profit and loss
+
+The paper panel now retains a **P&L history** table with weighted average cost,
+cumulative realized profit, unrealized profit and their total. Fill events and
+completed **1m** candle marks show the price/time/source used. Partial sales keep
+the remaining average cost; closed positions retain realized profit and earlier
+rows. Missing open valuation displays Unavailable. Reprocessing events or
+restarting the backend preserves single entries. Existing fills are backfilled
+once without changing balances or inventing historical candle marks.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.pnl_smoke --output /tmp/arbitrade-pnl-results
+```
+
+Browser/SQLite reference matched before and after backend restart: total P&L
+**$0 → $40 → $40 → -$5 → $25**, with $1,025 cash and no shares after close.
+All **65 backend tests** and frontend build pass.
+[Cost rules, event timing, storage and checked table](docs/profit-and-loss.md).
+
+## Verification
+
+Current offline workstation SmokeTest (free ports 18000/15173):
+
+```bash
+./scripts/smoke-test
+```
+
+Starts FastAPI/Vue and real Chromium, opens recorded replay, adds/edits an SMA,
+checks chart PNG questions plus provider failure, then runs reviewed paper
+buy4@100/sell1@110/close3@105. Expected UI and independent SQLite result:
+**cash1,025 / shares0 / realized25 / unrealized0**. Vetoes, duplicates and Stop
+must not add orders/fills. New temporary databases each run; services/browser
+cleaned on success/failure. Local existing tools only, no credentials or installs.
+[Command, evidence and hosted workflow prerequisites](docs/workstation-smoke-test.md).
+GitHub push workflow is prepared, not yet run; review its ephemeral-runner
+installation commands before enabling it. The current directory is not a Git
+repository. Live Yahoo/image-model/physical voice observations remain separate.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m unittest discover -s backend -v
+npm --prefix frontend run build
+/usr/bin/python scripts/smoke_test.py --http-only
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.verify_live --recorded
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.verify_live
+```
+
+Earlier live-feature verification on November 10, 2026: 43 backend tests and the frontend build passed.
+HTTP and recorded/actual WebSocket transport checks passed earlier. Automated
+**UI SmokeTest now passes using Playwright and Chromium on Omarchy**: connection
+button, matching OHLCV, same-minute replacement, rollover, all five timeframes,
+forming/ended labels, source age and separate feed/transport status. Desktop
+and mobile screenshots were inspected. A visual viewport issue found during
+that inspection was fixed: the first streamed candles now fit an initially
+empty chart and new intervals remain visible while following the latest bar.
+
+Repeatable automated UI SmokeTest, requiring free ports 8000/5173:
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-ui-results
+```
+
+This starts FastAPI and Vite, launches the installed `/usr/bin/chromium` with
+Playwright, performs user operations on the real Vue page, checks visible values
+against disposable SQLite data and stops all test services/browser. The default
+input is explicitly labeled **CONSTRUCTED replay**, with a fixed replay time
+for forming/ended checks. It writes screenshots and report.json, including
+stored observations, receipts and backend snapshots. It does not require the
+Codex integrated browser or an extension. The approved dev dependency is
+playwright-core 1.65.0 in frontend/node_modules; existing Chromium worked, with
+no browser download, sudo or system packages needed.
+
+[Desktop screenshot](docs/screenshots/ui-smoke-2026-11-10/disconnected-desktop.png),
+[mobile screenshot](docs/screenshots/ui-smoke-2026-11-10/mobile.png),
+[daily screenshot](docs/screenshots/ui-smoke-2026-11-10/timeframe-1d.png),
+[detailed UI report](docs/screenshots/ui-smoke-2026-11-10/report.json).
+
+Attempt actual Yahoo input with `--live`. The November 10 evening attempt
+received an actual after-hours AAPL quote, displayed the connected chart,
+source timestamp/age and waiting message, and reported **PENDING** because
+regular-session rules excluded that quote. On November 11 the actual in-session
+candle-to-screen comparison **passed** after re-enabling Yahoo: saved quotes,
+backend frames and changing visible OHLC agreed. The feed is currently enabled.
+[Actual live report](docs/screenshots/live-check-2026-11-11/report.json). Read report.json's result field: a completed live attempt may report
+PENDING rather than PASS. Its page is captured in
+[the live pending screenshot](docs/screenshots/ui-live-2026-11-10/pending-live.png).
+
+The older manual command remains available:
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.verify_live --recorded --browser
+```
+
+HTTP-only and non-browser transport checks are separate from UI SmokeTest.
+
+Details, failures and pending checks: [docs/verification.md](docs/verification.md).
+Protocol and limitations: [docs/live-updates.md](docs/live-updates.md).
+
+## API and data rules
+
+- `GET /api/health` returns `{"status":"ok"}` independently of feed health.
+- `GET /api/history` preserves the three-row synthetic sample array by default.
+- `GET /api/history?symbol=AAPL&timeframe=5m&source=observations&include_status=true`
+  returns observation history plus external completion/coverage metadata.
+- `WS /api/live?symbol=AAPL&timeframe=1m` sends stored observation history,
+  changed candles and periodic upstream status. It never mixes sample and live data.
+
+All candles retain exactly `timestamp,open,high,low,close,volume`. See
+[docs/candle-rules.md](docs/candle-rules.md) for deduplication, explicit
+corrections, cumulative-volume baselines and source ordering, and
+[docs/higher-timeframes.md](docs/higher-timeframes.md) for session alignment,
+calendar boundaries and receipt-aware replay.
+
+Useful standalone commands:
+
+```bash
+/usr/bin/python -m backend.observations list
+/usr/bin/python -m backend.candles --ticker AAPL
+PYTHONPATH=backend/.packages /usr/bin/python -m backend.yahoo_stream --ticker AAPL --timeout 30
+/usr/bin/python -m scripts.verify_recorder
+```
+
+The standalone Yahoo command remains bounded to one observation; the server
+uses the continuous receiver. Recorder verification uses constructed data.
+
+## Review a decision proposal
+
+Select a completed candle and **Freeze selected candle**, inspect its saved
+chart/facts, then **Request model proposal**. Python calls OpenAI Decisions;
+SQLite retains the snapshot and result. This operation does not submit a paper
+order. Set `OPENAI_API_KEY=your_actual_key` in `backend/.env` and restart the
+backend; process environment takes precedence. Keep the key backend-only.
+`backend/.env.example` contains placeholders. See [docs/decisions.md](docs/decisions.md)
+for API, cutoff rules, statuses and configured whole-share order size.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.decision_smoke --output /tmp/arbitrade-decision-results
+```
+
+This repeatable browser check uses a controlled provider and constructed data,
+compares saved decisions and unchanged paper tables, and cleans up its services.
+
+## Ask about a chart image
+
+Select a completed candle, click **Ask about chart**, and inspect the frozen PNG,
+cutoff and questions. **Analyze captured chart** asks the model for action,
+visual crossover and evidence sufficiency. Python compares its visual answer with
+the calculated crossover; disagreements and unreadable evidence are ineligible
+for execution. The PNG, questions and answers are saved together. Orders and
+balances stay untouched. See [docs/chart-questions.md](docs/chart-questions.md).
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.chart_smoke --output /tmp/arbitrade-chart-results
+```
+
+The controlled browser check is separate from the single live image check:
+that actual model answered wait/none/sufficient while Python found down, and the
+application flagged the conflict. Both checks and their evidence are recorded.
+
+## Inspect analyst and reviewer
+
+Every new analysis uses at most one analyst call and one separate reviewer call
+on the same frozen snapshot (and PNG for chart questions). The result displays
+both outputs/models, reviewer verdict and Python's final account/strategy checks.
+A reviewer acceptance cannot permit an unaffordable purchase or unsupported
+signal. Expand **Inspect role instructions and answers** for the saved details.
+No paper order is sent. See [docs/agent-review.md](docs/agent-review.md).
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.review_smoke --output /tmp/arbitrade-review-results
+```
+
+## Apply reviewed paper decisions
+
+**Start paper automation** analyzes each newly completed live-chart candle with
+its own frozen PNG, analyst and reviewer. Approved decisions use the simulator's
+next eligible quote and current-resource checks. **Stop paper automation** revokes
+late replies and cancels pending automation orders. It starts disabled and stays
+disabled after a backend restart. Keep the dashboard open; replay remains manual.
+
+The automation audit links each signal and decision ID to its review, fill or skip,
+and resulting cash/shares/P&L. Constructed data uses a separate test account.
+Manual questions create no order. See [docs/paper-automation.md](docs/paper-automation.md)
+for deduplication,120second age limit, fill rules and limitations.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.automation_smoke --output /tmp/arbitrade-automation-results
+```
+
+Verification used mocked provider replies and disposable recorded test prices:
+reusing an approved buy produced exactly one fill,1000→920cash/0→4shares;
+a reviewer veto and actual restart added no fill. Live automation was not enabled.
+
+## Discuss a recorded decision by voice
+
+Choose a saved decision in **Discuss a recorded decision by voice**, inspect its
+summary and click **Start voice**. Allow microphone access, ask a question and a
+follow-up, then **End voice**. This is a read-only conversation; it cannot trade
+or change automation. The active/off microphone indicator and audio controls
+show local capture and playback. See [docs/live-speech.md](docs/live-speech.md).
+
+The Mac browser uses the Mac microphone and speakers even with the backend on
+Omarchy. Open the localhost tunnel URL in Safari/Chrome; WebRTC audio connects
+directly to OpenAI. No SSH audio forwarding is needed. The key stays on Omarchy.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.voice_smoke --output /tmp/arbitrade-voice-results
+```
+
+This browser check uses actual local WebRTC with mocked provider/captions and a
+synthetic microphone. A separate live-provider synthetic-input session produced
+correct audio/captions; the physical Mac microphone/speaker check is pending.
+
+## Files and environment
+
+`backend/live.py` owns feed lifecycle, recording and snapshot derivation;
+`backend/yahoo_stream.py` reuses yfinance subscription and decoding;
+`backend/main.py` supplies HTTP/WebSocket routes. `backend/history.py`,
+`candles.py`, `timeframes.py` and `observations.py` provide data rules and storage.
+`frontend/src/CandleChart.js` owns the selector, chart and socket lifecycle;
+`chart-data.js` adapts UTC prices and nullable volume; `vite.config.js` proxies
+both HTTP and WebSocket requests. `scripts/verify_live.py` checks transport;
+`scripts/ui_smoke.py` and `ui_smoke.mjs` run the automated browser checks.
+Major prompts are preserved under `prompts/`, including prompts 08, 08a and the approved 08b UI-testing request.
+
+Confirmed environment: Linux/Omarchy, Python 3.14.8 at `/usr/bin/python`,
+FastAPI 0.156.8, Uvicorn 0.54.0, Node 26.13.0, npm 11.20.0, Vue 3.5.45,
+Vite 8.3.7, Lightweight Charts 5.3.0, yfinance 1.8.0, websockets 17.4 and
+exchange-calendars 4.13.2. Approved Python additions live in `backend/.packages`
+with pins in `backend/requirements-yahoo.txt` and `requirements-calendar.txt`.
+Approved playwright-core 1.65.0 was added to the frontend dev dependencies
+and lockfile. No virtual environment was created. Follow `AGENTS.md` before installing or changing dependencies.
+
+## Access from the Mac
+
+With the Omarchy development servers running, forward Vite (including its API/WebSocket proxy):
+
+```bash
+ssh -fN -M -S /tmp/arbitrade-mac-tunnel.sock -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L 127.0.0.1:5173:127.0.0.1:5173 omarchy
+```
+
+Open http://127.0.0.1:5173 in the Mac browser. Source stays on Omarchy.
+Stop the tunnel with `ssh -S /tmp/arbitrade-mac-tunnel.sock -O exit omarchy`.
+November 10: Mac Browser connection and all five timeframes passed using stored
+observations. November 11: fresh live quote-to-screen passed in project Chromium
+on Omarchy; the Mac tunnel was not reverified. Current backend PID/log files
+are in `/tmp/arbitrade-replay-review`; Yahoo is enabled.
+Noninteractive SSH needs the existing Node runtime on PATH:
+`export PATH=/home/jlrj/.local/share/mise/installs/node/26.13.0/bin:$PATH`.

@@ -1,0 +1,191 @@
+{
+  "result": "PASS",
+  "provider": "live OpenAI GPT-Live",
+  "microphone": "synthetic browser device",
+  "physical_listening": "not performed",
+  "questions_supplied": "application commentary events, not microphone speech",
+  "record": {
+    "decision_id": "91144155-dec6-4cb9-9604-2ea9103332c9",
+    "summary_read_at": "2026-11-11T17:18:28.048461+00:00",
+    "read_only": true,
+    "symbol": "AAPL",
+    "interval": "1m",
+    "candle_timestamp": "2026-11-11T15:52:00+00:00",
+    "cutoff": "2026-11-11T15:53:00+00:00",
+    "snapshot_id": "b27bbb96-6889-447f-be31-aca1fb738d1f",
+    "snapshot_sha256": "9fdab6085b8a13fb59fe645796319ed4634da77ac7aa7dd23a91800582ce9ab1",
+    "candle": {
+      "close": 353.135,
+      "high": 353.375,
+      "low": 353.1197,
+      "open": 353.335,
+      "timestamp": "2026-11-11T15:52:00Z",
+      "volume": null
+    },
+    "indicators": {
+      "short_window": 2,
+      "long_window": 3,
+      "short": 353.2392,
+      "long": 353.30943333333335,
+      "crossover": "down"
+    },
+    "frozen_account": {
+      "account_id": "live",
+      "average_cost": null,
+      "cash": "1000",
+      "created_at": "2026-11-11T14:11:22.763857+00:00",
+      "mode": "live",
+      "order_size": 1,
+      "shares": 0,
+      "starting_cash": "1000",
+      "symbol": "AAPL"
+    },
+    "market_data_kind": "recorded",
+    "analyst": {
+      "proposal": "wait",
+      "quantity": null,
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "model_call_kind": "live",
+      "answers": {
+        "action": {
+          "choice": "wait",
+          "confidence": 0.93,
+          "model": "gpt-6-luna",
+          "name": "action",
+          "probabilities": [
+            {
+              "probability": 0.01,
+              "value": "buy"
+            },
+            {
+              "probability": 0.02,
+              "value": "sell"
+            },
+            {
+              "probability": 0.01,
+              "value": "hold"
+            },
+            {
+              "probability": 0.94,
+              "value": "wait"
+            },
+            {
+              "probability": 0.02,
+              "value": "close"
+            }
+          ],
+          "type": "choice"
+        },
+        "crossover": {
+          "choice": "down",
+          "confidence": 0.6,
+          "model": "gpt-6-luna",
+          "name": "crossover",
+          "probabilities": [
+            {
+              "probability": 0.01,
+              "value": "up"
+            },
+            {
+              "probability": 0.7,
+              "value": "down"
+            },
+            {
+              "probability": 0.26,
+              "value": "none"
+            },
+            {
+              "probability": 0.03,
+              "value": "unreadable"
+            }
+          ],
+          "type": "choice"
+        },
+        "evidence": {
+          "choice": "sufficient",
+          "confidence": 0.82,
+          "model": "gpt-6-luna",
+          "name": "evidence",
+          "probabilities": [
+            {
+              "probability": 0.88,
+              "value": "sufficient"
+            },
+            {
+              "probability": 0.11,
+              "value": "insufficient"
+            },
+            {
+              "probability": 0.01,
+              "value": "unreadable"
+            }
+          ],
+          "type": "choice"
+        }
+      }
+    },
+    "reviewer": {
+      "verdict": "accept",
+      "status": "valid",
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "error_code": null
+    },
+    "validation": {
+      "status": "valid",
+      "validation_status": "valid",
+      "explanation": "Model proposal: wait. Backend facts at 2026-11-11T15:53:00+00:00: AAPL close 353.135; SMA 2=353.2392, SMA 3=353.30943333333335; crossover down; simulated cash 1000, shares 0, configured order size 1. Rule check: Valid under frozen long-only account rules; no order executed. Visual claim: down; Python crossover: down; evidence: sufficient; comparison: match.",
+      "error_code": null,
+      "final_check": {
+        "actionable": false,
+        "data_eligible": true,
+        "paper_order_eligible": false,
+        "passed": true,
+        "reasons": []
+      },
+      "visual_comparison": "match"
+    },
+    "paper_outcome": {
+      "application": null,
+      "order": null,
+      "fill": null,
+      "fill_account": null,
+      "trade_recorded": false,
+      "interpretation": "No recorded fill linked to this decision; do not claim a trade occurred."
+    },
+    "current_recorded_account": {
+      "account_id": "live",
+      "cash": "1000",
+      "positions": []
+    }
+  },
+  "session": "Session live_u1_Ej6Fpp3oMyDrZesfTzbJ28qdfJPmL8y3 \u00b7 live",
+  "turns": [
+    {
+      "question": "What did the agents decide for this symbol?",
+      "actual_provider_caption": "The analyst proposed to wait. The reviewer accepted that, and the validation confirms it was a valid wait at that time. No order or fill was recorded for this decision. Does that make sense?"
+    },
+    {
+      "question": "What happened to the paper account?",
+      "actual_provider_caption": "The frozen paper account at decision time had 1,000 cash and zero shares. No trade was recorded, so the current recorded account is still 1,000 cash and no positions. Let me know if you want any other detail from the record."
+    }
+  ],
+  "inbound_audio": [
+    {
+      "bytesReceived": 206615,
+      "packetsReceived": 1417,
+      "totalAudioEnergy": 0.8336000664721682
+    }
+  ],
+  "microphone_tracks_ended": true,
+  "note": "Live negotiation/audio/captions with synthetic input; physical microphone/speaker conversation remains pending.",
+  "after_session_ledger": {
+    "cash": "1000",
+    "positions": [],
+    "orders": 0,
+    "fills": 0,
+    "enabled_automation_runs": 0
+  },
+  "caption_comparison": "MATCH: wait, reviewer accept, valid; frozen/current cash1000, no shares or linked trade"
+}

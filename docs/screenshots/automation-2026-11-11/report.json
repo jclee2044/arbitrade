@@ -1,0 +1,136 @@
+{
+  "result": "PASS",
+  "provider_responses": "controlled/mocked",
+  "market_data": "constructed recorded fixture",
+  "initial_backend_pid": 201079,
+  "audits": [
+    {
+      "account_id": "test-571fe04e-8081-4cda-99f4-a020cc6ca418",
+      "cash": "920",
+      "shares": 4,
+      "fills": [
+        {
+          "id": 2,
+          "order_id": 2,
+          "quantity": 4,
+          "price": "20",
+          "fees": "0",
+          "observation_id": 10,
+          "receipt_id": 10,
+          "source_time_utc": "2026-11-10T15:09:10+00:00",
+          "executed_at": "2026-11-10T15:09:10.000000+00:00",
+          "market_observation_json": "{\"day_volume\": \"1000\", \"id\": \"AAPL\", \"price\": 20, \"test_data\": true, \"time\": 1794323350000}",
+          "decision_id": "5774c7f0-9d18-44dd-b9ba-8e9028b266e3"
+        }
+      ],
+      "captures_match": true
+    },
+    {
+      "account_id": "test-571fe04e-8081-4cda-99f4-a020cc6ca418",
+      "cash": "920",
+      "shares": 4,
+      "fills": [
+        {
+          "id": 2,
+          "order_id": 2,
+          "quantity": 4,
+          "price": "20",
+          "fees": "0",
+          "observation_id": 10,
+          "receipt_id": 10,
+          "source_time_utc": "2026-11-10T15:09:10+00:00",
+          "executed_at": "2026-11-10T15:09:10.000000+00:00",
+          "market_observation_json": "{\"day_volume\": \"1000\", \"id\": \"AAPL\", \"price\": 20, \"test_data\": true, \"time\": 1794323350000}",
+          "decision_id": "5774c7f0-9d18-44dd-b9ba-8e9028b266e3"
+        }
+      ],
+      "captures_match": true
+    }
+  ],
+  "restarted_backend_pid": 201335,
+  "checks": [
+    "Start uses $1000 disposable test account; up crossover gets fresh chart/analyst/review, duplicate approved application yields exactly one 4x20 fill, cash920/shares4 and linked P&L",
+    "Reviewer veto is visible under decision ID; no extra order/fill/cash/position change",
+    "Actual backend restart keeps decision/fill/P&L/cash; automation stopped, same candle deduplicates under a new Start"
+  ],
+  "decision_id": "5774c7f0-9d18-44dd-b9ba-8e9028b266e3",
+  "attempt_id": "2871b8cc-55d5-4e73-b201-0dc47bf03e4c",
+  "veto_id": "78e23e70-af26-48f6-b266-5c1611c44d6b",
+  "final_audit": {
+    "account_id": "test-571fe04e-8081-4cda-99f4-a020cc6ca418",
+    "cash": "920",
+    "shares": 4,
+    "fills": [
+      {
+        "id": 2,
+        "order_id": 2,
+        "quantity": 4,
+        "price": "20",
+        "fees": "0",
+        "observation_id": 10,
+        "receipt_id": 10,
+        "source_time_utc": "2026-11-10T15:09:10+00:00",
+        "executed_at": "2026-11-10T15:09:10.000000+00:00",
+        "market_observation_json": "{\"day_volume\": \"1000\", \"id\": \"AAPL\", \"price\": 20, \"test_data\": true, \"time\": 1794323350000}",
+        "decision_id": "5774c7f0-9d18-44dd-b9ba-8e9028b266e3"
+      }
+    ],
+    "captures_match": true
+  },
+  "attempts": [
+    {
+      "id": "a24a9970-9b22-4fc4-8630-c236aa6198ef",
+      "run_id": "6b0d08a5-b935-4afb-8dc0-f2ad3f4a793f",
+      "account_id": "test-571fe04e-8081-4cda-99f4-a020cc6ca418",
+      "strategy": "sma-v1:2:3",
+      "symbol": "AAPL",
+      "interval": "1m",
+      "candle_timestamp": "2026-11-10T15:07:00+00:00",
+      "cutoff": "2026-11-10T15:08:00+00:00",
+      "snapshot_id": "02e877c7-1bdc-4374-93ca-ceb440c5f228",
+      "decision_id": "3c68af0a-cc89-486f-b81e-c3e67e275fec",
+      "status": "skipped",
+      "reason": "decision_not_approved",
+      "order_id": null,
+      "fill_id": null,
+      "capture_error": null,
+      "created_at": "2026-11-10T15:09:00+00:00"
+    },
+    {
+      "id": "2871b8cc-55d5-4e73-b201-0dc47bf03e4c",
+      "run_id": "6b0d08a5-b935-4afb-8dc0-f2ad3f4a793f",
+      "account_id": "test-571fe04e-8081-4cda-99f4-a020cc6ca418",
+      "strategy": "sma-v1:2:3",
+      "symbol": "AAPL",
+      "interval": "1m",
+      "candle_timestamp": "2026-11-10T15:08:00+00:00",
+      "cutoff": "2026-11-10T15:09:00+00:00",
+      "snapshot_id": "ab7b4f4b-8d02-469b-adf2-9313fed53635",
+      "decision_id": "5774c7f0-9d18-44dd-b9ba-8e9028b266e3",
+      "status": "filled",
+      "reason": null,
+      "order_id": 2,
+      "fill_id": 2,
+      "capture_error": null,
+      "created_at": "2026-11-10T15:09:00+00:00"
+    },
+    {
+      "id": "f088f5a6-52a4-4209-b86e-086a9a228f3e",
+      "run_id": "6b0d08a5-b935-4afb-8dc0-f2ad3f4a793f",
+      "account_id": "test-571fe04e-8081-4cda-99f4-a020cc6ca418",
+      "strategy": "sma-v1:2:3",
+      "symbol": "AAPL",
+      "interval": "1m",
+      "candle_timestamp": "2026-11-10T15:09:00+00:00",
+      "cutoff": "2026-11-10T15:10:00+00:00",
+      "snapshot_id": "378cb3b0-aca0-4fe0-aab3-1293a9a69566",
+      "decision_id": "78e23e70-af26-48f6-b266-5c1611c44d6b",
+      "status": "skipped",
+      "reason": "decision_not_approved",
+      "order_id": null,
+      "fill_id": null,
+      "capture_error": null,
+      "created_at": "2026-11-10T15:10:00+00:00"
+    }
+  ]
+}

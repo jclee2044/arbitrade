@@ -1,0 +1,78 @@
+{
+  "result": "PASS",
+  "input": "CONSTRUCTED test_data=true; separate disposable SQLite",
+  "stored_configuration": [
+    {
+      "name": "Range 2",
+      "type": "price_range",
+      "settings": {
+        "window": 2
+      }
+    },
+    {
+      "name": "Range 3",
+      "type": "price_range",
+      "settings": {
+        "window": 3
+      }
+    },
+    {
+      "name": "SMA 2",
+      "type": "sma",
+      "settings": {
+        "window": 2
+      }
+    }
+  ],
+  "checks": [
+    "User creates Range 2 and Range 3 from API-supplied catalog; third-candle values are 5 and 6",
+    "Refresh restores both names, settings and values",
+    "Zero window explains error in UI and HTTP; valid indicators/settings remain unchanged",
+    "SMA created through same catalog/settings interface; third-candle SMA 2 equals 14",
+    "All named indicators use replay-visible completed candles; forming gaps and final batch/replay values agree",
+    "Settings scoped to symbol/timeframe, return on reopening 1m; desktop/mobile render without page errors"
+  ],
+  "values": {
+    "Range 2": [
+      null,
+      6,
+      5
+    ],
+    "Range 3": [
+      null,
+      null,
+      6
+    ],
+    "SMA 2": [
+      null,
+      13.5,
+      14
+    ]
+  },
+  "saved": [
+    {
+      "id": 1,
+      "symbol": "AAPL",
+      "timeframe": "1m",
+      "name": "Range 2",
+      "type": "price_range",
+      "settings": {
+        "window": 2
+      }
+    },
+    {
+      "id": 2,
+      "symbol": "AAPL",
+      "timeframe": "1m",
+      "name": "Range 3",
+      "type": "price_range",
+      "settings": {
+        "window": 3
+      }
+    }
+  ],
+  "replay_position": 6,
+  "stored_observations": 6,
+  "stored_receipts": 6,
+  "stored_database_unchanged": true
+}

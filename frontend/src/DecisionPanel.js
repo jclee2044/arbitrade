@@ -1,0 +1,117 @@
+import { h, ref, onBeforeUnmount, nextTick } from 'vue'
+import { chartPng, renderFrozenChart } from './chart-capture.js'
+
+export default {
+  props: { accountId:String, symbol:String, interval:String, candleTimestamp:String,
+    shortWindow:Number, longWindow:Number, completed:Boolean, chartRange:Function },
+  setup(props) {
+    const frozen=ref(null),decision=ref(null),busy=ref(false),error=ref(''),container=ref(null)
+    const capture=ref(null),questions=ref([]),imageRequested=ref(false)
+    let chart,disposed=false
+    async function jsonRequest(path,options) {
+      const response=await fetch(path,options);const result=await response.json()
+      if(!response.ok)throw new Error(typeof result.detail==='string'?result.detail:'Request failed')
+      return result
+    }
+    async function freeze(withImage=false) {
+      busy.value=true;error.value='';decision.value=null;capture.value=null;imageRequested.value=withImage
+      try {
+        const range=withImage?props.chartRange?.():null
+        const selection={account_id:props.accountId,symbol:props.symbol,interval:props.interval,
+          candle_timestamp:props.candleTimestamp,short_window:props.shortWindow,long_window:props.longWindow,
+          ...(range?.from?{chart_start:new Date(range.from*1000).toISOString(),chart_end:new Date(range.to*1000).toISOString()}: {})}
+        const result=await jsonRequest('/api/decision-snapshots',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(selection)})
+        if(disposed)return
+        frozen.value=result
+        await nextTick()
+        chart?.remove()
+        chart=await renderFrozenChart(container.value,result)
+        if(withImage){
+          questions.value=await jsonRequest('/api/decision-questions/chart')
+          await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)))
+          if(!disposed)capture.value=chartPng(chart,result)
+        }
+      } catch(failure){error.value=failure.message}
+      finally{if(!disposed)busy.value=false}
+    }
+    async function analyze() {
+      busy.value=true;error.value=''
+      try {
+        const result=await jsonRequest('/api/decisions',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({snapshot_id:frozen.value.snapshot.snapshot_id,...(capture.value?{capture:capture.value}:{})})})
+        if(!disposed)decision.value=result
+      } catch(failure){if(!disposed)error.value=failure.message}
+      finally{if(!disposed)busy.value=false}
+    }
+    onBeforeUnmount(()=>{disposed=true;chart?.remove()})
+    return()=>h('div',{class:'decision-panel','aria-labelledby':'decision-title'},[
+      h('h3',{id:'decision-title'},'Decision proposal · No order execution'),
+      h('p','Freeze one completed candle at its closing time. Review the exact saved chart and backend facts before asking the model. Later arrivals and fills are excluded.'),
+      h('p','Each analysis asks an analyst and then an independent reviewer, at most once per role. Python applies the final account and strategy checks.'),
+      h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(false)},'Freeze selected candle'),
+      h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(true)},'Ask about chart'),
+      !props.completed?h('p','Select a completed candle in the candle inspector to freeze it.'):null,
+      error.value?h('p',{role:'alert'},error.value):null,
+      frozen.value?h('div',{key:'frozen-snapshot',class:'frozen-snapshot'},[
+        h('p',{id:'snapshot-id'},`Snapshot ID: ${frozen.value.snapshot.snapshot_id}`),
+        h('p',{id:'snapshot-market'},`Market data: ${frozen.value.snapshot.provenance.market_data_kind} · ${frozen.value.snapshot.symbol} / ${frozen.value.snapshot.interval} · Decision time: ${frozen.value.snapshot.decision_time}`),
+        h('p',`Frozen account: ${frozen.value.snapshot.account?.account_id || 'Unavailable'} · SHA-256: ${frozen.value.sha256}`),
+        h('dl',{class:'snapshot-facts'},[
+          ['Close',frozen.value.snapshot.candle?.close??'Unavailable'],
+          ['Short SMA',frozen.value.snapshot.indicators.short??'Unavailable'],
+          ['Long SMA',frozen.value.snapshot.indicators.long??'Unavailable'],
+          ['Crossover',frozen.value.snapshot.indicators.crossover||'None'],
+          ['Simulated cash',frozen.value.snapshot.account?.cash??'Unavailable'],
+          ['Shares',frozen.value.snapshot.account?.shares??'Unavailable'],
+          ['Configured order size',frozen.value.snapshot.account?.order_size??'Unavailable'],
+        ].flatMap(([label,value])=>[h('dt',label),h('dd',String(value))])),
+        h('div',{ref:container,class:'decision-chart','aria-label':'Frozen snapshot candles and SMA lines'}),
+        h('p',{id:'snapshot-eligibility'},frozen.value.snapshot.completeness.complete
+          ? frozen.value.snapshot.completeness.paper_order_eligible?'Complete application snapshot. This panel never submits an order.':'Complete test-data snapshot · Ineligible for paper orders.'
+          : `Incomplete snapshot · Ineligible for paper orders: ${frozen.value.snapshot.completeness.missing.join(', ')}`),
+        capture.value?h('div',{class:'chart-capture'},[
+          h('h4','Captured chart · Blue short SMA / amber long SMA'),
+          h('p',{id:'capture-cutoff'},`${capture.value.manifest.symbol} / ${capture.value.manifest.interval} · Cutoff ${capture.value.manifest.cutoff} · Range ${capture.value.manifest.range_start} to ${capture.value.manifest.range_end}`),
+          h('p','Volume pane: unknown volume remains a gap. Only frozen chart pixels are submitted.'),
+          h('img',{id:'chart-preview',src:capture.value.image_url,alt:'Frozen chart PNG to submit for analysis'}),
+          h('h4','Questions sent with this chart'),
+          ...questions.value.map(q=>h('div',{class:'chart-question'},[h('strong',q.name),h('p',q.instructions),h('p',q.choices.map(c=>`${c.value}: ${c.description}`).join(' · '))])),
+        ]):null,
+        h('button',{disabled:busy.value||!frozen.value.snapshot.completeness.complete||(imageRequested.value&&!capture.value),onClick:analyze},busy.value?'Requesting…':capture.value?'Analyze captured chart':'Request model proposal'),
+      ]):null,
+      decision.value?h('div',{class:'decision-result'},[
+        h('p',{id:'decision-id'},`Decision ID: ${decision.value.id}`),
+        h('p',{id:'decision-provider'},`Model call: ${decision.value.model_call_kind} · ${decision.value.provider} / ${decision.value.model} · Market data: ${decision.value.market_data_kind}`),
+        h('p',{id:'decision-status'},`Status: ${decision.value.status} · Validation: ${decision.value.validation_status}`),
+        h('p',{id:'decision-proposal'},`Model proposal: ${decision.value.proposal||'None'}${decision.value.quantity!=null?` · Quantity ${decision.value.quantity}`:''}`),
+        h('p',{id:'decision-explanation'},decision.value.explanation),
+        decision.value.image_analysis?h('div',{id:'chart-answers'},[
+          ...Object.entries(decision.value.image_analysis.answers||{}).map(([name,a])=>h('p',{'data-answer':name},`${name}: ${a.choice}`)),
+          h('p',{id:'crossover-comparison'},`Visual comparison: ${decision.value.image_analysis.comparison} · Python crossover: ${frozen.value.snapshot.indicators.crossover||'none'}`),
+          h('p',decision.value.paper_order_eligible?'Passed frozen evidence checks. No order sent.':'Ineligible for automated execution.'),
+          decision.value.image_analysis.image_url?h('a',{href:decision.value.image_analysis.image_url,target:'_blank'},'Open saved capture'):null,
+        ]):null,
+        decision.value.review?h('section',{class:'agent-review','aria-labelledby':'review-title'},[
+          h('h4',{id:'review-title'},'Analyst and reviewer'),
+          h('p',{id:'review-snapshot'},`Shared snapshot: ${decision.value.review.snapshot_id||'Unavailable'} · SHA-256: ${decision.value.review.snapshot_sha256||'Unavailable'}`),
+          h('p',{id:'analyst-output'},`Analyst: ${decision.value.review.analyst.proposal||'No proposal'} · ${decision.value.review.analyst.status} · ${decision.value.review.analyst.provider} / ${decision.value.review.analyst.model}`),
+          h('p',{id:'reviewer-output'},`Reviewer: ${decision.value.review.reviewer.verdict||'No verdict'} · ${decision.value.review.reviewer.status} · ${decision.value.review.reviewer.provider} / ${decision.value.review.reviewer.model}`),
+          decision.value.review.reviewer.error_code?h('p',`Reviewer error: ${decision.value.review.reviewer.error_code}`):null,
+          h('p',{id:'reviewer-explanation'},decision.value.review.reviewer.explanation||'Reviewer skipped because no validated analyst output was available.'),
+          h('p',{id:'review-final'},`Final checks: ${decision.value.review.final_check.passed?'passed':'failed'} · ${decision.value.review.final_check.reasons.join(', ')||'No failed checks'}`),
+          h('p',{id:'review-eligibility'},`Paper execution eligible: ${decision.value.review.final_check.paper_order_eligible?'yes':'no'} · No order submitted`),
+          h('details',[
+            h('summary','Inspect role instructions and answers'),
+            h('h5','Analyst questions'),h('pre',JSON.stringify(decision.value.review.questions.analyst,null,2)),
+            h('h5','Analyst answers'),h('pre',JSON.stringify(decision.value.review.analyst.answers,null,2)),
+            h('h5','Reviewer question'),h('pre',JSON.stringify(decision.value.review.questions.reviewer,null,2)),
+            h('h5','Reviewer answer'),h('pre',JSON.stringify(decision.value.review.reviewer.answer,null,2)),
+            h('h5','Backend facts'),h('pre',JSON.stringify(decision.value.review.supporting_facts,null,2)),
+          ]),
+        ]):null,
+        h('p',decision.value.image_analysis?'Python supplied the facts and rule checks. The model selected the three named answers; it did not supply a rationale. No paper order was sent.':'Facts and rule checks are supplied by Python. The model selected only the proposal; it did not supply a rationale. No paper order was sent.'),
+      ]):null,
+    ])
+  },
+}

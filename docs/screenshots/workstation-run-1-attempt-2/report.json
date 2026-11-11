@@ -1,0 +1,8 @@
+{
+  "result": "FAIL",
+  "market": "offline deterministic",
+  "model": "stubbed analyst/reviewer",
+  "checks": [],
+  "processes_stopped": true,
+  "failure": "Browser failed: see browser.json, services.log and failure.png"
+}

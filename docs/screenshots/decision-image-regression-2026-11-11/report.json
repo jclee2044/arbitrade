@@ -1,0 +1,96 @@
+{
+  "result": "PASS",
+  "model_call_kind": "controlled",
+  "market_data_kind": "constructed",
+  "checks": [
+    "Freeze and render saved 15:04 candle at close-time before provider call; close19, SMA16/13/up, cash948/shares4",
+    "Named hold is valid decision, persisted by ID; UI separates controlled model from constructed data and backend facts; no paper execution",
+    "Controlled timeout, malformed named answer and missing input have separate durable statuses and no proposal",
+    "Saved snapshot remains identical after all calls; desktop/mobile render with no uncaught page errors"
+  ],
+  "snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+  "decision_id": "7bc820b1-90d7-4d65-842c-b4e7d6a637bd",
+  "timeout_id": "f949ab61-4c15-4472-8b96-28254976f5c4",
+  "saved_decisions": [
+    {
+      "id": "7bc820b1-90d7-4d65-842c-b4e7d6a637bd",
+      "snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "requested_snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "created_at": "2026-11-11T15:38:05.778240+00:00",
+      "provider": "controlled-fixture",
+      "model": "gpt-6-luna",
+      "model_call_kind": "controlled",
+      "market_data_kind": "constructed",
+      "status": "valid",
+      "validation_status": "valid",
+      "proposal": "hold",
+      "quantity": null,
+      "explanation": "Model proposal: hold. Backend facts at 2026-11-10T15:05:00+00:00: AAPL close 19; SMA 2=16.0, SMA 3=13.0; crossover up; simulated cash 948, shares 4, configured order size 1. Rule check: Valid under frozen long-only account rules; no order executed.",
+      "error_code": null,
+      "answer_json": "{\"choice\":\"hold\",\"confidence\":1.0,\"model\":\"gpt-6-luna\",\"name\":\"paper_action\",\"probabilities\":[{\"probability\":0.0,\"value\":\"buy\"},{\"probability\":0.0,\"value\":\"sell\"},{\"probability\":1.0,\"value\":\"hold\"},{\"probability\":0.0,\"value\":\"wait\"},{\"probability\":0.0,\"value\":\"close\"}],\"type\":\"choice\"}",
+      "paper_order_eligible": 0
+    },
+    {
+      "id": "f949ab61-4c15-4472-8b96-28254976f5c4",
+      "snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "requested_snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "created_at": "2026-11-11T15:38:05.960463+00:00",
+      "provider": "controlled-fixture",
+      "model": "gpt-6-luna",
+      "model_call_kind": "controlled",
+      "market_data_kind": "constructed",
+      "status": "timeout",
+      "validation_status": "not_evaluated",
+      "proposal": null,
+      "quantity": null,
+      "explanation": "No validated proposal: controlled_provider_timeout",
+      "error_code": "controlled_provider_timeout",
+      "answer_json": null,
+      "paper_order_eligible": 0
+    },
+    {
+      "id": "7ccf22c9-0f41-4b4c-81a0-4a3e3995e8f7",
+      "snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "requested_snapshot_id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "created_at": "2026-11-11T15:38:06.193941+00:00",
+      "provider": "controlled-fixture",
+      "model": "gpt-6-luna",
+      "model_call_kind": "controlled",
+      "market_data_kind": "constructed",
+      "status": "malformed_answer",
+      "validation_status": "not_evaluated",
+      "proposal": null,
+      "quantity": null,
+      "explanation": "No validated proposal: wrong_question_name",
+      "error_code": "wrong_question_name",
+      "answer_json": null,
+      "paper_order_eligible": 0
+    },
+    {
+      "id": "62a5c234-abdc-4ef6-9f4a-7eea721e7203",
+      "snapshot_id": null,
+      "requested_snapshot_id": null,
+      "created_at": "2026-11-11T15:38:06.305820+00:00",
+      "provider": "controlled-fixture",
+      "model": "gpt-6-luna",
+      "model_call_kind": "controlled",
+      "market_data_kind": null,
+      "status": "missing_input",
+      "validation_status": "incomplete",
+      "proposal": null,
+      "quantity": null,
+      "explanation": "No eligible frozen snapshot was supplied.",
+      "error_code": "snapshot_missing",
+      "answer_json": null,
+      "paper_order_eligible": 0
+    }
+  ],
+  "snapshots": [
+    {
+      "id": "c8f159fe-5445-4108-967a-1f7ddbc6dd3e",
+      "payload_json": "{\"account\":{\"account_id\":\"live\",\"average_cost\":\"13\",\"cash\":\"948\",\"created_at\":\"2026-11-10T14:59:00+00:00\",\"mode\":\"live\",\"order_size\":1,\"shares\":4,\"starting_cash\":\"1000\",\"symbol\":\"AAPL\"},\"available_time\":\"2026-11-10T15:05:00+00:00\",\"candle\":{\"close\":19,\"high\":19,\"low\":19,\"open\":19,\"timestamp\":\"2026-11-10T15:04:00Z\",\"volume\":100},\"candle_timestamp\":\"2026-11-10T15:04:00+00:00\",\"chart\":{\"candles\":[{\"close\":13,\"high\":13,\"low\":13,\"open\":13,\"timestamp\":\"2026-11-10T15:00:00Z\",\"volume\":null},{\"close\":10,\"high\":10,\"low\":10,\"open\":10,\"timestamp\":\"2026-11-10T15:01:00Z\",\"volume\":100},{\"close\":7,\"high\":7,\"low\":7,\"open\":7,\"timestamp\":\"2026-11-10T15:02:00Z\",\"volume\":100},{\"close\":13,\"high\":13,\"low\":13,\"open\":13,\"timestamp\":\"2026-11-10T15:03:00Z\",\"volume\":100},{\"close\":19,\"high\":19,\"low\":19,\"open\":19,\"timestamp\":\"2026-11-10T15:04:00Z\",\"volume\":100}],\"coverage\":[{\"available_minutes\":1,\"complete\":true,\"coverage_complete\":true,\"ended\":true,\"expected_minutes\":1,\"interval_end\":\"2026-11-10T15:01:00Z\",\"session\":\"2026-11-10\",\"timestamp\":\"2026-11-10T15:00:00Z\",\"volume_known\":false,\"volume_scope\":\"available constituent minutes only\"},{\"available_minutes\":1,\"complete\":true,\"coverage_complete\":true,\"ended\":true,\"expected_minutes\":1,\"interval_end\":\"2026-11-10T15:02:00Z\",\"session\":\"2026-11-10\",\"timestamp\":\"2026-11-10T15:01:00Z\",\"volume_known\":true,\"volume_scope\":\"available constituent minutes only\"},{\"available_minutes\":1,\"complete\":true,\"coverage_complete\":true,\"ended\":true,\"expected_minutes\":1,\"interval_end\":\"2026-11-10T15:03:00Z\",\"session\":\"2026-11-10\",\"timestamp\":\"2026-11-10T15:02:00Z\",\"volume_known\":true,\"volume_scope\":\"available constituent minutes only\"},{\"available_minutes\":1,\"complete\":true,\"coverage_complete\":true,\"ended\":true,\"expected_minutes\":1,\"interval_end\":\"2026-11-10T15:04:00Z\",\"session\":\"2026-11-10\",\"timestamp\":\"2026-11-10T15:03:00Z\",\"volume_known\":true,\"volume_scope\":\"available constituent minutes only\"},{\"available_minutes\":1,\"complete\":true,\"coverage_complete\":true,\"ended\":true,\"expected_minutes\":1,\"interval_end\":\"2026-11-10T15:05:00Z\",\"session\":\"2026-11-10\",\"timestamp\":\"2026-11-10T15:04:00Z\",\"volume_known\":true,\"volume_scope\":\"available constituent minutes only\"}],\"indicators\":[]},\"completeness\":{\"complete\":true,\"missing\":[],\"paper_order_eligible\":false},\"decision_time\":\"2026-11-10T15:05:00+00:00\",\"indicators\":{\"crossover\":\"up\",\"long\":13.0,\"long_window\":3,\"series\":[{\"long\":null,\"short\":null,\"signal\":null,\"timestamp\":\"2026-11-10T15:00:00Z\"},{\"long\":null,\"short\":11.5,\"signal\":null,\"timestamp\":\"2026-11-10T15:01:00Z\"},{\"long\":10.0,\"short\":8.5,\"signal\":null,\"timestamp\":\"2026-11-10T15:02:00Z\"},{\"long\":10.0,\"short\":10.0,\"signal\":null,\"timestamp\":\"2026-11-10T15:03:00Z\"},{\"long\":13.0,\"short\":16.0,\"signal\":\"up\",\"timestamp\":\"2026-11-10T15:04:00Z\"}],\"short\":16.0,\"short_window\":2},\"interval\":\"1m\",\"provenance\":{\"account_fill_ids\":[1],\"evidence_sha256\":\"d0b41991001ab4d9d82eaee1e21781d7f1077202dbe8657a9254b91bef1ae303\",\"market_data_kind\":\"constructed\",\"observation_count\":5,\"receipt_count\":5},\"schema_version\":1,\"snapshot_id\":\"c8f159fe-5445-4108-967a-1f7ddbc6dd3e\",\"symbol\":\"AAPL\"}",
+      "payload_sha256": "8b0ff8309104ee855a7e020a267766b81ebcba40126c69507e17802bf0ec4fb3"
+    }
+  ],
+  "paper_ledger_unchanged": true
+}

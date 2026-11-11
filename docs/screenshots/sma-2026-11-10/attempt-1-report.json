@@ -1,0 +1,5 @@
+{
+  "result": "FAIL",
+  "input": "CONSTRUCTED test_data=true; separate disposable SQLite",
+  "failure": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\napiRequestContext.get: Invalid URL\n    at /home/jlrj/Documents/arbitrade/scripts/sma_smoke.mjs:43:41 {\n  log: [],\n  name: 'TypeError',\n  code: 'ERR_INVALID_URL'\n}\n\nNode.js v26.13.0\n"
+}

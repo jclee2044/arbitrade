@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+export PYTHONPATH="$PWD/backend/.packages${PYTHONPATH:+:$PYTHONPATH}"
+exec "${ARBITRADE_PYTHON:-/usr/bin/python}" -m scripts.workstation_smoke "$@"

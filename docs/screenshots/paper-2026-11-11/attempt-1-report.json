@@ -1,0 +1,216 @@
+{
+  "result": "FAIL",
+  "input": "CONSTRUCTED test_data=true; disposable SQLite account, $1000 starting cash",
+  "phases": {
+    "buy-pending": {
+      "cash": "1000",
+      "shares": 0,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "706f769e-784f-4758-8798-643531faf40d",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:07:17.863182+00:00",
+          "after_receipt_id": 0,
+          "status": "pending",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [],
+      "total_fills": 0
+    },
+    "supply-100": {
+      "cash": "1000",
+      "shares": 0,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "706f769e-784f-4758-8798-643531faf40d",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:07:17.863182+00:00",
+          "after_receipt_id": 0,
+          "status": "pending",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [],
+      "total_fills": 0
+    },
+    "buy-filled": {
+      "cash": "600",
+      "shares": 4,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "706f769e-784f-4758-8798-643531faf40d",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:07:17.863182+00:00",
+          "after_receipt_id": 0,
+          "status": "filled",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "quantity": 4,
+          "price": "100",
+          "fees": "0",
+          "observation_id": 1,
+          "receipt_id": 1,
+          "source_time_utc": "2026-11-10T15:00:10+00:00",
+          "executed_at": "2026-11-11T14:07:17.898560+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794322810000}"
+        }
+      ],
+      "total_fills": 1
+    },
+    "retry-buy": {
+      "cash": "600",
+      "shares": 4,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "706f769e-784f-4758-8798-643531faf40d",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:07:17.863182+00:00",
+          "after_receipt_id": 0,
+          "status": "filled",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "quantity": 4,
+          "price": "100",
+          "fees": "0",
+          "observation_id": 1,
+          "receipt_id": 1,
+          "source_time_utc": "2026-11-10T15:00:10+00:00",
+          "executed_at": "2026-11-11T14:07:17.898560+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794322810000}"
+        }
+      ],
+      "total_fills": 1
+    },
+    "supply-110": {
+      "cash": "600",
+      "shares": 4,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "706f769e-784f-4758-8798-643531faf40d",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:07:17.863182+00:00",
+          "after_receipt_id": 0,
+          "status": "filled",
+          "rejection_reason": null
+        },
+        {
+          "id": 2,
+          "account_id": "live",
+          "request_id": "90a109d6-7b01-424b-9bab-477444d14e75",
+          "symbol": "AAPL",
+          "side": "sell",
+          "quantity": 1,
+          "submitted_at": "2026-11-11T14:07:18.979324+00:00",
+          "after_receipt_id": 1,
+          "status": "pending",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "quantity": 4,
+          "price": "100",
+          "fees": "0",
+          "observation_id": 1,
+          "receipt_id": 1,
+          "source_time_utc": "2026-11-10T15:00:10+00:00",
+          "executed_at": "2026-11-11T14:07:17.898560+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794322810000}"
+        }
+      ],
+      "total_fills": 1
+    },
+    "sell-filled": {
+      "cash": "710",
+      "shares": 3,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "706f769e-784f-4758-8798-643531faf40d",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:07:17.863182+00:00",
+          "after_receipt_id": 0,
+          "status": "filled",
+          "rejection_reason": null
+        },
+        {
+          "id": 2,
+          "account_id": "live",
+          "request_id": "90a109d6-7b01-424b-9bab-477444d14e75",
+          "symbol": "AAPL",
+          "side": "sell",
+          "quantity": 1,
+          "submitted_at": "2026-11-11T14:07:18.979324+00:00",
+          "after_receipt_id": 1,
+          "status": "filled",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "quantity": 4,
+          "price": "100",
+          "fees": "0",
+          "observation_id": 1,
+          "receipt_id": 1,
+          "source_time_utc": "2026-11-10T15:00:10+00:00",
+          "executed_at": "2026-11-11T14:07:17.898560+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794322810000}"
+        },
+        {
+          "id": 2,
+          "order_id": 2,
+          "quantity": 1,
+          "price": "110",
+          "fees": "0",
+          "observation_id": 2,
+          "receipt_id": 2,
+          "source_time_utc": "2026-11-10T15:00:20+00:00",
+          "executed_at": "2026-11-11T14:07:19.006833+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 110, \"test_data\": true, \"time\": 1794322820000}"
+        }
+      ],
+      "total_fills": 2
+    }
+  },
+  "initial_backend_pid": 160875,
+  "failure": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /pending/. Input:\n\n'2AAPLsell12026-11-11T14:07:18.979324+00:00filled1 @ $110.00 \u00b7 Observation 2 / receipt 2 \u00b7 2026-11-11T14:07:19.006833+00:00'\n\n    at pending (file:///home/jlrj/Documents/arbitrade/scripts/paper_smoke.mjs:30:10)\n    at async file:///home/jlrj/Documents/arbitrade/scripts/paper_smoke.mjs:60:43"
+}

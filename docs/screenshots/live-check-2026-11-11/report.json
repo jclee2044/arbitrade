@@ -1,0 +1,48 @@
+{
+  "result": "PASS",
+  "input": "ACTUAL Yahoo; existing observation DB; no test quote injection",
+  "first": {
+    "timestamp": "2026-11-11T14:45:00Z",
+    "open": 353.4,
+    "high": 353.44,
+    "low": 353.22,
+    "close": 353.355,
+    "volume": null
+  },
+  "latest": {
+    "timestamp": "2026-11-11T14:45:00Z",
+    "open": 353.4,
+    "high": 353.44,
+    "low": 353.22,
+    "close": 353.3325,
+    "volume": null
+  },
+  "visible_inspector": {
+    "Date and time": "2026-11-11 14:45 UTC",
+    "Open": "353.4",
+    "High": "353.44",
+    "Low": "353.22",
+    "Close": "353.3325",
+    "Volume": "Unknown",
+    "Interval": "Still forming",
+    "Coverage": "Complete"
+  },
+  "first_status": "Chart: Connected to FastAPI \u00b7 Feed: live \u00b7 Source age: 1 seconds",
+  "final_status": "Chart: Connected to FastAPI \u00b7 Feed: live \u00b7 Source age: 1 seconds",
+  "candle_options": 4,
+  "browser_errors": [],
+  "checks": [
+    "Fresh Live/1m page; Check connection succeeds",
+    "Today's candle OHLC matches received backend frame",
+    "Observed a later changed candle and matching visible OHLC",
+    "Yahoo live; chart connected; no uncaught page errors",
+    "Visible updated closing price exists in actual saved SQLite observations for that minute"
+  ],
+  "sqlite_matching_observations": [
+    {
+      "observation_id": 197,
+      "source_time_utc": "2026-11-11T14:45:07+00:00",
+      "price": 353.3325
+    }
+  ]
+}

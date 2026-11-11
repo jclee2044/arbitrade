@@ -1,0 +1,41 @@
+name: Offline workstation SmokeTest
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ARBITRADE_PYTHON: python
+      ARBITRADE_CHROMIUM: playwright
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26.13.0'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      # Only the ephemeral runner is provisioned. No provider secrets are used.
+      # Review these installation commands before enabling the first push run.
+      - name: Prepare Python runtime
+        run: python -m pip install fastapi==0.156.8 uvicorn==0.54.0 pydantic==2.14.1 python-dotenv==1.2.4 websockets==17.4 -r backend/requirements-calendar.txt
+      - name: Prepare existing locked browser tools
+        run: npm --prefix frontend ci
+      - name: Prepare Playwright Chromium and Linux libraries
+        working-directory: frontend
+        run: npx --no-install playwright install --with-deps chromium
+      - name: SmokeTest (fresh account on each invocation)
+        run: |
+          ./scripts/smoke-test --output /tmp/arbitrade-smoke/first
+          ./scripts/smoke-test --output /tmp/arbitrade-smoke/second
+      - name: Preserve reports and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-smoke-evidence
+          path: /tmp/arbitrade-smoke
+          if-no-files-found: warn

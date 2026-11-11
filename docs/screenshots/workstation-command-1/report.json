@@ -1,0 +1,65 @@
+{
+  "result": "PASS",
+  "market": "offline deterministic",
+  "model": "stubbed analyst/reviewer",
+  "checks": [
+    "Recorded replay: added SMA2=(13+19)/2=16; edited same saved SMA to window3=(7+13+19)/3=13 on 15:04 candle",
+    "Real chart PNG and matching symbol/candle reach stub model; known answers and provider failure visible; manual chart questions leave fills unchanged",
+    "Start in browser: clean $1000/zero shares/zero fees; approved buy4 fills at next $100 mark, $600/4; duplicate event, claim and apply add no fill",
+    "Configured sell1 fills at $110: $710/3, realized10/unrealized30; subsequent down-crossover reviewer veto stays visible and adds no fill",
+    "Approved close3 fills at $105: visible cash1025/shares0/realized25/unrealized0; SQLite audited independently by runner",
+    "Stop in browser then deliver another completed candle/mark: no new attempt, order or fill"
+  ],
+  "initial_account": "test-f16bf142-26b9-4c4a-ad44-e9c675b0ec7c",
+  "final_account": "test-f16bf142-26b9-4c4a-ad44-e9c675b0ec7c",
+  "buy_attempt": "6179bb6c-de09-4a23-a571-48ecc162c0ec",
+  "veto_attempt": "d2afa8a5-a487-4fdf-a7ba-3088731cc261",
+  "close_attempt": "155d870f-5f54-4aab-9da6-f438f0a43b00",
+  "sqlite": {
+    "account_id": "test-f16bf142-26b9-4c4a-ad44-e9c675b0ec7c",
+    "cash": "1025",
+    "shares": 0,
+    "realized": "25",
+    "unrealized": "0",
+    "fills": [
+      {
+        "id": 1,
+        "order_id": 1,
+        "quantity": 4,
+        "price": "100",
+        "fees": "0",
+        "observation_id": 10,
+        "receipt_id": 11,
+        "source_time_utc": "2026-11-10T15:09:10+00:00",
+        "executed_at": "2026-11-10T15:09:10.000000+00:00",
+        "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794323350000}"
+      },
+      {
+        "id": 2,
+        "order_id": 2,
+        "quantity": 1,
+        "price": "110",
+        "fees": "0",
+        "observation_id": 12,
+        "receipt_id": 14,
+        "source_time_utc": "2026-11-10T15:10:10+00:00",
+        "executed_at": "2026-11-10T15:10:10.000000+00:00",
+        "market_observation_json": "{\"id\": \"AAPL\", \"price\": 110, \"test_data\": true, \"time\": 1794323410000}"
+      },
+      {
+        "id": 3,
+        "order_id": 3,
+        "quantity": 3,
+        "price": "105",
+        "fees": "0",
+        "observation_id": 18,
+        "receipt_id": 20,
+        "source_time_utc": "2026-11-10T15:16:10+00:00",
+        "executed_at": "2026-11-10T15:16:10.000000+00:00",
+        "market_observation_json": "{\"id\": \"AAPL\", \"price\": 105, \"test_data\": true, \"time\": 1794323770000}"
+      }
+    ],
+    "matching_payloads": 11
+  },
+  "processes_stopped": true
+}

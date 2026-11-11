@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "input": "CONSTRUCTED test_data=true",
+  "selection": {
+    "start": "2026-11-10T14:59:59+00:00",
+    "end": "2026-11-10T15:01:02+00:00",
+    "close": "103",
+    "volume": "11 shares",
+    "total": 5,
+    "constructed": true
+  },
+  "before": [
+    4,
+    5
+  ],
+  "after": [
+    4,
+    5
+  ],
+  "checks": [
+    "Backend started with live Yahoo feed disabled",
+    "Two UI replays show identical OHLCV; close and volume match SQLite expectations",
+    "Late revision appears only at its receipt step; repeated payload does not change volume",
+    "Play replay and timeframe change work",
+    "Empty selection visibly explains that no recorded observations exist"
+  ]
+}

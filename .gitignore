@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+node_modules/
+frontend/dist/
+.env
+.env.*
+!.env.example
+*.log
+backend/.packages/
+backend/data/*.sqlite3
+backend/data/*.sqlite3-*
+
+# Local credentials and agent configuration
+.aws/
+.codex/
+.agents/
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+credentials

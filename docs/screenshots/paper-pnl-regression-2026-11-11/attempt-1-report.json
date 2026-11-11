@@ -1,0 +1,114 @@
+{
+  "result": "FAIL",
+  "input": "CONSTRUCTED test_data=true; disposable SQLite account, $1000 starting cash",
+  "phases": {
+    "buy-pending": {
+      "cash": "1000",
+      "shares": 0,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "299e0658-9d18-407e-acf5-78373c14f593",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:33:00.586584+00:00",
+          "after_receipt_id": 0,
+          "status": "pending",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [],
+      "total_fills": 0
+    },
+    "supply-100": {
+      "cash": "1000",
+      "shares": 0,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "299e0658-9d18-407e-acf5-78373c14f593",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:33:00.586584+00:00",
+          "after_receipt_id": 0,
+          "status": "pending",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [],
+      "total_fills": 0
+    },
+    "buy-filled": {
+      "cash": "600",
+      "shares": 4,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "299e0658-9d18-407e-acf5-78373c14f593",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:33:00.586584+00:00",
+          "after_receipt_id": 0,
+          "status": "filled",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "quantity": 4,
+          "price": "100",
+          "fees": "0",
+          "observation_id": 1,
+          "receipt_id": 1,
+          "source_time_utc": "2026-11-10T15:00:10+00:00",
+          "executed_at": "2026-11-11T14:33:00.620682+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794322810000}"
+        }
+      ],
+      "total_fills": 1
+    },
+    "retry-buy": {
+      "cash": "600",
+      "shares": 4,
+      "orders": [
+        {
+          "id": 1,
+          "account_id": "live",
+          "request_id": "299e0658-9d18-407e-acf5-78373c14f593",
+          "symbol": "AAPL",
+          "side": "buy",
+          "quantity": 4,
+          "submitted_at": "2026-11-11T14:33:00.586584+00:00",
+          "after_receipt_id": 0,
+          "status": "filled",
+          "rejection_reason": null
+        }
+      ],
+      "fills": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "quantity": 4,
+          "price": "100",
+          "fees": "0",
+          "observation_id": 1,
+          "receipt_id": 1,
+          "source_time_utc": "2026-11-10T15:00:10+00:00",
+          "executed_at": "2026-11-11T14:33:00.620682+00:00",
+          "market_observation_json": "{\"id\": \"AAPL\", \"price\": 100, \"test_data\": true, \"time\": 1794322810000}"
+        }
+      ],
+      "total_fills": 1
+    }
+  },
+  "initial_backend_pid": 167652,
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n2 !== 1\n\n    at file:///home/jlrj/Documents/arbitrade/scripts/paper_smoke.mjs:54:10"
+}

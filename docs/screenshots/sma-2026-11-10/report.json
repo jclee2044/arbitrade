@@ -1,0 +1,291 @@
+{
+  "result": "PASS",
+  "input": "CONSTRUCTED test_data=true; separate disposable SQLite",
+  "checks": [
+    "UI and HTTP reject zero, fractional and unordered windows; user applies 2/3",
+    "Batch Python result matches all seven hand-calculated rows including warm-up gaps",
+    "Live WebSocket with custom 2/3 windows displays the same completed-history averages and signals with Yahoo off",
+    "Every replay prefix and visible inspector matches batch; forming seventh candle has no confirmed down signal",
+    "Final repeated receipt closes seventh candle: upward at 16/13 and downward at 4/9; two marker entries",
+    "Mobile chart fits; 5m starts fresh and has no borrowed 1m crossovers"
+  ],
+  "batch": [
+    {
+      "timestamp": "2026-11-10T15:00:00Z",
+      "short": null,
+      "long": null,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:01:00Z",
+      "short": 11.5,
+      "long": null,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:02:00Z",
+      "short": 8.5,
+      "long": 10,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:03:00Z",
+      "short": 10,
+      "long": 10,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:04:00Z",
+      "short": 16,
+      "long": 13,
+      "signal": "up"
+    },
+    {
+      "timestamp": "2026-11-10T15:05:00Z",
+      "short": 13,
+      "long": 13,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:06:00Z",
+      "short": 4,
+      "long": 9,
+      "signal": "down"
+    }
+  ],
+  "completed_replay_prefixes": [
+    [
+      {
+        "timestamp": "2026-11-10T15:00:00Z",
+        "short": null,
+        "long": null,
+        "signal": null
+      }
+    ],
+    [
+      {
+        "timestamp": "2026-11-10T15:00:00Z",
+        "short": null,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:01:00Z",
+        "short": 11.5,
+        "long": null,
+        "signal": null
+      }
+    ],
+    [
+      {
+        "timestamp": "2026-11-10T15:00:00Z",
+        "short": null,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:01:00Z",
+        "short": 11.5,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:02:00Z",
+        "short": 8.5,
+        "long": 10,
+        "signal": null
+      }
+    ],
+    [
+      {
+        "timestamp": "2026-11-10T15:00:00Z",
+        "short": null,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:01:00Z",
+        "short": 11.5,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:02:00Z",
+        "short": 8.5,
+        "long": 10,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:03:00Z",
+        "short": 10,
+        "long": 10,
+        "signal": null
+      }
+    ],
+    [
+      {
+        "timestamp": "2026-11-10T15:00:00Z",
+        "short": null,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:01:00Z",
+        "short": 11.5,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:02:00Z",
+        "short": 8.5,
+        "long": 10,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:03:00Z",
+        "short": 10,
+        "long": 10,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:04:00Z",
+        "short": 16,
+        "long": 13,
+        "signal": "up"
+      }
+    ],
+    [
+      {
+        "timestamp": "2026-11-10T15:00:00Z",
+        "short": null,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:01:00Z",
+        "short": 11.5,
+        "long": null,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:02:00Z",
+        "short": 8.5,
+        "long": 10,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:03:00Z",
+        "short": 10,
+        "long": 10,
+        "signal": null
+      },
+      {
+        "timestamp": "2026-11-10T15:04:00Z",
+        "short": 16,
+        "long": 13,
+        "signal": "up"
+      },
+      {
+        "timestamp": "2026-11-10T15:05:00Z",
+        "short": 13,
+        "long": 13,
+        "signal": null
+      }
+    ]
+  ],
+  "forming": [
+    {
+      "timestamp": "2026-11-10T15:00:00Z",
+      "short": null,
+      "long": null,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:01:00Z",
+      "short": 11.5,
+      "long": null,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:02:00Z",
+      "short": 8.5,
+      "long": 10,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:03:00Z",
+      "short": 10,
+      "long": 10,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:04:00Z",
+      "short": 16,
+      "long": 13,
+      "signal": "up"
+    },
+    {
+      "timestamp": "2026-11-10T15:05:00Z",
+      "short": 13,
+      "long": 13,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:06:00Z",
+      "short": null,
+      "long": null,
+      "signal": null
+    }
+  ],
+  "final": [
+    {
+      "timestamp": "2026-11-10T15:00:00Z",
+      "short": null,
+      "long": null,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:01:00Z",
+      "short": 11.5,
+      "long": null,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:02:00Z",
+      "short": 8.5,
+      "long": 10,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:03:00Z",
+      "short": 10,
+      "long": 10,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:04:00Z",
+      "short": 16,
+      "long": 13,
+      "signal": "up"
+    },
+    {
+      "timestamp": "2026-11-10T15:05:00Z",
+      "short": 13,
+      "long": 13,
+      "signal": null
+    },
+    {
+      "timestamp": "2026-11-10T15:06:00Z",
+      "short": 4,
+      "long": 9,
+      "signal": "down"
+    }
+  ],
+  "signals": [
+    "2026-11-10 15:04 UTC \u00b7 Upward \u00b7 Short 16 \u00b7 Long 13",
+    "2026-11-10 15:06 UTC \u00b7 Downward \u00b7 Short 4 \u00b7 Long 9"
+  ],
+  "stored_observations": 7,
+  "stored_receipts": 8,
+  "stored_database_unchanged": true
+}

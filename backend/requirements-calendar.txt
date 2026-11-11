@@ -1,0 +1,4 @@
+exchange-calendars==4.13.2
+pyluach==2.3.0
+toolz==1.2.0
+korean-lunar-calendar==0.4.0

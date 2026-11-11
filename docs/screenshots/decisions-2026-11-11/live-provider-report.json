@@ -1,0 +1,1332 @@
+{
+  "snapshot": {
+    "snapshot": {
+      "schema_version": 1,
+      "symbol": "AAPL",
+      "interval": "1m",
+      "candle_timestamp": "2026-11-11T15:28:00+00:00",
+      "decision_time": "2026-11-11T15:29:00+00:00",
+      "available_time": "2026-11-11T15:29:00+00:00",
+      "candle": {
+        "timestamp": "2026-11-11T15:28:00Z",
+        "open": 353.59,
+        "high": 353.68,
+        "low": 353.4609,
+        "close": 353.62,
+        "volume": null
+      },
+      "indicators": {
+        "short_window": 2,
+        "long_window": 3,
+        "short": 353.62005,
+        "long": 353.5467,
+        "crossover": null,
+        "series": [
+          {
+            "timestamp": "2026-11-10T19:32:00Z",
+            "short": null,
+            "long": null,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:43:00Z",
+            "short": 350.79,
+            "long": null,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:44:00Z",
+            "short": 353.195,
+            "long": 351.6566666666667,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:45:00Z",
+            "short": 353.88995,
+            "long": 353.5933,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:46:00Z",
+            "short": 354.22995,
+            "long": 353.9499666666667,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:47:00Z",
+            "short": 354.02975,
+            "long": 354.1498,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T14:48:00Z",
+            "short": 353.80975,
+            "long": 353.8965,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:49:00Z",
+            "short": 353.65505,
+            "long": 353.7665333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:50:00Z",
+            "short": 353.56505,
+            "long": 353.5867,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:51:00Z",
+            "short": 353.2725,
+            "long": 353.40836666666667,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:52:00Z",
+            "short": 353.1775,
+            "long": 353.2683333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:53:00Z",
+            "short": 353.4675,
+            "long": 353.3433333333333,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T14:54:00Z",
+            "short": 353.665,
+            "long": 353.53,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:55:00Z",
+            "short": 354.025,
+            "long": 353.90833333333336,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:56:00Z",
+            "short": 354.2725,
+            "long": 354.06666666666666,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:57:00Z",
+            "short": 353.98,
+            "long": 354.11833333333334,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T14:58:00Z",
+            "short": 353.63255,
+            "long": 353.8050333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T14:59:00Z",
+            "short": 353.52505,
+            "long": 353.6200333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:00:00Z",
+            "short": 353.6475,
+            "long": 353.5833666666667,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:01:00Z",
+            "short": 353.805,
+            "long": 353.735,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:02:00Z",
+            "short": 353.8425,
+            "long": 353.795,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:03:00Z",
+            "short": 353.6725,
+            "long": 353.75166666666667,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:04:00Z",
+            "short": 353.495,
+            "long": 353.5883333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:05:00Z",
+            "short": 353.37,
+            "long": 353.43666666666667,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:06:00Z",
+            "short": 353.14505,
+            "long": 353.2367,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:07:00Z",
+            "short": 353.0862,
+            "long": 353.1641333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:08:00Z",
+            "short": 353.13615,
+            "long": 353.0808,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:09:00Z",
+            "short": 353.1175,
+            "long": 353.14576666666665,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:10:00Z",
+            "short": 353.1525,
+            "long": 353.125,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:11:00Z",
+            "short": 353.155,
+            "long": 353.15833333333336,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:12:00Z",
+            "short": 353.25,
+            "long": 353.2133333333333,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:13:00Z",
+            "short": 353.45,
+            "long": 353.3566666666667,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:14:00Z",
+            "short": 353.435,
+            "long": 353.4,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:15:00Z",
+            "short": 353.4775,
+            "long": 353.5083333333333,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:16:00Z",
+            "short": 353.6375,
+            "long": 353.525,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:17:00Z",
+            "short": 353.68005,
+            "long": 353.6717,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:18:00Z",
+            "short": 353.69665,
+            "long": 353.6711,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:19:00Z",
+            "short": 353.6566,
+            "long": 353.68443333333335,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:20:00Z",
+            "short": 353.53,
+            "long": 353.57106666666664,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:21:00Z",
+            "short": 353.475,
+            "long": 353.5366666666667,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:22:00Z",
+            "short": 353.51995,
+            "long": 353.47996666666666,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:23:00Z",
+            "short": 353.49495,
+            "long": 353.5133,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:24:00Z",
+            "short": 353.515,
+            "long": 353.50663333333335,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:25:00Z",
+            "short": 353.47565,
+            "long": 353.48376666666667,
+            "signal": "down"
+          },
+          {
+            "timestamp": "2026-11-11T15:26:00Z",
+            "short": 353.41065,
+            "long": 353.4504333333333,
+            "signal": null
+          },
+          {
+            "timestamp": "2026-11-11T15:27:00Z",
+            "short": 353.51005,
+            "long": 353.48046666666664,
+            "signal": "up"
+          },
+          {
+            "timestamp": "2026-11-11T15:28:00Z",
+            "short": 353.62005,
+            "long": 353.5467,
+            "signal": null
+          }
+        ]
+      },
+      "account": {
+        "account_id": "live",
+        "mode": "live",
+        "created_at": "2026-11-11T14:11:22.763857+00:00",
+        "cash": "1000",
+        "starting_cash": "1000",
+        "symbol": "AAPL",
+        "shares": 0,
+        "average_cost": null,
+        "order_size": 1
+      },
+      "chart": {
+        "candles": [
+          {
+            "timestamp": "2026-11-10T19:32:00Z",
+            "open": 348.58,
+            "high": 348.58,
+            "low": 348.58,
+            "close": 348.58,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:43:00Z",
+            "open": 352.93,
+            "high": 353.0322,
+            "low": 352.8964,
+            "close": 353.0,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:44:00Z",
+            "open": 353.01,
+            "high": 353.4,
+            "low": 352.88,
+            "close": 353.39,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:45:00Z",
+            "open": 353.4,
+            "high": 354.3899,
+            "low": 353.22,
+            "close": 354.3899,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:46:00Z",
+            "open": 354.225,
+            "high": 354.4,
+            "low": 353.95,
+            "close": 354.07,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:47:00Z",
+            "open": 354.0495,
+            "high": 354.05,
+            "low": 353.6,
+            "close": 353.9895,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:48:00Z",
+            "open": 353.99,
+            "high": 353.995,
+            "low": 353.245,
+            "close": 353.63,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:49:00Z",
+            "open": 353.6499,
+            "high": 353.84,
+            "low": 353.35,
+            "close": 353.6801,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:50:00Z",
+            "open": 353.68,
+            "high": 353.7187,
+            "low": 353.3,
+            "close": 353.45,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:51:00Z",
+            "open": 353.45,
+            "high": 353.5,
+            "low": 352.97,
+            "close": 353.095,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:52:00Z",
+            "open": 353.13,
+            "high": 353.435,
+            "low": 352.9201,
+            "close": 353.26,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:53:00Z",
+            "open": 353.245,
+            "high": 353.7999,
+            "low": 353.23,
+            "close": 353.675,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:54:00Z",
+            "open": 353.675,
+            "high": 353.74,
+            "low": 353.29,
+            "close": 353.655,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:55:00Z",
+            "open": 353.655,
+            "high": 354.395,
+            "low": 353.61,
+            "close": 354.395,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:56:00Z",
+            "open": 354.41,
+            "high": 354.41,
+            "low": 354.06,
+            "close": 354.15,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:57:00Z",
+            "open": 354.11,
+            "high": 354.135,
+            "low": 353.8,
+            "close": 353.81,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:58:00Z",
+            "open": 353.701,
+            "high": 353.715,
+            "low": 353.2601,
+            "close": 353.4551,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T14:59:00Z",
+            "open": 353.455,
+            "high": 353.6,
+            "low": 353.24,
+            "close": 353.595,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:00:00Z",
+            "open": 353.57,
+            "high": 353.835,
+            "low": 353.54,
+            "close": 353.7,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:01:00Z",
+            "open": 353.74,
+            "high": 354.005,
+            "low": 353.6662,
+            "close": 353.91,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:02:00Z",
+            "open": 353.92,
+            "high": 353.93,
+            "low": 353.48,
+            "close": 353.775,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:03:00Z",
+            "open": 353.78,
+            "high": 353.78,
+            "low": 353.43,
+            "close": 353.57,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:04:00Z",
+            "open": 353.58,
+            "high": 353.84,
+            "low": 353.42,
+            "close": 353.42,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:05:00Z",
+            "open": 353.405,
+            "high": 353.535,
+            "low": 353.2301,
+            "close": 353.32,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:06:00Z",
+            "open": 353.3,
+            "high": 353.3,
+            "low": 352.83,
+            "close": 352.9701,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:07:00Z",
+            "open": 352.96,
+            "high": 353.24,
+            "low": 352.96,
+            "close": 353.2023,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:08:00Z",
+            "open": 353.1948,
+            "high": 353.23,
+            "low": 353.0,
+            "close": 353.07,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:09:00Z",
+            "open": 353.16,
+            "high": 353.53,
+            "low": 352.9,
+            "close": 353.165,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:10:00Z",
+            "open": 353.165,
+            "high": 353.2675,
+            "low": 353.1001,
+            "close": 353.14,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:11:00Z",
+            "open": 353.14,
+            "high": 353.17,
+            "low": 352.97,
+            "close": 353.17,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:12:00Z",
+            "open": 353.17,
+            "high": 353.33,
+            "low": 353.1,
+            "close": 353.33,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:13:00Z",
+            "open": 353.39,
+            "high": 353.7,
+            "low": 353.39,
+            "close": 353.57,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:14:00Z",
+            "open": 353.5,
+            "high": 353.5,
+            "low": 353.08,
+            "close": 353.3,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:15:00Z",
+            "open": 353.32,
+            "high": 353.73,
+            "low": 353.3,
+            "close": 353.655,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:16:00Z",
+            "open": 353.68,
+            "high": 353.85,
+            "low": 353.54,
+            "close": 353.62,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:17:00Z",
+            "open": 353.65,
+            "high": 353.83,
+            "low": 353.6019,
+            "close": 353.7401,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:18:00Z",
+            "open": 353.7701,
+            "high": 353.85,
+            "low": 353.62,
+            "close": 353.6532,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:19:00Z",
+            "open": 353.69,
+            "high": 353.7,
+            "low": 353.47,
+            "close": 353.66,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:20:00Z",
+            "open": 353.68,
+            "high": 353.68,
+            "low": 353.35,
+            "close": 353.4,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:21:00Z",
+            "open": 353.47,
+            "high": 353.7,
+            "low": 353.455,
+            "close": 353.55,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:22:00Z",
+            "open": 353.53,
+            "high": 353.67,
+            "low": 353.4201,
+            "close": 353.4899,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:23:00Z",
+            "open": 353.47,
+            "high": 353.52,
+            "low": 353.31,
+            "close": 353.5,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:24:00Z",
+            "open": 353.515,
+            "high": 353.63,
+            "low": 353.455,
+            "close": 353.53,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:25:00Z",
+            "open": 353.5499,
+            "high": 353.55,
+            "low": 353.32,
+            "close": 353.4213,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:26:00Z",
+            "open": 353.43,
+            "high": 353.5,
+            "low": 353.33,
+            "close": 353.4,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:27:00Z",
+            "open": 353.4,
+            "high": 353.67,
+            "low": 353.38,
+            "close": 353.6201,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-11T15:28:00Z",
+            "open": 353.59,
+            "high": 353.68,
+            "low": 353.4609,
+            "close": 353.62,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-10T19:32:00Z",
+            "session": "2026-11-10",
+            "interval_end": "2026-11-10T19:33:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:43:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:44:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:44:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:45:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:45:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:46:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:46:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:47:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:47:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:48:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:48:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:49:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:49:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:50:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:50:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:51:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:51:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:52:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:52:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:53:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:53:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:54:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:54:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:55:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:55:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:56:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:56:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:57:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:57:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:58:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:58:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T14:59:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T14:59:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:00:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:00:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:01:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:01:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:02:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:02:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:03:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:03:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:04:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:04:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:05:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:05:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:06:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:06:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:07:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:07:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:08:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:08:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:09:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:09:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:10:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:10:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:11:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:11:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:12:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:12:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:13:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:13:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:14:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:14:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:15:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:15:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:16:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:16:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:17:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:17:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:18:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:18:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:19:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:19:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:20:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:20:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:21:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:21:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:22:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:22:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:23:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:23:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:24:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:24:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:25:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:25:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:26:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:26:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:27:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:27:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:28:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          },
+          {
+            "timestamp": "2026-11-11T15:28:00Z",
+            "session": "2026-11-11",
+            "interval_end": "2026-11-11T15:29:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "available constituent minutes only"
+          }
+        ]
+      },
+      "provenance": {
+        "market_data_kind": "recorded",
+        "observation_count": 3206,
+        "receipt_count": 3210,
+        "evidence_sha256": "11ba72687e07dea7ee89303c58e5ccb2c193207ae0435aed9727342cb18ca5b3",
+        "account_fill_ids": []
+      },
+      "completeness": {
+        "complete": true,
+        "missing": [],
+        "paper_order_eligible": true
+      },
+      "snapshot_id": "1c96a9a4-3b41-4051-822b-9ec79ef2c103"
+    },
+    "sha256": "fee3434da027aa5710e0e3f38cf32383d8bf38a2289eaf26e6203ce149f9eddc"
+  },
+  "backend_decision_requests": 1,
+  "live_provider_check": "completed",
+  "decision": {
+    "id": "bf1867f8-72d9-4b65-937d-ea94e39bfa12",
+    "snapshot_id": "1c96a9a4-3b41-4051-822b-9ec79ef2c103",
+    "requested_snapshot_id": "1c96a9a4-3b41-4051-822b-9ec79ef2c103",
+    "created_at": "2026-11-11T15:29:04.305229+00:00",
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "model_call_kind": "live",
+    "market_data_kind": "recorded",
+    "status": "valid",
+    "validation_status": "valid",
+    "proposal": "wait",
+    "quantity": null,
+    "explanation": "Model proposal: wait. Backend facts at 2026-11-11T15:29:00+00:00: AAPL close 353.62; SMA 2=353.62005, SMA 3=353.5467; crossover none; simulated cash 1000, shares 0, configured order size 1. Rule check: Valid under frozen long-only account rules; no order executed.",
+    "error_code": null,
+    "paper_order_eligible": false,
+    "answer": {
+      "choice": "wait",
+      "confidence": 0.37,
+      "model": "gpt-6-luna",
+      "name": "paper_action",
+      "probabilities": [
+        {
+          "probability": 0.49,
+          "value": "buy"
+        },
+        {
+          "probability": 0.0,
+          "value": "sell"
+        },
+        {
+          "probability": 0.0,
+          "value": "hold"
+        },
+        {
+          "probability": 0.5,
+          "value": "wait"
+        },
+        {
+          "probability": 0.01,
+          "value": "close"
+        }
+      ],
+      "type": "choice"
+    }
+  },
+  "persisted_response_matches": true,
+  "paper_ledger_unchanged": true
+}

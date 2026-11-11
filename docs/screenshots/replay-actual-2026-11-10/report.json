@@ -1,0 +1,27 @@
+{
+  "result": "PASS",
+  "input": "ACTUAL recorded Yahoo",
+  "selection": {
+    "start": "2026-11-10T19:32:56.049919+00:00",
+    "end": "2026-11-10T19:32:56.049919+00:00",
+    "close": "348.58",
+    "volume": "Unknown",
+    "total": 1,
+    "source_time": "2026-11-10T19:32:55+00:00",
+    "constructed": false
+  },
+  "before": [
+    95,
+    99
+  ],
+  "after": [
+    95,
+    99
+  ],
+  "checks": [
+    "Backend started with live Yahoo feed disabled",
+    "Two UI replays show identical OHLCV; close and volume match SQLite expectations",
+    "Play replay and timeframe change work",
+    "Empty selection visibly explains that no recorded observations exist"
+  ]
+}
