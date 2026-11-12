@@ -24,6 +24,20 @@ def sma_values(completed, settings):
     return values
 
 
+def ema_values(completed, settings):
+    size = settings['window']
+    values = [None] * len(completed)
+    if len(completed) < size:
+        return values
+    previous = sum(candle['close'] for candle in completed[:size]) / size
+    values[size - 1] = previous
+    alpha = 2 / (size + 1)
+    for index in range(size, len(completed)):
+        previous += alpha * (completed[index]['close'] - previous)
+        values[index] = previous
+    return values
+
+
 def range_values(completed, settings):
     """Highest high minus lowest low in the last N completed candles."""
     size = settings['window']
@@ -53,6 +67,8 @@ INDICATOR_TYPES = {
                          'price', 'price', WINDOW, sma_values),
     'price_range': IndicatorType('Rolling price range', 'Highest high minus lowest low of the last N completed candles.',
                                  'price difference', 'separate', WINDOW, range_values),
+    'ema': IndicatorType('Exponential moving average', 'Smoothed completed closes, seeded with the first full window mean.',
+                         'price', 'price', WINDOW, ema_values),
 }
 
 

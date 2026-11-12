@@ -1,0 +1,152 @@
+{
+  "date": "2026-11-11",
+  "browser": "Chromium",
+  "recorded_yahoo_dashboard": {
+    "source": "Yahoo Finance",
+    "status": "Stale",
+    "candles": 378,
+    "icons": {
+      "diamond": true,
+      "icons": [
+        192,
+        512
+      ],
+      "standalone": "standalone",
+      "apple": 180
+    },
+    "errors": [],
+    "checks": [
+      "Actual local dashboard renders recorded bars",
+      "OHLCV hover card and pinned selection",
+      "Hover, keyboard and touch rail",
+      "Paper and AI reachable",
+      "Mobile layout and panel navigation"
+    ]
+  },
+  "constructed_market_ui": {
+    "result": "PASS",
+    "input": "CONSTRUCTED replay test_data=true",
+    "checks": [
+      "Clicked Check connection; visible backend-connected result; default 1m",
+      "Labeled constructed input; exact OHLCV and still-forming label",
+      "Same-minute close and volume replaced without a duplicate candle",
+      "Next minute adds a candle; preceding minute visibly ended",
+      "All timeframe selectors load matching backend history; daily included",
+      "Source age advances; disconnected upstream displayed while chart WebSocket remains open",
+      "Desktop/mobile chart renders; screenshots saved; no uncaught JavaScript errors"
+    ]
+  },
+  "offline_workstation": {
+    "result": "PASS",
+    "market": "offline deterministic",
+    "model": "stubbed analyst/reviewer",
+    "checks": [
+      "Recorded replay: added SMA2=(13+19)/2=16; edited same saved SMA to window3=(7+13+19)/3=13 on 15:04 candle",
+      "Analysis finishes while viewing Chart; pinned replay selection and progress persist. Saved PNG and decision survive a round trip to Voice. Stub answers and provider failure leave fills unchanged",
+      "Start in browser: clean $1000/zero shares/zero fees; approved buy4 fills at next $100 mark, $600/4; duplicate event, claim and apply add no fill",
+      "Configured sell1 fills at $110: $710/3, realized10/unrealized30; subsequent down-crossover reviewer veto stays visible and adds no fill",
+      "Approved close3 fills at $105: visible cash1025/shares0/realized25/unrealized0; SQLite audited independently by runner",
+      "Stop in browser then deliver another completed candle/mark: no new attempt, order or fill"
+    ],
+    "processes_stopped": true
+  },
+  "simulated_account_audit": {
+    "cash": "1025",
+    "shares": 0,
+    "realized": "25",
+    "unrealized": "0",
+    "matching_payloads": 11
+  },
+  "fill_count": 3,
+  "feature_smoke_tests": {
+    "replay": {
+      "result": "PASS",
+      "checks": [
+        "Backend started with live Yahoo feed disabled",
+        "Two UI replays show identical OHLCV; close and volume match SQLite expectations",
+        "Late revision appears only at its receipt step; repeated payload does not change volume",
+        "Play replay and timeframe change work",
+        "Empty selection visibly explains that no recorded observations exist"
+      ]
+    },
+    "sma": {
+      "result": "PASS",
+      "checks": [
+        "UI and HTTP reject zero, fractional and unordered windows; user applies 2/3",
+        "Batch Python result matches all seven hand-calculated rows including warm-up gaps",
+        "Live WebSocket with custom 2/3 windows displays the same completed-history averages and signals with Yahoo off",
+        "Every replay prefix and visible inspector matches batch; forming seventh candle has no confirmed down signal",
+        "Final repeated receipt closes seventh candle: upward at 16/13 and downward at 4/9; two marker entries",
+        "Mobile chart fits; 5m starts fresh and has no borrowed 1m crossovers"
+      ]
+    },
+    "indicator": {
+      "result": "PASS",
+      "checks": [
+        "User creates Range 2 and Range 3 from API-supplied catalog; third-candle values are 5 and 6",
+        "Refresh restores both names, settings and values",
+        "Zero window explains error in UI and HTTP; valid indicators/settings remain unchanged",
+        "SMA created through same catalog/settings interface; third-candle SMA 2 equals 14",
+        "All named indicators use replay-visible completed candles; forming gaps and final batch/replay values agree",
+        "Settings scoped to symbol/timeframe, return on reopening 1m; desktop/mobile render without page errors"
+      ]
+    },
+    "paper": {
+      "result": "PASS",
+      "checks": [
+        "Wait/hold create no order; buy 4 waits, fills at next observed $100, shows $600/4; same request retry adds no order/fill",
+        "Sell 1 at $110 gives $710/3; close remaining 3 at $105 gives $1,025/0",
+        "Empty-account sale rejected and audited; real backend process restarted; dashboard/SQLite retain exactly 3 fills and $1,025/0",
+        "Replay uses separate $1,000 account: no fill from prices already on disk; next revealed quote triggers cash recheck rejection; live account unchanged",
+        "Desktop/mobile paper panel renders without uncaught browser errors"
+      ]
+    },
+    "pnl": {
+      "result": "PASS",
+      "checks": [
+        "All five browser rows equal direct SQLite and reference, including $40, -$5, and final $25; partial sale preserves $100 average",
+        "Forming candle produces no mark; completing 1m candles supplies $110/$95 with source/time; repeated reads/request preserve five events",
+        "Actual backend restart and page reload preserve exact row IDs/amounts/sources, three fills, $1,025/0; mobile table scrolls, no page errors"
+      ]
+    },
+    "decision": {
+      "result": "PASS",
+      "checks": [
+        "Freeze and render saved 15:04 candle at close-time before provider call; close19, SMA16/13/up, cash948/shares4",
+        "Named hold is valid decision, persisted by ID; UI separates controlled model from constructed data and backend facts; no paper execution",
+        "Controlled timeout, malformed named answer and missing input have separate durable statuses and no proposal",
+        "Saved snapshot remains identical after all calls; desktop/mobile render with no uncaught page errors"
+      ]
+    },
+    "chart": {
+      "result": "PASS",
+      "checks": [
+        "Freeze selected cutoff and visible range; chart-only native PNG renders before submission with three exact questions",
+        "Preview bytes equal retrievable saved PNG; displayed named answers equal durable API result; capture stays frozen",
+        "Conflict, unreadable image, missing named answer and provider timeout are distinct saved ineligible results"
+      ]
+    },
+    "review": {
+      "result": "PASS",
+      "checks": [
+        "Agreed eligible hold, reviewer rejection, jointly accepted unaffordable buy, review timeout and invalid reply displayed and saved under original decision IDs",
+        "Same frozen snapshot/hash, inspectable distinct role instructions/answers and final checks; no page errors on desktop/mobile"
+      ]
+    },
+    "automation": {
+      "result": "PASS",
+      "checks": [
+        "Start uses $1000 disposable test account; up crossover gets fresh chart/analyst/review, duplicate approved application yields exactly one 4x20 fill, cash920/shares4 and linked P&L",
+        "Reviewer veto is visible under decision ID; no extra order/fill/cash/position change",
+        "Actual backend restart keeps decision/fill/P&L/cash; automation stopped, same candle deduplicates under a new Start"
+      ]
+    },
+    "voice": {
+      "result": "PASS",
+      "checks": [
+        "Mocked provider, real local WebRTC media pair: two questions/captions in one session, incoming/outgoing audio tracks, selected SQLite context, End releases native microphone tracks/peer/audio",
+        "Denied microphone makes no provider call; failed provider, RTC disconnect and End during pending permission release all tracks and peers"
+      ]
+    }
+  }
+}

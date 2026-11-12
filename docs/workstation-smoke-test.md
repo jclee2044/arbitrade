@@ -32,15 +32,15 @@ next-quote simulator, P&L and SQLite writes are real. Backend outbound
 `socket.create_connection` is blocked; browser page requests are restricted to
 loopback. No provider credentials are passed or required.
 
-1. Open the recorded session in replay, add named SMA2, and inspect 15:04 UTC:
+1. Open the recorded session in Replay. In Indicators, expand **Rolling price range & custom indicators**, add named SMA2 and inspect the 15:04 UTC candle.
    `(13+19)/2 = 16`. Edit that same indicator to window3, save and verify
    `(7+13+19)/3 = 13` visibly and in SQLite.
-2. Ask about chart, then analyze the native PNG. At the stub provider boundary,
+2. Open **Review decision proposal** beside the chart, ask about the chart, then analyze the native PNG. Open the resulting decision in **Voice chat** and return to the same captured chart. At the stub provider boundary,
    decode pixels and assert snapshot ID/symbol/candle/cutoff agree. Return
    wait/up/sufficient, check each visible answer and unchanged selected replay
    account fills. Repeat with provider_error and verify visible status/no fill.
    Saved PNG bytes must equal the provider-boundary bytes in the independent audit.
-3. Return to live mode and Start paper automation in the browser. New constructed
+3. Return to live mode and use Paper trading in the header to start Automation. Choose **Back to chart** during execution and stop the run from the header. New constructed
    data routes to a fresh test account with $1,000, zero shares and zero fees.
    Configure size4 before buying, size1 before selling through the fixture-only
    control endpoint (there is no production per-side size UI). Deliver marks
@@ -64,9 +64,7 @@ cannot run application cleanup. Reports include whether launched processes exite
 
 `.github/workflows/smoke-test.yml` runs this same command twice on pushes and
 manual dispatch, then uploads evidence even on failure. Each invocation creates
-a clean account/database. No Yahoo/OpenAI secrets are configured. The workflow is
-prepared but **has not run on GitHub**: this directory is not a Git repository,
-so there is no remote/push/run to inspect and no Git setup was attempted.
+a clean account/database. No Yahoo/OpenAI secrets are configured. Local results are recorded in [verification](verification.md). Hosted runs correspond to the versions pushed to GitHub.
 
 Bootstrap steps are reviewable in the workflow. They have **not been executed**
 in this session. Per AGENTS.md, student review/approval of these installation

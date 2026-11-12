@@ -43,9 +43,33 @@ class TimeframeTests(unittest.TestCase):
 
     def test_default_minute_and_all_timeframes(self):
         self.assertEqual(history_response(as_of=self.now)['candles'], load_history())
-        for timeframe in ('1m', '5m', '15m', '1h', '1d'):
+        for timeframe in ('1m', '5m', '15m', '30m', '1h', '1d', '1w', '1mo'):
             result = self.derive(timeframe=timeframe)
             self.assertEqual(set(result['candles'][0]), {'timestamp', 'open', 'high', 'low', 'close', 'volume'})
+
+    def test_week_and_month_use_full_calendar_period_and_actual_final_close(self):
+        from backend.decisions import candle_end
+        data = [version(minute('2026-11-25T16:00:00Z', 101)),
+                version(minute('2026-11-27T17:59:00Z', 103, None)),
+                version(minute('2026-11-30T15:00:00Z', 110)),
+                version(minute('2026-12-01T15:00:00Z', 120))]
+        partial = self.derive(data, '1w', '2026-11-25T17:00:00Z')
+        bar, status = partial['candles'][0], partial['coverage'][0]
+        self.assertEqual(bar['timestamp'], '2026-11-23T14:30:00Z')
+        self.assertEqual((status['interval_end'], status['expected_minutes'], status['ended']),
+                         ('2026-11-27T18:00:00Z', 3 * 390 + 210, False))
+        done = self.derive(data, '1w', '2026-11-27T18:00:00Z')
+        self.assertIsNone(done['candles'][0]['volume'])
+        self.assertTrue(done['coverage'][0]['ended'])
+        monthly = self.derive(data, '1mo', '2026-12-01T16:00:00Z')
+        self.assertEqual([r['timestamp'] for r in monthly['candles']], ['2026-11-02T14:30:00Z', '2026-12-01T14:30:00Z'])
+        self.assertEqual(monthly['coverage'][0]['interval_end'], '2026-11-30T21:00:00Z')
+        self.assertEqual([r['ended'] for r in monthly['coverage']], [True, False])
+        for frame, result in [('1w', done), ('1mo', monthly)]:
+            for r in result['coverage']:
+                self.assertEqual(candle_end('AAPL', frame, r['timestamp']), utc_datetime(r['interval_end']))
+        with self.assertRaises(ValueError):
+            candle_end('AAPL', '1w', '2026-11-25T14:30:00Z')
 
     def test_second_five_minute_group_stays_in_same_day(self):
         data = self.sample + [version(minute('2026-11-09T14:35:00Z'))]

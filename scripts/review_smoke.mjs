@@ -9,8 +9,11 @@ const button=name=>page.getByRole('button',{name,exact:true})
 async function until(fn){for(let i=0;i<150;i++){if(await fn())return;await new Promise(done=>setTimeout(done,100))}throw Error('Timed out waiting for review')}
 try{
  await page.goto(base,{waitUntil:'networkidle'})
+ await page.getByRole('tab', { name: 'Signals', exact: true }).click()
+ await page.getByText('Crossover windows', {exact:true}).click()
  await page.locator('#sma-short').fill('2');await page.locator('#sma-long').fill('3');await button('Apply SMA windows').click()
  await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:04:00Z')/1000))
+ await page.getByRole('button', { name: 'Review decision proposal', exact: true }).click()
  await button('Freeze selected candle').click();await page.locator('#snapshot-id').waitFor()
  const sid=(await page.locator('#snapshot-id').textContent()).replace('Snapshot ID: ','')
  const saved=await(await page.request.get(base+'/api/decision-snapshots/'+sid)).json()

@@ -2728,6 +2728,26 @@ http://127.0.0.1:5173 and returned queued. Browser automation inventory empty
 and iab unavailable, so visible rendering could not be independently verified.
 No application edits or full SmokeTest this turn; existing command ./scripts/smoke-test.
 
+### 2026-11-11 — Logo concepts for review
+
+Git status returned “not a git repository.” The system Python 3.14.8 lacked fontTools and imported cairo 1.29.2 successfully. Used installed Cairo to outline the lettering. The render command `rsvg-convert -z 2 docs/brand/concepts.svg -o docs/brand/concepts.png` succeeded. Expected three complete lowercase wordmarks and three matching icons. Inspected the rendered sheet at 690 × 510 and observed all three pairs without clipping. Student selection and launcher-size review of the selected icon are pending. Application SmokeTest was not run for this artwork.
+
+### Ledger revision for review
+Git status again reported no repository. Reused the Ledger outlines, adjusted letter spacing and redrew the t. Ran `rsvg-convert -z 2 docs/brand/ledger-tight.svg -o docs/brand/ledger-tight.png` successfully. Expected a complete wordmark and three labeled icon options. Visually confirmed all four at 720 × 420. Icon selection and launcher-size testing remain pending. Application SmokeTest was not run for this artwork.
+
+### Three Ledger market variants
+Git status reported no repository. Ran `rsvg-convert -z 2 docs/brand/ledger-market.svg -o docs/brand/ledger-market.png` successfully. Expected three complete logos and corresponding icons. Inspected the rendered sheet at 720 × 510 and confirmed the blue diamond dot, price-line e and candlestick i were visible. Student selection and launcher-size testing remain pending.
+
+### Faceted diamond and upper-wick revision
+Git status reported no repository. Ran `rsvg-convert -z 2 docs/brand/ledger-facets-wick.svg -o docs/brand/ledger-facets-wick.png` successfully. Expected two wordmarks and matching icons. Inspected the 720 × 340 preview and confirmed visible blue facets, a white highlight, and a baseline-aligned candle with one fine upper wick. Student selection and launcher-size review remain pending.
+
+### Jade candlestick comparison
+Git status reported no repository. Ran `rsvg-convert -z 2 docs/brand/ledger-jade.svg -o docs/brand/ledger-jade.png` and inspected the 720 × 340 preview. Both variants rendered with thin upper wicks. Lightened the icon foreground for dark backgrounds and rendered again. Selection and actual launcher-size review remain pending.
+
+### Diamond cuts and softened b
+Git status reported no repository. Ran `rsvg-convert -z 2 docs/brand/ledger-diamond-cuts.svg -o docs/brand/ledger-diamond-cuts.png` successfully. Inspected the 840 × 510 preview. Confirmed three different gem silhouettes, enlarged details, matching icons and rounded lower b stems. Selection and launcher-size testing remain pending.
+
+
 ## November 11, 2026 — commit preparation blocked by missing repository
 
 Request saved in prompts/29-commit-except-logo.md. Expected `git status --short`
@@ -2799,6 +2819,12 @@ host staging succeeded. No secrets or logo artifacts were staged. Review covers
 296 initial files:37 backend,14 frontend,37 scripts,174 docs/evidence,28 prompts,
 2 handoffs,1 workflow and3 root files. No remote added and no commit/push made.
 
+### Brilliant-profile sparkle studies
+Rendered the three variants with `rsvg-convert -z 2 docs/brand/ledger-brilliant-sparkle.svg -o docs/brand/ledger-brilliant-sparkle.png`. Expected three detailed blue gems sharing the chosen silhouette. Inspected the 840 × 510 preview and confirmed each wordmark, enlargement and matching icon rendered. Selection and launcher-size checks remain pending.
+
+### Crown Flash revision
+Rendered with `rsvg-convert -z 2 docs/brand/crown-flash-right.svg -o docs/brand/crown-flash-right.png`. Inspected the preview at 840 × 170 and confirmed the upper-right glint in the wordmark, detail and icon, and a bracketed baseline serif on the b. Student review is pending.
+
 
 ## November 11, 2026 — publish reviewed initial project
 
@@ -2814,3 +2840,144 @@ SmokeTest: ./scripts/smoke-test. The reviewed workflow is included; first hosted
 run remains unverified until GitHub reports results. Plan: create initial commit,
 use main for the empty destination, configure origin, push without force, and
 compare local HEAD to the remote main ref. Prompt:33-push-to-github.md.
+
+
+### Observed publication result
+
+`git commit -m "Initial Arbitrade trading workstation"` succeeded, creating
+root commit a0588b0f95a52af986bba1b9018c4399f63013bf (297 files). Renamed local
+branch to main and added origin=https://github.com/jclee2044/arbitrade.git.
+`git push -u origin main` succeeded (new main branch, upstream configured).
+`git ls-remote origin refs/heads/main` exactly matches local `git rev-parse HEAD`:
+a0588b0f95a52af986bba1b9018c4399f63013bf. Final staged audit before commit:
+297 files, zero credential findings; diff whitespace and logo exclusion checks
+passed. `git check-ignore` reconfirmed backend/.env and both local databases.
+No force push. Hosted SmokeTest outcome not checked; no new test pass claimed.
+Logo files/prompts/shared-document sections remain local. These post-push
+verification notes are local session records, not part of the published commit.
+
+### Approved logo exports and app header
+Extracted the three SVGs into frontend/public/brand and checked each source for the unwanted concept caption. Rendered all three with rsvg-convert; observed the wordmark, isolated diamond and emerald i icon. `npm --prefix frontend run build` passed. `node /tmp/arbitrade-check-header.mjs` opened the production build in Chromium, decoded the image in the accessible Arbitrade heading and verified placement: (80,28) on a 1280px viewport and (10,16) on a 390px viewport. Expected top-left alignment and a 196px logo; both passed. The first sandboxed SmokeTest failed before startup because sockets were restricted. With local sockets enabled, `./scripts/smoke-test --output /tmp/arbitrade-brand-smoke-retry` passed all six browser scenarios and the SQLite audit, and stopped its services.
+
+### Browser and installed app icons
+Corrected the source i icon viewBox to enclose the approved artwork before exporting 180, 192 and 512 pixel PNGs with rsvg-convert. Expected a diamond favicon and an installable standalone manifest with i icons. Production build passed with `npm --prefix frontend run build`. Ran `node /tmp/arbitrade-pwa-check.mjs` against that build. The private browser context reported in-incognito; a disposable regular Chromium profile reported zero installability errors, parsed the manifest, and decoded visible pixels for all four icon resources. Device installation was not exercised. `./scripts/smoke-test --output /tmp/arbitrade-icons-smoke` passed and cleaned up its services.
+
+### Interface design directions
+Rendered three static SVG dashboard concepts using rsvg-convert at 1.5× and inspected the resulting PNGs. Confirmed the approved logo, chart, navigation and paper account elements render in each, and the third uses ice blue for the moving average and interval control. Numbers are illustrative. Mockups await selection. The running UI was not modified.
+
+### Chart-first layout review
+Read the supplied assignment and platform vision. Rendered three static chart/summary mockups with rsvg-convert via the system Python. Inspected the comparison preview for rail width, candle and volume alignment, hover detail, adjacent summary, and source/status/age. Refined the summary headline to describe change since the open. All data are illustrative; student layout selection is pending.
+
+### Editorial cream chart studies
+Rendered three fixed-layout designs with rsvg-convert at 1.5×. Compared all three PNGs visually and confirmed the cream page, emerald rail, candle and volume chart, and adjacent summary are present. Chart surfaces are ivory, pale ice blue and pale celadon. Artwork only; student selection pending.
+
+### Ivory layout with parchment summary
+Rendered 10-ivory-parchment-summary.svg using rsvg-convert at 1.5× and visually inspected the PNG. Confirmed the parchment summary at right and the smaller 26px company heading beside the ticker.
+
+### Sidebar feature panel concepts
+Rendered the Studies, Paper, and AI panel SVGs to PNG. Inspected the AI preview and confirmed the sparkle button, saved decision selector and voice control alongside the chart. Static design only.
+
+### Expanding rail and feature preservation
+Inspected the six current Vue components and mapped existing user operations and navigation-sensitive state to docs/brand/interface/feature-checklist.md. Rendered the two-state SVG with rsvg-convert and visually confirmed uniform ivory icons, no captions at rest, and right-side labels for all four expanded icons. This is a design review; runtime acceptance is pending implementation.
+
+### Diamond AI rail and Part 4.1 readiness review
+Rendered and inspected the 13-diamond-ai concept. Compared the provided assignment with the existing live browser/SQLite report, documented constructed disconnect and replay checks, and repository submission files. The real live example had unknown volume. No submission report.md or accessible demonstration video link was identified in the reviewed repo materials. This was a review of recorded evidence, not a new live run.
+
+The clarified AI icon uses the exact faceted light-blue brand diamond artwork. Rendered 14-brand-diamond-ai.svg at 2× and visually confirmed both rail states.
+
+## Trading desk redesign · November 11, 2026
+
+The student requested the chart-first layout, Indicators in the sidebar, Paper trading in the upper right, and continued access to every existing operation. The supplied assignment allows the student to choose the interface. Its Part 4.1 source, age, and upstream status requirements determined which feed details appear beneath the plot. FastAPI health, transport and exact timestamps are available through Feed details. [Prompt 43](../prompts/43-redesign-workstation.md) · [Assignment text](assignment-4.md) · [Feature inventory](brand/interface/feature-checklist.md).
+
+The desktop and touch previews show the running Vue app with 378 recorded Yahoo AAPL candles. The browser reported a stale feed during inspection. The latest recorded bar had unknown share volume, so its histogram has a gap. Hover showed OHLC and volume availability. Clicking pinned a candle, and Follow latest restored the newest selection. The earlier in-session evidence records an actual Yahoo price change reaching the chart and SQLite. [Desktop](screenshots/workstation-redesign/desktop.png) · [Touch layout](screenshots/workstation-redesign/mobile.png) · [Earlier in-session report](screenshots/live-check-2026-11-11/report.json).
+
+| Check | Expected and observed |
+| --- | --- |
+| `npm --prefix frontend run build` | Vite compiled all 28 modules and produced the production HTML, CSS and JavaScript. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest discover -s backend -p 'test_*.py' -q` | All 99 backend tests passed in 5.772 seconds with local socket access. Pandas emitted its existing timezone-array deprecation warning. |
+| `ARBITRADE_BACKEND_PORT=18001 ARBITRADE_FRONTEND_PORT=15174 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-market-acceptance` | Chromium matched the expanded candle inspector to stored OHLCV, exercised all five timeframes, replaced a same-minute update and showed a new interval. The visible feed status changed to disconnected while the chart WebSocket stayed connected. The test used labeled constructed prices and known volume, then stopped its services. |
+| `./scripts/smoke-test` | The browser saved and edited an SMA, captured a native chart, exercised the stubbed analyst/reviewer, ran the paper bot while viewing Chart, and stopped it from the header. The SQLite audit found eleven matching chart-image payloads and exactly three simulated fills. Final cash was $1,025 with zero shares, $25 realized, and $0 unrealized. The replay selection, recorded decision and frozen capture persisted across navigation. Services stopped. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.<name>_smoke --output /tmp/arbitrade-redesign-final-features/<name>` | All ten passed individually. Use the names `indicator`, `sma`, `replay`, `paper`, `pnl`, `decision`, `chart`, `review`, `automation`, and `voice`. Add `--constructed` for the recorded replay fixture. Coverage includes saved windows, corrected receipts, restarts, duplicate protection, model failure, reviewer veto, WebRTC tracks, microphone denial and disconnect. |
+| Local Chromium inspection on port 5173 | The rail expanded on hover and keyboard Tab, Escape dismissed keyboard navigation, and a tap toggled labels on a 390px screen. Paper and AI opened from their designated controls. The AI diamond matched the favicon. Both manifest icons and the 180px Apple icon decoded. Desktop and touch views had no uncaught page errors. |
+| `cmp` against the supplied attachment and `git diff --check` | The assignment copy matched byte-for-byte. The tracked diff passed the whitespace check. The existing Python, frontend packages and system Chromium were reused. |
+
+The first indicator check timed out looking for detailed source text after a page reload. Chromium found the text inside the closed Feed details disclosure. The test now reopens it as a user would, and passed with its original persistence and numerical assertions. A desktop keyboard probe initially used programmatic focus immediately after a mouse click. Using a real Tab verified native keyboard focus and revealed the labels. An initial backend unit run stalled inside the socket-restricted sandbox and was interrupted. The bounded rerun with loopback access passed.
+
+The browser checks used controlled providers and synthetic microphone input for AI and speech. A physical microphone/speaker demonstration is a separate check. The Part 4.1 Canvas submission still needs the student's reviewed commit, report and accessible 30–60 second video. Later requirements include historical strategy evaluation with its trades and performance, a grounded text chatbot and the presentation. [Condensed browser results](screenshots/workstation-redesign/report.json) · [Constructed outage with known volume](screenshots/workstation-redesign/constructed-outage.png) · [AI-use record](../AI-USE.md).
+
+## Chart-preserving workspace mockups · November 11, 2026
+
+The student requested visual previews of the dedicated Indicators chooser and the wider AI workspace. Both desktop concepts retain the same chart range. The mobile Voice concept places a compact chart above the controls. These PNGs are design proposals. [Prompt 44](../prompts/44-chart-preserving-workspace-mockups.md) · [Indicators](brand/interface/15-indicators-chooser.png) · [AI workspace](brand/interface/16-ai-chart-workspace.png) · [Mobile Voice](brand/interface/17-mobile-chart-and-voice.png).
+
+Used the existing system Python and `backend.history.history_response` to read AAPL observations from SQLite in read-only mode at 21:02 UTC. The query returned 378 one-minute candles with unknown volume. The last close was $355.79. A separate query at the 20:49 UTC cutoff returned a completed 20:48 candle with a $355.62 close, short SMA 355.211765, long SMA 354.997554 and no crossover. The proposal text and voice session shown are illustrative.
+
+`node /tmp/arbitrade44-render.mjs` rendered offline using the installed Chromium, the real navigation artwork, and Lightweight Charts. An initial 820px desktop viewport cropped the lower inspector. The 900px render showed the entire inspector. The measured AI layout allocated 718 CSS pixels to the chart and 478 to the panel. On the phone the 176px-high chart and the Start voice control both fit in the viewport. `magick identify -ping` confirmed two 2040 × 1350 PNGs and one 804 × 1608 PNG. The conversation preview check decoded all three and switched between them. The prototype used no model, microphone or trading endpoints. Application code and dependencies were outside the scope of this design review.
+
+## Dedicated workstation page concepts · November 11, 2026
+
+[Prompt 45](../prompts/45-dedicated-workstation-pages.md) requested three desktop images of a different design. The [Chart page](brand/interface/18-page-concept-chart.png) uses the full charting width. The [Indicators page](brand/interface/19-page-concept-indicator-library.png) groups six preset windows for the existing SMA and rolling range calculations, and shows the selected preset beside a chart preview. The [AI page](brand/interface/20-page-concept-ai-conversation.png) pairs an explicitly illustrative conversation with a market chart and frozen decision evidence.
+
+`node /tmp/arbitrade45-render.mjs` rendered all three in Chromium using the same recorded Yahoo series and the native chart library. Browser checks compared the visible selection and time bounds across pages. Each showed AAPL, 1 minute, SMA 20 and SMA 50, over the same 19:30–20:59 UTC chart window. Chart widths were 1,228, 445 and 551 CSS pixels respectively. All six library presets were visible, two were marked on-chart, and the AI conversation and chart fit side by side. The recording contained unknown share volume. The 20:48 decision reference used its own 20:49 cutoff. Visual inspection caught a reference marker underneath the chart canvas and prompted a layering correction. All three exports are 2040 × 1260 PNGs. The earlier panel studies remain separate. These are design-review images.
+
+## Single workspace with indicator controls · November 11, 2026
+
+[Prompt 46](../prompts/46-single-workspace-indicators-voice.md) led to one [2190 × 1200 desktop PNG](brand/interface/21-single-workspace-sma-ema-voice.png). The example uses 360 illustrative daily candles on NASDAQ trading dates so the 200-day average has a full window. Each selected square uses the same color as its chart series. The chart uses solid SMA lines and a dashed EMA line. EMA is marked proposed. The example uses a 20-day SMA of $254.00, 200-day SMA of $243.61 and 30-day EMA of $253.18.
+
+`node /tmp/arbitrade46-render.mjs` tested both 20/30/100/200 rows, square dimensions, exactly matching selection and series colors, and the three-column ordering. A header border initially produced a one-pixel vertical overflow. The corrected rendering fits 1460 × 800 CSS pixels and places Voice 12 pixels below the AI summary. The final PNG was visually inspected. No application changes were made.
+
+## Indicator tabs and chart timeframes · November 11, 2026
+
+[Prompt 47](../prompts/47-tabbed-indicators-timeframes.md) revises the [single desktop mockup](brand/interface/22-tabbed-indicators-timeframes.png). Indicators holds the SMA and EMA controls and rolling price range. The second tab, Signals, is for confirmed SMA crossovers. The mockup uses the preceding example’s 360 illustrative daily candles. The original [assignment description](assignment-4.md) gives students the choice of market instruments and makes EMA optional.
+
+| Check | Expected and observed |
+| --- | --- |
+| `node /tmp/arbitrade47-render.mjs` using installed Chromium, Vue and Lightweight Charts | Each average has one row of six square controls in the requested order. The three selected colors match their chart lines. The separate timeframe row reads 1m, 5m, 15m, 30m, 1hr, D, W, M with D active. The approved diamond sits 8 CSS pixels after the summary title, centered on its capital letters. The “Proposed” badge, daily dropdown and chart-library caption are absent. |
+| Visual and PNG checks | The complete view fits 1500 × 840 CSS pixels. The chart is 823 pixels wide and Voice begins 12 pixels below the summary. The exported 2250 × 1260 PNG was visually inspected and compared byte for byte after copying. Pillow was unavailable in the project interpreter. ImageMagick and the Python standard library completed the checks. |
+| Live route, registry and local recordings | A direct call to the FastAPI live handler for MSFT sent an error and closed with code 1008. A read-only SQLite query found only AAPL among the recorded Yahoo symbols. The indicator registry in `backend/indicators.py` returned SMA and rolling price range. The registered timeframes were 1m, 5m, 15m, 1h and 1d. The first verification snippet imported a database helper from the wrong module. The corrected check opened SQLite in read-only mode. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_live backend.test_indicator_instances -q` | All 9 tests passed, including the AAPL subscription and indicator setting validation. |
+
+This is a design preview. EMA and the 30-minute, weekly and monthly aggregations would require implementation. The application SmokeTest was last run for the workstation redesign above.
+
+## Parchment header and confirmed Signals · November 11, 2026
+
+[Prompt 48](../prompts/48-parchment-header-signals.md) refines the [Indicators view](brand/interface/23-parchment-indicators.png) and opens the [Signals view](brand/interface/24-parchment-signals.png). The masthead uses the summary card’s parchment (`#f1ebdd`). The workspace link and period explanation were removed. The review copy opens on the most recent crossover and lets the student switch tabs, pin a different event or follow the latest candle. The running app’s corresponding feature is under Indicators → Crossovers.
+
+The preview passes the same 360 illustrative daily closes to the existing `backend.indicators.moving_averages` function with the default 20/50 pair. It returns six confirmed crossings. The 12 Aug 2026 upward crossing displays SMA 20 at $239.89, SMA 50 at $239.45 and a candle close of $246.12. Both series match the chart inputs. Choosing an event updates its chart marker, candle details and illustrative summary. Returning to Indicators restores its chosen overlays.
+
+| Check | Observed result |
+| --- | --- |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_indicators -q` | Four tests passed, including equality handling, incomplete candles and full-precision comparisons. |
+| `node /tmp/arbitrade48-review.mjs` in the local visual preview wrapper | Chromium selected all six events. Each date matched its pinned candle and summary, and the direction matched the headline. Switching tabs retained the pinned candle, Follow latest returned to 11 Nov, and toggling SMA 50 changed the legend. The tab arrow keys worked. |
+| Layout and image checks | The header matched the summary background in both views. Both requested text removals were verified. The desktop view fits 1500 × 840 CSS pixels. Additional checks at widths 1024, 736 and 320 found no horizontal overflow. Both 2250 × 1260 PNGs were visually inspected and verified byte for byte after copying. |
+
+The offline preview initially left an empty space for the header wallet icon. It now reuses the app’s existing icon. The preview wrapper required `--force` to regenerate the temporary inspection file. The browser checks passed on the final render. The work is a design review with illustrative data. The application SmokeTest was not rerun.
+
+### Opening the running workstation
+
+The student asked to see the actual app. Loopback checks inside the sandbox could not reach the host services. On the project host, `curl` found the existing frontend on port 5173 and the API on port 8000. A read-only HTTP check through port 5173 verified HTTP 200, the page title “Arbitrade” and an `ok` response from `/api/health`. Codex queued the dashboard URL for the right-hand browser panel. Browser control was unavailable, so the visible panel and its selected tab could not be verified. The crossover list is accessible under Indicators → Crossovers.
+
+## Indicators and Signals workspace
+
+November 11, 2026. The student approved implementation of the two parchment-header designs in the running Vue/FastAPI workstation. The chart now has six independent periods for each average, eight candle intervals, and two sidebar tabs. A confirmed signal, its pinned chart marker, candle inspector and model request use the same candle. A reviewed result selects the associated voice record. Paper trading remains in the header. [Prompt](../prompts/49-implement-indicators-signals-workspace.md) · [Assignment](assignment-4.md).
+
+| Command or operation | Expected result | Observed result |
+| --- | --- | --- |
+| Inspect Git, interpreters, package files and installed tools | Preserve existing work and reuse the project environment | `main` tracked `origin/main` with prior design work. Linux x86_64, `/usr/bin/python` 3.14.8, Node 26.13.0, npm 11.20.0, system Chromium and existing project packages were available. Dependency manifests and lockfile have no diff. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest discover -s backend -p 'test_*.py' -q` | Existing contracts and new calculation/storage tests pass | 102 tests passed in the final run (7.080 seconds). Coverage includes EMA initialization, warm-up, revisions, independent preset persistence, half-hour boundaries, early holiday closes and calendar weeks/months. Pandas emitted its existing timezone-array deprecation warning. |
+| `npm --prefix frontend run build` and `git diff --check` | Production bundle builds and patch has valid whitespace | Vite 8.3.7 built 29 modules. The whitespace check passed. |
+| `ARBITRADE_BACKEND_PORT=18001 ARBITRADE_FRONTEND_PORT=15174 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade49-final/market` | The Part 4.1 dashboard follows recorded and incoming data, including an outage | Chromium compared all eight chart intervals with backend OHLCV, checked a same-minute revision and rollover, and saw a disconnected upstream while the chart socket stayed open. Constructed volume was visible. |
+| `./scripts/smoke-test --output /tmp/arbitrade49-review/workstation` | User operations and SQLite agree across the workstation | Passed in Chromium. Replay, named indicator edits, chart-image review, handoff to Voice, automation and Stop worked. SQLite agreed with the three simulated fills, final cash of $1,025, zero shares and $25 realized P&L. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.<name>_smoke --output /tmp/arbitrade49-extra/<name>` | Each existing feature remains reachable and exercises its normal operation | All ten feature checks passed after corrections. Names are `indicator`, `sma`, `replay` (add `--constructed`), `decision`, `chart`, `review`, `voice`, `paper`, `pnl` and `automation`. The final paper/P&L reports are under `/tmp/arbitrade49-rerun`. Decision, voice and SMA were also repeated after the integration changes. The decision test checks an exact saved result and independent paper ledger, selected-candle isolation, insufficient history and the voice decision ID. |
+| Read the production API via the Vite proxy and inspect the running app with Chromium | The dashboard uses the installed backend, recorded AAPL data and responsive layout | Health returned `ok`. The catalog returned SMA, EMA and rolling price range. Recorded history produced 14 half-hour candles, one weekly candle and one monthly candle. The 1m chart displayed 378 candles and eight confirmed 20/50 crossovers. The browser pinned the newest event, followed the latest candle, and opened proposal, Voice, Trade and Automation. The header and AI card both computed to `#f1ebdd`. All five viewport widths, 320 through 1440, fit without horizontal page overflow or uncaught page errors. [Browser measurements](screenshots/indicators-signals/report.json). |
+
+Two integrated runs found the long SMA window input had zero rendered width after switching from a custom indicator form to Signals. Sizing the inputs alone did not resolve the disclosure reuse. Giving each tab panel its own Vue key and constraining the field widths restored a visible, editable input. The first independent Paper and P&L checks attempted to open Feed details while viewing the dedicated account page. The revised drivers use Back to chart to inspect the feed and step replay, then reopen the account. Restart and balance assertions passed.
+
+The old review backend lacked EMA. The process command and project root were verified and its paper automation was idle before restarting it with its original arguments and environment. An initial read-only catalog probe assumed an object wrapper. The actual API returns a list, which the corrected probe checked through port 5173. The dashboard is served at `http://127.0.0.1:5173/`. The Codex panel open request was queued. The screenshots come from Chromium against that running address. [Indicators](screenshots/indicators-signals/desktop.png) · [Pinned signal](screenshots/indicators-signals/signals.png) · [Mobile](screenshots/indicators-signals/mobile.png).
+
+The live subscription is AAPL. The latest recorded minute had unknown volume. The source strip and inspector show that condition, and the repeatable outage check covers reported volume with controlled data. Model and voice regression tests used controlled replies and synthetic input. Fresh live-provider analysis and a physical microphone conversation were outside these checks. Earlier actual in-session chart evidence is available for the student's Part 4.1 report and video. [Recorded live check](screenshots/live-check-2026-11-11/report.json).
+
+## Reviewed redesign commit
+
+The student authorized a local commit of the reviewed updates. Git inspection found the implementation, brand assets and associated prompt, assignment and design records on main. The 147 existing changed/new files totaled about 7.1 MB. Credential-pattern and exact local credential scans found no matches. The frontend production build passed again with 29 modules. The prior implementation's 102 backend tests and browser results remain recorded above. The commit also includes this approval record and prompt 50. Verify the resulting commit with `git log -1` and `git status --short`. [Approval](../prompts/50-commit-workspace-redesign.md).
+
+The first staging attempt encountered the sandbox’s read-only Git metadata. The approved host command staged the files. Its whitespace check found an extra blank line at the end of the newly added IndicatorPanel.js. Removing that blank line resolved the check before committing.

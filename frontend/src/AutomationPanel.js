@@ -3,7 +3,8 @@ import { chartPng,renderFrozenChart } from './chart-capture.js'
 
 export default {
  props:{accountId:String,symbol:String,interval:String,shortWindow:Number,longWindow:Number,completed:Array},
- setup(props){
+ emits:['running'],
+ setup(props,{emit,expose}){
   const status=ref({run:null,attempts:[],state:null}),error=ref(''),working=ref(false),stopRequested=ref(false),container=ref(null),preview=ref(null),frozen=ref(null)
   const handled=new Set()
   let chart,disposed=false,processing=false,polling=false,timer,version=0
@@ -51,14 +52,16 @@ export default {
     }
    }catch(e){if(!disposed)error.value=e.message}finally{processing=false}
   }
+  expose({stop})
+  watch(()=>Boolean(status.value.run?.enabled),enabled=>emit('running',enabled))
   watch(()=>[props.accountId,props.symbol,props.interval,props.shortWindow,props.longWindow],()=>{if(status.value.run?.enabled)stop()})
   watch(()=>[props.completed,status.value.run?.enabled],()=>process(),{deep:true})
   load();timer=setInterval(async()=>{await load();process()},800)
   onBeforeUnmount(()=>{disposed=true;version++;clearInterval(timer);chart?.remove();const r=status.value.run;if(r?.enabled)fetch('/api/paper/automation/'+r.id+'/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}',keepalive:true}).catch(()=>{})})
   return()=>h('section',{class:'automation-panel','aria-labelledby':'automation-title'},[
-   h('h3',{id:'automation-title'},'Paper automation · Simulation only'),
-   h('p','Start analyzes each newly completed live-chart candle once, with a fresh frozen PNG, analyst and reviewer. Eligible orders wait for the next observed quote. Stop blocks pending replies and cancels pending automation orders.'),
-   h('p','No historical backfill. Maximum decision age: 120 seconds; fill quotes must be at most 30 seconds old. Constructed observations use a separate test account. Replay remains manual.'),
+   h('h3',{id:'automation-title'},'Paper automation'),
+   h('p','Review each newly completed live candle and simulate eligible orders at the next qualifying quote.'),
+   h('details',[h('summary','Execution rules'),h('p','Each candle gets one frozen chart, analyst and reviewer. Stop blocks pending replies and cancels pending automation orders. No historical backfill. Maximum decision age: 120 seconds; fill quotes must be at most 30 seconds old. Constructed observations use a separate test account. Replay remains manual.')]),
    h('button',{disabled:working.value||!!status.value.run?.enabled||props.accountId!=='live',onClick:start},'Start paper automation'),
    h('button',{disabled:!status.value.run?.enabled,onClick:stop},'Stop paper automation'),
    h('p',{id:'automation-status'},`Automation: ${status.value.run?.enabled?(stopRequested.value?'stop requested; awaiting confirmation':'enabled'):'stopped'}${status.value.run?` · Account ${status.value.run.account_id} · ${status.value.run.strategy}`:''}`),
@@ -68,7 +71,7 @@ export default {
    h('div',{ref:container,class:'decision-chart',style:{display:frozen.value?'block':'none'},'aria-label':'Frozen automation chart'}),
    frozen.value?h('p',{id:'automation-cutoff'},`${frozen.value.snapshot.symbol} / ${frozen.value.snapshot.interval} · Cutoff ${frozen.value.snapshot.decision_time} · Snapshot ${frozen.value.snapshot.snapshot_id}`):null,
    preview.value?h('img',{id:'automation-preview',src:preview.value,alt:'Fresh automation chart PNG'}):null,
-   h('div',{class:'paper-history'},[h('table',{id:'automation-history'},[
+   h('div',{class:'paper-history',role:'region','aria-label':'Automation history',tabindex:0},[h('table',{id:'automation-history'},[
     h('thead',[h('tr',['Candle / signal','Decision / roles','Execution / reason','Fill / resulting account'].map(t=>h('th',t)))]),
     h('tbody',status.value.attempts.map(a=>{
      const d=a.decision,fill=status.value.state?.fills.find(f=>f.id===a.fill_id),pnl=status.value.state?.pnl_history.find(p=>p.fill_id===a.fill_id)

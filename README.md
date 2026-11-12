@@ -1,8 +1,16 @@
 # Arbitrade
 
-A local market chart with a Python backend, FastAPI transport and Vue frontend.
-Candle-close AI proposals can be reviewed manually or applied by explicitly enabled paper automation. Work inside `/home/jlrj/Documents/arbitrade`.
-Git currently reports that this folder is not a repository; no commit was made.
+A local trading workstation with a Vue frontend, a Python/FastAPI backend, and SQLite market and simulation records. The chart, indicators, AI analysis, and simulated account share the same candle context. [Assignment 4 description](docs/assignment-4.md).
+
+## Around the desk
+
+- **Chart** opens with AAPL candlesticks and volume. Hover for OHLC and reported volume, or pin a candle by clicking it or choosing **Inspect candle**. **Follow latest** returns to the most recent candle. Source, age and feed status sit beneath the plot. **Feed details** contains the connection check and source timestamps.
+- **Indicators** in the emerald sidebar has independent SMA and EMA buttons for 10, 20, 30, 50, 100 and 200 candles. Solid and dashed lines match the button colors. Expand **Rolling price range & custom indicators** to add a named indicator or edit its window. Each chart remembers its choices.
+- **Signals**, the second sidebar tab, shows confirmed SMA crossovers newest first. Choose one to bring its candle into view and inspect both averages. **Crossover windows** sets the strategy pair, initially 20 and 50.
+- **AI summary** beside the chart shows evidence for the selected candle. **Analyze candle** freezes a completed candle and requests a reviewed model proposal when its evidence is sufficient. **Review decision proposal** opens the saved facts, chart-image questions and analyst/reviewer details. **Voice chat** below can discuss that decision or another saved record you choose.
+- **Paper trading** at the top right opens the simulated account. **Trade** contains manual orders, fills, and profit and loss. **Automation** contains the bot controls and its decision history. While automation runs, **Stop automation** is also available in the header.
+
+Use the chevron to collapse or expand the sidebar. On phones the sidebar starts collapsed and the summary follows the chart. [Indicators](docs/screenshots/indicators-signals/desktop.png) · [Signals](docs/screenshots/indicators-signals/signals.png) · [Phone](docs/screenshots/indicators-signals/mobile.png).
 
 ## Run
 
@@ -24,7 +32,8 @@ records quotes and closes the feed on shutdown. Multiple browser connections
 share that subscription. Independent backend workers would each subscribe.
 No authentication or credentials are used for Yahoo quotes.
 
-The chart defaults to AAPL / 1m and supports 5m, 15m, 1h and daily. Switching
+The live subscription is AAPL. The chart defaults to one minute and supports
+1m, 5m, 15m, 30m, 1hr, daily, weekly and monthly candles. Switching
 opens a new WebSocket with matching stored history, followed by backend-derived
 updates. The page displays the source, latest source timestamp and age,
 upstream feed status separately from the browser connection, and forming/ended
@@ -65,7 +74,7 @@ repeat handling. The replay feature passed 44 backend tests and the frontend bui
 
 ## Moving averages
 
-Choose positive whole-number **Short SMA window** and **Long SMA window** values,
+In **Signals → Crossover windows**, choose positive whole numbers for the short and long SMA windows,
 with short smaller than long, then click **Apply SMA windows**. Defaults are
 20/50; applying changes restarts a replay. Python calculates both lines from
 ended candle closes. Warm-up and forming candles show Unavailable. Ties retain
@@ -86,8 +95,8 @@ This uses isolated services on 18000/15173 and a labeled disposable test databas
 
 ## Named chart indicators
 
-Use **Chart indicators** to choose a type, name an instance and set its window.
-SMA and rolling price range share a Python calculation interface. Each instance
+Open **Indicators → Rolling price range & custom indicators** to choose a type, name an instance and set its window.
+SMA, EMA and rolling price range share a Python calculation interface. Each instance
 keeps its own settings in `backend/data/chart-config.sqlite3`, separately from
 recorded observations, and returns when the same symbol/timeframe is reopened.
 `ARBITRADE_CONFIG_DATABASE` selects another settings file. Inspect values for
@@ -107,7 +116,7 @@ PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke --output
 
 ## Paper trading
 
-The **Paper trading · Simulation only** panel shows cash, AAPL shares and order
+Open **Paper trading** in the upper right and choose **Trade** for cash, shares and order
 history. Buy whole shares, sell part, or close the position. Hold/wait create no
 orders. Starting cash is **$1,000**; fees are zero. A valid order remains pending
 until the next eligible new regular-session observed price arrives. Cash/shares
@@ -163,9 +172,7 @@ buy4@100/sell1@110/close3@105. Expected UI and independent SQLite result:
 must not add orders/fills. New temporary databases each run; services/browser
 cleaned on success/failure. Local existing tools only, no credentials or installs.
 [Command, evidence and hosted workflow prerequisites](docs/workstation-smoke-test.md).
-GitHub push workflow is prepared, not yet run; review its ephemeral-runner
-installation commands before enabling it. The current directory is not a Git
-repository. Live Yahoo/image-model/physical voice observations remain separate.
+The push workflow uses the same SmokeTest. See the verification log for local results and evidence from separate Yahoo, model and audio checks.
 
 ```bash
 PYTHONPATH=backend/.packages /usr/bin/python -m unittest discover -s backend -v
@@ -178,13 +185,13 @@ PYTHONPATH=backend/.packages /usr/bin/python -m scripts.verify_live
 Earlier live-feature verification on November 10, 2026: 43 backend tests and the frontend build passed.
 HTTP and recorded/actual WebSocket transport checks passed earlier. Automated
 **UI SmokeTest now passes using Playwright and Chromium on Omarchy**: connection
-button, matching OHLCV, same-minute replacement, rollover, all five timeframes,
+button, matching OHLCV, same-minute replacement, rollover, the five original timeframes,
 forming/ended labels, source age and separate feed/transport status. Desktop
 and mobile screenshots were inspected. A visual viewport issue found during
 that inspection was fixed: the first streamed candles now fit an initially
 empty chart and new intervals remain visible while following the latest bar.
 
-Repeatable automated UI SmokeTest, requiring free ports 8000/5173:
+The current UI SmokeTest exercises all eight timeframes. It uses free ports 8000/5173 by default. Set `ARBITRADE_BACKEND_PORT` and `ARBITRADE_FRONTEND_PORT` to use other local ports.
 
 ```bash
 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-ui-results
@@ -255,7 +262,7 @@ uses the continuous receiver. Recorder verification uses constructed data.
 
 ## Review a decision proposal
 
-Select a completed candle and **Freeze selected candle**, inspect its saved
+Select a completed candle and open **Review decision proposal** in the summary. Choose **Freeze selected candle**, inspect its saved
 chart/facts, then **Request model proposal**. Python calls OpenAI Decisions;
 SQLite retains the snapshot and result. This operation does not submit a paper
 order. Set `OPENAI_API_KEY=your_actual_key` in `backend/.env` and restart the
@@ -272,7 +279,7 @@ compares saved decisions and unchanged paper tables, and cleans up its services.
 
 ## Ask about a chart image
 
-Select a completed candle, click **Ask about chart**, and inspect the frozen PNG,
+In **Review decision proposal**, select a completed candle, click **Ask about chart**, and inspect the frozen PNG,
 cutoff and questions. **Analyze captured chart** asks the model for action,
 visual crossover and evidence sufficiency. Python compares its visual answer with
 the calculated crossover; disagreements and unreadable evidence are ineligible
@@ -302,7 +309,7 @@ PYTHONPATH=backend/.packages /usr/bin/python -m scripts.review_smoke --output /t
 
 ## Apply reviewed paper decisions
 
-**Start paper automation** analyzes each newly completed live-chart candle with
+In **Paper trading → Automation**, **Start paper automation** analyzes each newly completed live-chart candle with
 its own frozen PNG, analyst and reviewer. Approved decisions use the simulator's
 next eligible quote and current-resource checks. **Stop paper automation** revokes
 late replies and cancels pending automation orders. It starts disabled and stays
@@ -323,8 +330,8 @@ a reviewer veto and actual restart added no fill. Live automation was not enable
 
 ## Discuss a recorded decision by voice
 
-Choose a saved decision in **Discuss a recorded decision by voice**, inspect its
-summary and click **Start voice**. Allow microphone access, ask a question and a
+Use **Voice chat** below the AI summary or **Discuss this decision** on a reviewed proposal. **Choose decision** opens the saved records. Inspect the selected
+record and click **Start voice**. Allow microphone access, ask a question and a
 follow-up, then **End voice**. This is a read-only conversation; it cannot trade
 or change automation. The active/off microphone indicator and audio controls
 show local capture and playback. See [docs/live-speech.md](docs/live-speech.md).
@@ -347,11 +354,12 @@ correct audio/captions; the physical Mac microphone/speaker check is pending.
 `backend/yahoo_stream.py` reuses yfinance subscription and decoding;
 `backend/main.py` supplies HTTP/WebSocket routes. `backend/history.py`,
 `candles.py`, `timeframes.py` and `observations.py` provide data rules and storage.
-`frontend/src/CandleChart.js` owns the selector, chart and socket lifecycle;
+`frontend/src/useMarketChart.js` owns the chart and socket lifecycle. `CandleChart.js` presents the chart, replay and inspection controls.
 `chart-data.js` adapts UTC prices and nullable volume; `vite.config.js` proxies
 both HTTP and WebSocket requests. `scripts/verify_live.py` checks transport;
 `scripts/ui_smoke.py` and `ui_smoke.mjs` run the automated browser checks.
 Major prompts are preserved under `prompts/`, including prompts 08, 08a and the approved 08b UI-testing request.
+The [AI-use record](AI-USE.md) identifies the coding assistance used for the desk redesign.
 
 Confirmed environment: Linux/Omarchy, Python 3.14.8 at `/usr/bin/python`,
 FastAPI 0.156.8, Uvicorn 0.54.0, Node 26.13.0, npm 11.20.0, Vue 3.5.45,

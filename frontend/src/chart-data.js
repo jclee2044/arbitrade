@@ -2,7 +2,7 @@ export function formatUtc(time) {
   return new Date(time * 1000).toISOString().replace('T', ' ').slice(0, 16) + ' UTC'
 }
 
-export function adaptCandles(rows) {
+export function adaptCandles(rows, volumeColors = { up: '#15847b', down: '#c9435b' }) {
   if (!Array.isArray(rows)) throw new Error('Expected a candle array')
   const candles = rows.map((row) => {
     const time = Date.parse(row.timestamp) / 1000
@@ -24,7 +24,14 @@ export function adaptCandles(rows) {
     candles,
     prices: candles.map(({ time, open, high, low, close }) => ({ time, open, high, low, close })),
     volumes: candles.map(({ time, open, close, volume }) => ({
-      time, ...(volume === null ? {} : { value: volume }), color: close >= open ? '#15847b' : '#c9435b',
+      time, ...(volume === null ? {} : { value: volume }), color: close >= open ? volumeColors.up : volumeColors.down,
     })),
   }
 }
+
+const dollars = new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 4,
+})
+
+export const price = value => value == null ? '—' : dollars.format(value)
+export const average = value => value == null ? 'Unavailable' : value.toLocaleString('en-US', { maximumFractionDigits: 6 })

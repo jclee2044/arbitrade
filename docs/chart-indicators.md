@@ -1,30 +1,30 @@
-# Named chart indicators
+# Chart indicators
 
-In **Chart indicators**, choose a type, enter a name, set its window, and click
-**Add indicator**. **Saved indicator values** shows each instance's settings
+In the **Indicators** tab, select any combination of 10, 20, 30, 50, 100 and 200 candles for SMA and EMA. The default chart has SMA 20, SMA 200 and EMA 30. A color identifies each period. SMA uses a solid line and EMA a dashed line. Selecting a period again removes it. Presets persist independently for each symbol and timeframe.
+
+Under **Rolling price range & custom indicators**, choose a type, enter a name, set its window, and click
+**Add indicator**. **Saved indicators** shows each instance's settings
 and its value for the selected candle. Selecting another candle updates the
 values. Unavailable means warm-up is incomplete or the candle is still forming.
 Names/settings return after refresh for the same symbol and timeframe.
 
-The available types and settings come from Python through FastAPI. The first
-two types are:
+The available types and settings come from Python through FastAPI.
 
 | Type | Inputs from the last N completed candles | Calculation | Units | Display |
 | --- | --- | --- | --- | --- |
 | `sma` | closes | sum of closes / N | Instrument quote price (USD for AAPL) | Price pane |
+| `ema` | closes | first value = SMA of the first N completed closes, then previous EMA + (2 / (N + 1)) × (new close − previous EMA) | Instrument quote price | Price pane, dashed |
 | `price_range` | highs and lows | highest high − lowest low | Quote-price difference (USD for AAPL), not percent | Separate indicator pane |
 
-Both use a positive whole-number `window`, default 20. Each named instance owns
+All three use a positive whole-number `window`, default 20. Each named instance owns
 its validated settings. Window 2 and window 3 can coexist without affecting one
 another. Names are trimmed, 1–80 characters, unique within the symbol/timeframe
 (case-sensitive). Invalid settings or duplicate names produce an explanation
-and leave existing entries unchanged. The UI supports creating named instances;
-editing/deleting saved instances is not part of this change.
+and leave existing entries unchanged. To edit a saved window, enter its new value and choose **Save window**.
 
 The existing paired-SMA/crossover controls remain compatible, and their
 calculation now calls the same registered SMA implementation. Those paired
-query controls remain separate from named saved instances. To retain a specific
-SMA window across refresh, create a named SMA through Chart indicators.
+query controls are in **Signals → Crossover windows**. Switching to Signals displays its short and long averages and confirmed events. Switching back restores the Indicators view.
 
 ## Calculation contract and extension
 
@@ -66,7 +66,7 @@ INDICATOR_TYPES['my_type'] = IndicatorType(
 
 The catalog, UI form, named-instance transport, persistence and rendering use
 that registration. No new Vue calculation is needed. A unit test registers a
-third constant type and exercises the generic output path. The paired SMA
+constant type and exercises the generic output path. The paired SMA
 uses `indicator_rows('sma', ..., exact=True)` before comparing sides, preserving
 its full-precision crossover and tie rules.
 
@@ -80,8 +80,7 @@ performance remains future work; range currently scans its rolling window.
 
 Default settings file: `backend/data/chart-config.sqlite3`, selected separately
 with `ARBITRADE_CONFIG_DATABASE=/absolute/path/chart-config.sqlite3`. Keep it
-separate from `ARBITRADE_DATABASE` (recorded observations). Startup initializes
-only the settings table; calculations do not save derived values. Creating a
+separate from `ARBITRADE_DATABASE` (recorded observations). The indicator store initializes its settings tables. Creating a
 named indicator writes configuration only. Replay still opens recorded sessions
 read-only. No fixture configurations are added to the production settings file.
 
@@ -89,8 +88,13 @@ read-only. No fixture configurations are added to the production settings file.
 with a unique (symbol, timeframe, name) constraint. Each operation opens/closes
 its own connection; insert validation happens before the transaction.
 
+`indicator_presets` stores an enabled flag for each explicit choice keyed by symbol, timeframe, kind and period. Reading an untouched chart applies the default selections. A named indicator can share a preset's display name because the two configurations have independent identities.
+
 - `GET /api/indicators/types`: types, descriptions, units, pane and setting rules.
 - `GET /api/indicators?symbol=AAPL&timeframe=1m`: saved named configurations.
+- `GET /api/indicator-presets?symbol=AAPL&timeframe=1m` returns enabled presets.
+- `PUT /api/indicator-presets/ema/30` with `{"symbol":"AAPL","timeframe":"1m","enabled":true}` sets a preset and returns the chart's enabled selections. Retrying the same request keeps its state.
+- `PATCH /api/indicators/{id}` with `{"settings":{"window":30}}` updates a named window.
 - `POST /api/indicators`: creates an instance (201); invalid input 422;
   duplicate name 409. Example body:
 
@@ -99,7 +103,7 @@ its own connection; insert validation happens before the transaction.
 ```
 
 HTTP history with `include_status=true` and live/replay WebSocket messages add
-an `indicators` array containing the configuration, units/pane and
+separate `indicators` (named) and `presets` arrays containing the configuration, units/pane and
 `rows: [{"timestamp": "...", "value": 5.0}]`. Live periodic status reflects
 new settings. A replay `{"action":"refresh"}` reloads configured indicators at
 the **same** replay position/clock; adding an instance does not require advancing

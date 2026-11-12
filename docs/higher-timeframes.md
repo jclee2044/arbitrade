@@ -1,7 +1,7 @@
 # Session-aligned history
 
 The history endpoint derives all requested resolutions from one-minute data
-on every request. Supported values: `1m` (default), `5m`, `15m`, `1h`, `1d`.
+on every request. Supported values are `1m` (default), `5m`, `15m`, `30m`, `1h`, `1d`, `1w` and `1mo`.
 It never treats already aggregated bars as minute inputs. No higher-timeframe
 candles are cached or written to SQLite.
 
@@ -72,6 +72,8 @@ interval is clipped to the session close. An early-close final hourly bar can
 have only 30 expected minutes. Scheduled breaks are omitted from expected
 minute counts, while groups remain anchored to the session open.
 
+Weekly bars group sessions by ISO week and monthly bars group them by calendar month. Both use the opening instant of the first scheduled session and the closing instant of the last, including holiday weeks and shortened sessions. The complete schedule determines expected minutes even when the database holds only part of the period. A bar appears after its first observed regular-session minute and becomes eligible for a confirmed indicator or a frozen decision after its scheduled close.
+
 Within each group, use first open, maximum high, minimum low, last close, and
 sum of the available minute volumes. Unknown constituent volume yields null;
 known zero remains zero. A missing minute is a coverage gap, not a fabricated
@@ -106,10 +108,7 @@ PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_timeframes
 /usr/bin/python scripts/smoke_test.py --http-only
 ```
 
-All 39 tests pass, including the actual calendar's early closes, holiday and
+The original 39-test check covered the actual calendar's early closes, holiday and
 DST boundaries, replay visibility, revised-minute replacement, known-zero and
 unknown volume, and session alignment. Direct HTTP requests for all five
-timeframes and invalid inputs passed. The existing frontend proxy smoke
-passed, including backend failure/recovery. Browser rendering was not changed
-or reverified; its earlier connection limitation remains. Exact results are
-in `docs/verification.md`.
+original timeframes and invalid inputs passed. The current eight-interval browser check, weekly/monthly boundary tests and real workstation history check are in the [verification record](verification.md#indicators-and-signals-workspace).

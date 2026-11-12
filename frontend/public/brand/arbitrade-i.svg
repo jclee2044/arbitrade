@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="696 41 94 94" role="img">
+  <title>Arbitrade app icon</title>
+  <defs>
+    <g id="cut0">
+      <polygon points="-13,-2 -9,-8 8,-8 13,-2 0,11" fill="#aadbf1" />
+      <polygon points="-9,-8 -7,-2 -13,-2" fill="#f9ffff" />
+      <polygon points="-9,-8 -4,-8 -7,-2" fill="#aadbf1" />
+      <polygon points="-4,-8 -2,-2 -7,-2" fill="#d7f5ff" />
+      <polygon points="-4,-8 3,-8 -2,-2" fill="#8fc4dd" />
+      <polygon points="3,-8 4,-2 -2,-2" fill="#f9ffff" />
+      <polygon points="3,-8 8,-8 4,-2" fill="#417fa7" />
+      <polygon points="8,-8 9,-2 4,-2" fill="#aadbf1" />
+      <polygon points="8,-8 13,-2 9,-2" fill="#65a2cb" />
+      <polygon points="-13,-2 -7,-2 0,11" fill="#8fc4dd" />
+      <polygon points="-7,-2 -2,-2 0,11" fill="#65a2cb" />
+      <polygon points="-2,-2 4,-2 0,11" fill="#f9ffff" />
+      <polygon points="4,-2 9,-2 0,11" fill="#aadbf1" />
+      <polygon points="9,-2 13,-2 0,11" fill="#417fa7" />
+      <path transform="translate(8 -8) rotate(0) scale(5)" d="M0 -1 Q.09 -.12 .83 0 Q.09 .09 0 1 Q-.09 .09 -.83 0 Q-.09 -.12 0 -1Z" fill="#B4D8EA" />
+      <path transform="translate(8 -8) rotate(0) scale(3.8)" d="M0 -1 Q.09 -.12 .83 0 Q.09 .09 0 1 Q-.09 .09 -.83 0 Q-.09 -.12 0 -1Z" fill="white" />
+    </g>
+  </defs>
+  <rect x="696" y="41" width="94" height="94" rx="21" fill="#084C3D" />
+  <g fill="#FAF8F2" color="#FAF8F2" transform="translate(743 88) scale(.89) translate(-16 37)">
+    <path d="M20.59 -46.67L1.80 -45.56L1.80 -41.27L6.89 -41.27C10.69 -41.16 11.19 -40.56 11.19 -36.25L11.19 -7.61C11.09 -6.09 11.00 -5.50 10.59 -5.00C9.89 -4.09 8.00 -3.69 3.69 -3.59L3.00 -3.59L3.00 0.00L28.89 0.00L28.89 -3.59L28.19 -3.59C21.50 -3.80 20.59 -4.30 20.59 -7.91Z" />
+    <use href="#cut0" transform="translate(16 -66)" />
+  </g>
+</svg>

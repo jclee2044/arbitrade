@@ -49,7 +49,7 @@ def verify(output):
             assert (observation_count, receipt_count) == (6, 6)
             with sqlite3.connect(environment['ARBITRADE_CONFIG_DATABASE']) as connection:
                 saved = connection.execute('SELECT name,type,settings_json FROM chart_indicators ORDER BY id').fetchall()
-            assert [(row[0], json.loads(row[2])['window']) for row in saved] == [('Range 2', 2), ('Range 3', 3), ('SMA 2', 2)]
+            assert [(row[0], json.loads(row[2])['window']) for row in saved] == [('Range 2', 2), ('Range 3', 3), ('SMA 2', 2), ('EMA 2', 2)]
             report['stored_configuration'] = [dict(name=row[0], type=row[1], settings=json.loads(row[2])) for row in saved]
             report.update(result='PASS', **json.loads(result.stdout), stored_observations=observation_count,
                           stored_receipts=receipt_count, stored_database_unchanged=True)

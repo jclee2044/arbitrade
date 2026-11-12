@@ -1,0 +1,67 @@
+{
+  "url": "http://127.0.0.1:5173/",
+  "data": "Recorded AAPL history from the running workstation",
+  "checks": [
+    {
+      "signals": 8,
+      "selected": "Latest confirmed crossover pinned, then Follow latest",
+      "features": [
+        "Decision proposal",
+        "Voice chooser",
+        "Paper trading",
+        "Automation"
+      ]
+    },
+    {
+      "width": 1440,
+      "document": 1440,
+      "chart": 784.84375,
+      "summaryX": 1113,
+      "chartX": 305,
+      "header": "rgb(241, 235, 221)",
+      "card": "rgb(241, 235, 221)",
+      "candleCount": 378
+    },
+    {
+      "width": 1024,
+      "document": 1024,
+      "chart": 532,
+      "summaryX": 775,
+      "chartX": 229,
+      "header": "rgb(241, 235, 221)",
+      "card": "rgb(241, 235, 221)",
+      "candleCount": 378
+    },
+    {
+      "width": 820,
+      "document": 820,
+      "chart": 577,
+      "summaryX": 229,
+      "chartX": 229,
+      "header": "rgb(241, 235, 221)",
+      "card": "rgb(241, 235, 221)",
+      "candleCount": 378
+    },
+    {
+      "width": 390,
+      "document": 390,
+      "chart": 366,
+      "summaryX": 12,
+      "chartX": 12,
+      "header": "rgb(241, 235, 221)",
+      "card": "rgb(241, 235, 221)",
+      "candleCount": 378
+    },
+    {
+      "width": 320,
+      "document": 320,
+      "chart": 296,
+      "summaryX": 12,
+      "chartX": 12,
+      "header": "rgb(241, 235, 221)",
+      "card": "rgb(241, 235, 221)",
+      "candleCount": 378
+    }
+  ],
+  "uncaughtPageErrors": []
+}

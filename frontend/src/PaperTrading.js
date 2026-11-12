@@ -69,9 +69,11 @@ export default {
     onBeforeUnmount(() => { generation++; clearInterval(timer) })
     const holding = () => state.value?.positions.find((item) => item.symbol === props.symbol)?.shares || 0
     return () => h('div', { class: 'paper-trading', 'aria-labelledby': 'paper-title', 'data-account-id': props.accountId }, [
-      h('h3', { id: 'paper-title' }, 'Paper trading · Simulation only'),
-      h('p', 'Long-only · $1,000 starting cash · Zero fees. Orders fill at the next eligible new regular-session observation after submission, never the currently displayed price.'),
-      h('p', props.accountId?.startsWith('replay-') ? 'Replay account · Only newly revealed observations can fill orders. Restarting replay creates a separate account.' : 'Live paper account · Orders remain pending while the feed is disabled or no eligible price arrives.'),
+      h('h3', { id: 'paper-title' }, props.accountId?.startsWith('replay-') ? 'Replay paper account' : 'Live paper account'),
+      h('details', [h('summary', 'Simulation rules'),
+        h('p', 'Long-only · $1,000 starting cash · Zero fees. Orders fill at the next eligible new regular-session observation after submission.'),
+        h('p', props.accountId?.startsWith('replay-') ? 'Only newly revealed observations can fill orders. Restarting replay creates a separate account.' : 'Orders remain pending while the feed is disabled or no eligible price arrives.'),
+      ]),
       !props.accountId ? h('p', 'Waiting for a replay account.') : null,
       state.value ? h('dl', { class: 'paper-balances' }, [
         h('dt', 'Cash'), h('dd', { id: 'paper-cash' }, usd(state.value.account.cash)),
@@ -89,7 +91,7 @@ export default {
       error.value ? h('p', { role: 'alert' }, error.value) : null,
       connectionError.value ? h('p', { role: 'alert' }, connectionError.value) : null,
       h('h4', 'Paper order history'),
-      h('div', { class: 'paper-history' }, [h('table', [
+      h('div', { class: 'paper-history', role: 'region', 'aria-label': 'Paper order history', tabindex: 0 }, [h('table', [
         h('thead', [h('tr', ['ID', 'Symbol', 'Side', 'Quantity', 'Submitted (UTC)', 'Status / reason', 'Fill'].map((text) => h('th', text)))]),
         h('tbody', (state.value?.orders || []).map((order) => {
           const fill = state.value.fills.find((item) => item.order_id === order.id)
@@ -114,7 +116,7 @@ export default {
           ? `Valuation price: ${usd(pnlSummary.value.price)} · ${pnlSummary.value.price_source} · Price time (UTC): ${pnlSummary.value.price_time}`
           : holding() ? 'Valuation unavailable: no usable price for this open position.' : 'No open position to value.'),
         h('h4', 'P&L history'),
-        h('div', { class: 'pnl-history' }, [h('table', { id: 'pnl-history' }, [
+        h('div', { class: 'pnl-history', role: 'region', 'aria-label': 'Profit and loss history', tabindex: 0 }, [h('table', { id: 'pnl-history' }, [
           h('thead', [h('tr', ['Event / time (UTC)', 'Price / source / price time (UTC)', 'Cash', 'Shares', 'Average cost', 'Realized', 'Unrealized', 'Total P&L'].map((label) => h('th', label)))]),
           h('tbody', pnlRows.value.map((row) => h('tr', { key: row.id, 'data-pnl-event': row.event_key }, [
             `${row.symbol} · ${row.event_type === 'fill' ? `Fill ${row.fill_id}` : 'Completed 1m candle'} · ${row.event_time}`,

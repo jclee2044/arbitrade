@@ -11,6 +11,8 @@ const button=name=>page.getByRole('button',{name,exact:true})
 async function until(fn){for(let i=0;i<300;i++){if(await fn())return;await new Promise(done=>setTimeout(done,100))}throw Error('Timed out')}
 try {
  await page.goto(base,{waitUntil:'networkidle'})
+ await page.getByRole('tab', { name: 'Signals', exact: true }).click()
+ await page.getByText('Crossover windows', {exact:true}).click()
  await page.locator('#sma-short').fill('2');await page.locator('#sma-long').fill('3');await button('Apply SMA windows').click()
  await until(async()=>await page.locator('#candle-time option').count()>3)
  let stamp=String(Date.parse('2026-11-10T15:04:00Z')/1000)
@@ -21,6 +23,7 @@ try {
    assert(chosen,'Need completed candle with SMA values');stamp=String(Date.parse(chosen.timestamp)/1000)
  }
  await page.locator('#candle-time').selectOption(stamp)
+ await page.getByRole('button', { name: 'Review decision proposal', exact: true }).click()
  await button('Ask about chart').click()
  await page.locator('#chart-preview').waitFor({state:'visible'})
  assert.equal(await page.locator('.decision-result').count(),0)

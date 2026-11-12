@@ -15,7 +15,11 @@ async function advance(now,price){await api('/fixture/advance',{now,...(price===
 async function state(){return api('/api/paper/automation')}
 try{
  await page.goto(base,{waitUntil:'networkidle'})
+ await page.getByRole('tab', { name: 'Signals', exact: true }).click()
+ await page.getByText('Crossover windows', {exact:true}).click()
  await page.locator('#sma-short').fill('2');await page.locator('#sma-long').fill('3');await button('Apply SMA windows').click()
+ await page.getByRole('button', { name: 'Paper trading', exact: true }).click()
+ await page.getByRole('button', { name: 'Automation', exact: true }).click()
  await button('Start paper automation').click()
  await until(async()=>(await page.locator('#automation-status').textContent()).includes('enabled'))
  const initial=await state();assert(initial.run.account_id.startsWith('test-'));assert.equal(initial.state.account.cash,'1000');assert.equal(initial.state.fills.length,0)
@@ -41,6 +45,8 @@ try{
  checks.push('Reviewer veto is visible under decision ID; no extra order/fill/cash/position change')
  await button('Stop paper automation').click();await host('audit')
  await host('restart');await page.reload({waitUntil:'networkidle'})
+ await page.getByRole('button', { name: 'Paper trading', exact: true }).click()
+ await page.getByRole('button', { name: 'Automation', exact: true }).click()
  await until(async()=>(await page.locator('#automation-status').textContent()).includes('stopped'))
  const restored=await state();assert.equal(restored.state.account.cash,'920');assert.equal(restored.state.fills.length,1)
  const start=await api('/api/paper/automation/start',{account_id:'live',symbol:'AAPL',interval:'1m',short_window:2,long_window:3})

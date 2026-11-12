@@ -13,7 +13,7 @@ import uuid
 from backend.candles import form_candles, utc_datetime
 from backend.decision_provider import OpenAIDecisions, ProviderFailure, parse_answer
 from backend.indicators import with_averages, validate_windows, configured_indicators
-from backend.timeframes import TIMEFRAMES, MinuteVersion, derive_timeframe, exchange_sessions
+from backend.timeframes import TIMEFRAMES, MinuteVersion, derive_timeframe, sessions_for_chart
 from backend.pnl import money
 from fractions import Fraction
 
@@ -26,8 +26,7 @@ def candle_end(symbol, interval, timestamp):
     if symbol != 'AAPL' or interval not in TIMEFRAMES:
         raise ValueError('Choose AAPL and a supported interval')
     stamp = utc_datetime(timestamp)
-    sessions = exchange_sessions('NASDAQ', (stamp-timedelta(days=2)).date().isoformat(),
-                                 (stamp+timedelta(days=2)).date().isoformat())
+    sessions = sessions_for_chart('NASDAQ', interval, stamp.date(), stamp.date())
     for session in sessions:
         if session.opened <= stamp < session.closed:
             duration = TIMEFRAMES[interval]

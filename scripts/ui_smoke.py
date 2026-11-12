@@ -9,6 +9,7 @@ import asyncio
 from contextlib import asynccontextmanager
 from datetime import datetime
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -52,7 +53,10 @@ async def verify(live, output):
     package = ROOT / 'frontend/node_modules/playwright-core/package.json'
     if not package.is_file():
         raise RuntimeError('playwright-core is missing. Obtain AGENTS.md dependency approval before installing it.')
-    for port in (8000, 5173):
+    backend_port = int(os.environ.get('ARBITRADE_BACKEND_PORT', '8000'))
+    frontend_port = int(os.environ.get('ARBITRADE_FRONTEND_PORT', '5173'))
+    frontend_url = f'http://127.0.0.1:{frontend_port}'
+    for port in (backend_port, frontend_port):
         with socket.socket() as probe:
             probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             probe.bind(('127.0.0.1', port))
@@ -77,7 +81,7 @@ async def verify(live, output):
                 await feed.stop()
 
         app.router.lifespan_context = lifespan
-        server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=8000, log_level='error'))
+        server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=backend_port, log_level='error'))
         server_task = asyncio.create_task(server.serve())
         try:
             async with asyncio.timeout(15):
@@ -88,9 +92,9 @@ async def verify(live, output):
                     await asyncio.sleep(0.05)
             frontend = subprocess.Popen(['npm', '--prefix', 'frontend', 'run', 'dev'], cwd=ROOT,
                                         stdout=logs, stderr=logs, start_new_session=True)
-            await asyncio.to_thread(wait_ready, frontend, 'http://127.0.0.1:5173')
+            await asyncio.to_thread(wait_ready, frontend, frontend_url)
             driver = await asyncio.create_subprocess_exec(
-                'node', str(ROOT / 'scripts/ui_smoke.mjs'), str(output), 'live' if live else 'recorded',
+                'node', str(ROOT / 'scripts/ui_smoke.mjs'), str(output), 'live' if live else 'recorded', frontend_url,
                 cwd=ROOT, stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=logs,
             )
             report = {'input': 'ACTUAL Yahoo' if live else 'CONSTRUCTED replay test_data=true', 'checks': [], 'phases': {}}
@@ -147,7 +151,7 @@ async def verify(live, output):
                         await feed.stop()
                     elif action != 'snapshots':
                         raise ValueError(f'Unexpected test action: {action}')
-                    snapshots = {interval: feed.snapshot(interval) for interval in ('1m', '5m', '15m', '1h', '1d')}
+                    snapshots = {interval: feed.snapshot(interval) for interval in ('1m', '5m', '15m', '30m', '1h', '1d', '1w', '1mo')}
                     report['phases'][action] = snapshots
                     driver.stdin.write((json.dumps(snapshots) + '\n').encode())
                     await driver.stdin.drain()

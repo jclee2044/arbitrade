@@ -50,6 +50,33 @@ class IndicatorInstanceTests(unittest.TestCase):
         self.assertEqual(indicator_rows('price_range', candles, coverage, {'window': 2})[-1]['value'], 5)
         self.assertEqual(indicator_rows('price_range', candles, coverage, {'window': 3})[-1]['value'], 7)
 
+    def test_ema_seeds_on_completed_closes_and_recomputes_after_a_revision(self):
+        candles, coverage = reference()
+        for candle, close in zip(candles, (10, 14, 21)):
+            candle['close'] = close
+        def result():
+            return [r['value'] for r in indicator_rows('ema', candles, coverage, {'window': 2})]
+        self.assertEqual(result(), [None, 12, 18])
+        coverage[-1]['ended'] = False
+        self.assertEqual(result(), [None, 12, None])
+        coverage[-1]['ended'] = True
+        candles[0]['close'] = 16
+        self.assertEqual(result(), [None, 15, 19])
+
+    def test_preset_choices_survive_reopening_and_are_independent_of_named_studies(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'charts.sqlite3'
+            store = IndicatorStore(path)
+            named = store.create('AAPL', '1m', 'SMA 20', 'sma', {'window': 20})
+            initial = store.presets('AAPL', '1m')
+            store.set_preset('AAPL', '1m', 'ema', 100, True)
+            store.set_preset('AAPL', '1m', 'sma', 20, False)
+            store.set_preset('AAPL', '1m', 'ema', 100, True)
+            reopened = IndicatorStore(path)
+            self.assertEqual([p['id'] for p in reopened.presets('AAPL','1m')], ['sma-200','ema-30','ema-100'])
+            self.assertEqual(reopened.list('AAPL','1m'), [named])
+            self.assertEqual(reopened.presets('AAPL','1w'), initial)
+
     def test_sma_uses_same_contract_and_registry_can_extend(self):
         candles, coverage = reference()
         generic = indicator_rows('sma', candles, coverage, {'window': 2})

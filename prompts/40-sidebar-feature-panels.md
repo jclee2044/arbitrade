@@ -1,0 +1,1 @@
+Clarify sidebar placement for SMA and rolling range windows, confirmed crossovers, decision proposals, paper automation, paper trading and recorded-decision voice chat. Use a Gemini-style sparkle button for AI.

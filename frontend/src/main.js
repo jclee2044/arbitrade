@@ -1,39 +1,120 @@
-import { createApp, h, ref } from 'vue'
+import { createApp, h, ref, computed, nextTick } from 'vue'
+import { useMarketChart } from './useMarketChart.js'
+import DeskNavigation from './DeskNavigation.js'
 import CandleChart from './CandleChart.js'
+import ChartSummary from './ChartSummary.js'
+import IndicatorPanel from './IndicatorPanel.js'
+import PaperTrading from './PaperTrading.js'
+import AutomationPanel from './AutomationPanel.js'
+import DecisionPanel from './DecisionPanel.js'
 import VoicePanel from './VoicePanel.js'
 import './style.css'
 
+// Park inactive panels without unmounting them. Frozen chart export needs a measured canvas.
+function view(id, active, children) {
+  return h('div', { id, class: ['tool-view', !active && 'parked'], inert: !active,
+    'aria-hidden': active ? undefined : 'true' }, children)
+}
+
 createApp({
   setup() {
-    const result = ref('Ready to check the connection.')
-    const checking = ref(false)
+    const chartHost = ref(null)
+    const setChartHost = el => { chartHost.value = el }
+    const m = useMarketChart(chartHost)
+    const tool = ref('chart')
+    const collapsed = ref(window.matchMedia('(max-width: 700px)').matches)
+    const paperTab = ref('Trade')
+    const proposalOpen = ref(false)
+    const decisionPanel = ref(null)
+    const analysis = ref(null)
+    const busy = ref(false)
+    const notice = ref(null)
+    const automation = ref(null)
+    const automationOn = ref(false)
+    const voice = ref(null)
+    const voiceOn = ref(false)
+    const selectionKey = (account, symbol, interval, time, short, long) =>
+      JSON.stringify([account, symbol, interval, Date.parse(time), short, long])
+    const currentKey = computed(() => selectionKey(m.paperAccount, m.symbol, m.timeframe, m.selected?.timestamp, m.appliedShort, m.appliedLong))
 
-    async function checkConnection() {
-      checking.value = true
-      result.value = 'Checking…'
-      try {
-        const response = await fetch('/api/health')
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        const data = await response.json()
-        if (data.status !== 'ok') throw new Error('Unexpected health response')
-        result.value = `Backend connected: ${JSON.stringify(data)}`
-      } catch (error) {
-        result.value = `Backend unavailable: ${error.message}`
-      } finally {
-        checking.value = false
-      }
+    const selectedAnalysis = computed(() => analysis.value?.key === currentKey.value ? analysis.value : null)
+    function receiveAnalysis(outcome) {
+      const { selection, decision } = outcome
+      analysis.value = { ...outcome, key: selectionKey(selection.account_id, selection.symbol, selection.interval,
+        selection.candle_timestamp, selection.short_window, selection.long_window) }
+      notice.value = null
+      if (analysis.value.key === currentKey.value && !voiceOn.value) voice.value?.selectDecision(decision.id, false)
+    }
+    async function analyze() {
+      const key = currentKey.value
+      notice.value = null
+      const message = await decisionPanel.value.generateSummary()
+      if (message) notice.value = { key, message }
+    }
+    async function toggleProposal() {
+      proposalOpen.value = !proposalOpen.value
+      if (!proposalOpen.value) return
+      await nextTick()
+      await decisionPanel.value.reviewSelection(selectedAnalysis.value)
+    }
+    async function navigate(destination) {
+      tool.value = destination
+      await nextTick()
+      document.getElementById(destination === 'paper' ? 'paper-workspace' : 'desk')?.focus({ preventScroll: true })
+      window.scrollTo({ top: 0 })
+    }
+    async function openVoice(id) {
+      if (tool.value !== 'chart') await navigate('chart')
+      proposalOpen.value = false
+      if (id) await voice.value.selectDecision(id)
+      else voice.value.openChooser()
+      await nextTick()
+      document.getElementById('voice-title')?.scrollIntoView({ block: 'nearest' })
+    }
+    function stopAutomation() {
+      paperTab.value = 'Automation'
+      navigate('paper')
+      automation.value?.stop()
     }
 
-    return () => h('main', [
-      h('h1', 'Arbitrade'),
-      h('p', 'Check the local backend connection.'),
-      h('button', {
-        disabled: checking.value,
-        onClick: checkConnection,
-      }, checking.value ? 'Checking…' : 'Check connection'),
-      h('p', { role: 'status', 'aria-live': 'polite' }, result.value),
-      h(CandleChart),
-      h(VoicePanel),
-    ])
+    return () => [
+      h(DeskNavigation, { tool: tool.value, mode: m.mode, automationOn: automationOn.value, voiceOn: voiceOn.value,
+        onNavigate: navigate, onMode: m.changeMode, onStop: stopAutomation, onVoice: () => openVoice() }),
+      h('main', { id: 'desk', tabindex: -1 }, [
+        h('div', { class: ['workspace', collapsed.value && 'rail-closed', tool.value !== 'chart' && 'parked'], inert: tool.value !== 'chart' }, [
+          h(IndicatorPanel, { market: m, collapsed: collapsed.value, onCollapse: value => { collapsed.value = value } }),
+          h('div', { class: 'market-desk' }, [
+            h('div', { class: 'instrument' }, [h('h2', m.symbol === 'AAPL' ? 'Apple Inc.' : m.symbol), h('span', { class: 'ticker' }, m.symbol)]),
+            h(CandleChart, { market: m, chartHost: setChartHost }),
+          ]),
+          h('aside', { class: 'analysis-column', 'aria-label': 'Analysis and voice' }, [
+            h(ChartSummary, { market: m, decision: selectedAnalysis.value?.decision,
+              busy: busy.value, message: notice.value?.key === currentKey.value ? notice.value.message : '',
+              proposalOpen: proposalOpen.value, onAnalyze: analyze, onReview: toggleProposal }, {
+              default: () => view('proposal-view', proposalOpen.value, [h(DecisionPanel, {
+                ref: decisionPanel, chartRange: m.visibleRange, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe,
+                candleTimestamp: m.selected?.timestamp, completed: Boolean(m.selectedCoverage?.ended),
+                shortWindow: m.appliedShort, longWindow: m.appliedLong, onOutcome: receiveAnalysis, onBusy: value => { busy.value = value },
+                onDiscuss: openVoice,
+              })]),
+            }),
+            h(VoicePanel, { ref: voice, onSession: value => { voiceOn.value = value } }),
+          ]),
+        ]),
+        h('section', { id: 'paper-workspace', class: tool.value !== 'paper' ? 'parked' : '', inert: tool.value !== 'paper', tabindex: -1,
+          'aria-label': 'Paper trading account' }, [
+          h('button', { class: 'text-button', onClick: () => navigate('chart') }, 'Back to chart'),
+          h('h2', 'Paper trading'), h('p', { class: 'simulation-label' }, 'Simulation only'),
+          h('div', { class: 'subnav' }, ['Trade', 'Automation'].map(name => h('button', {
+            'aria-pressed': paperTab.value === name, onClick: () => { paperTab.value = name },
+          }, name))),
+          view('trade-view', paperTab.value === 'Trade', [h(PaperTrading, { accountId: m.paperAccount, symbol: m.symbol })]),
+          view('automation-view', paperTab.value === 'Automation', [h(AutomationPanel, {
+            ref: automation, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe, shortWindow: m.appliedShort,
+            longWindow: m.appliedLong, completed: m.completed, onRunning: value => { automationOn.value = value },
+          })]),
+        ]),
+      ]),
+    ]
   },
 }).mount('#app')

@@ -1,5 +1,19 @@
 # Design pipeline
 
+## Current trading desk
+
+The default workspace pairs the live chart with a summary of the selected candle. The summary compares its close (or latest price) with its own open, displays its UTC time, and distinguishes a forming interval and partial coverage. Hover inspects OHLC and available share volume without changing the selection. Clicking a candle, selecting its timestamp, or choosing a confirmed crossover pins the candle for review. The desktop panel sits to the right, and on a phone it follows the chart.
+
+The emerald sidebar has two keyboard-accessible tabs and a collapse button. Indicators toggles 10/20/30/50/100/200-period SMA and EMA overlays and exposes named SMA, EMA and rolling-range settings. Signals focuses the chart on the selected strategy's two SMAs. Its newest-first list, chart marker and evidence card share the pinned candle timestamp. Switching tabs preserves the replay position and restores the chosen overlays.
+
+The chart uses eight exchange-session intervals. Python calculates EMA from an initial SMA and weights each subsequent completed close by `2 / (window + 1)`. Weekly and monthly bars aggregate scheduled sessions up to the first or last trading day of their period. The same calendar and receipt cutoff govern live/history, replay and frozen decisions. The existing chart configuration database stores explicit preset choices by symbol, timeframe, type and period.
+
+The parchment header contains the wordmark, mode and Paper trading. Trade holds orders and P&L, and Automation holds the controls and audit. The header provides a stop control throughout an active run. The parchment AI summary uses the favicon diamond. It presents observed prices and indicators immediately. Analyze candle calls the existing decision workflow for a completed candle and shows the reviewed outcome for that selection. Voice chat can discuss that decision by ID or open another saved record.
+
+`main.js` keeps the chart and tool components mounted as navigation changes. Inactive panels leave the tab order, and a mounted chart canvas can still produce the native PNG used by automation. Draft SMA inputs become active strategy windows when the user applies them. The source, upstream feed state and age stay visible under the plot. Detailed source timestamps, FastAPI transport and the health check are available in Feed details.
+
+The [assignment](assignment-4.md) allows students to choose navigation. Part 4.1 is demonstrated through the chart, source status, recording, replay and outage evidence. The other panels expose existing later-stage work. Historical strategy backtesting with performance results and the final presentation are separate assignment deliverables.
+
 Implemented flow as of prompt 08:
 
 ```text
@@ -21,7 +35,7 @@ without a new quote. Feed loss is detected from the upstream transport within
 about 250ms plus scheduling; browser status arrives on the next one-second
 update. Reconnect uses a new subscribed client after a three-second backoff.
 
-Vue defaults to 1m; 5m/15m/1h/1d switches close the old socket and open matching
+Vue defaults to 1m. Switching to 5m, 15m, 30m, 1h, 1d, 1w or 1mo opens matching
 history plus live updates. Generation checks discard old subscription events.
 Unknown volume is histogram whitespace. Selected candles show forming/ended
 and complete/partial coverage separately. Chart connection and Yahoo feed
@@ -35,10 +49,10 @@ GET /api/history -> default sample CSV, or selectable observation history
  -> six-field array, or metadata envelope with include_status=true
 ```
 
-Health checks remain independent of Yahoo health. The Check connection button
+Health checks remain independent of Yahoo health. The Check connection button in Feed details
 only checks FastAPI health. Synthetic CSV history is available by HTTP but is
 no longer the dashboard source. The standalone Yahoo CLI remains a bounded
-one-quote recorder. AI integration remains future work.
+one-quote recorder.
 
 Storage, replay and session rules are defined in candle-rules.md and
 higher-timeframes.md. WebSocket envelope and implementation limits are in

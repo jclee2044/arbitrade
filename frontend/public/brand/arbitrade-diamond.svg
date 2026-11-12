@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -14 28 26" role="img">
+  <title>Arbitrade diamond</title>
+  <defs>
+    <g id="cut0">
+      <polygon points="-13,-2 -9,-8 8,-8 13,-2 0,11" fill="#aadbf1" />
+      <polygon points="-9,-8 -7,-2 -13,-2" fill="#f9ffff" />
+      <polygon points="-9,-8 -4,-8 -7,-2" fill="#aadbf1" />
+      <polygon points="-4,-8 -2,-2 -7,-2" fill="#d7f5ff" />
+      <polygon points="-4,-8 3,-8 -2,-2" fill="#8fc4dd" />
+      <polygon points="3,-8 4,-2 -2,-2" fill="#f9ffff" />
+      <polygon points="3,-8 8,-8 4,-2" fill="#417fa7" />
+      <polygon points="8,-8 9,-2 4,-2" fill="#aadbf1" />
+      <polygon points="8,-8 13,-2 9,-2" fill="#65a2cb" />
+      <polygon points="-13,-2 -7,-2 0,11" fill="#8fc4dd" />
+      <polygon points="-7,-2 -2,-2 0,11" fill="#65a2cb" />
+      <polygon points="-2,-2 4,-2 0,11" fill="#f9ffff" />
+      <polygon points="4,-2 9,-2 0,11" fill="#aadbf1" />
+      <polygon points="9,-2 13,-2 0,11" fill="#417fa7" />
+      <path transform="translate(8 -8) rotate(0) scale(5)" d="M0 -1 Q.09 -.12 .83 0 Q.09 .09 0 1 Q-.09 .09 -.83 0 Q-.09 -.12 0 -1Z" fill="#B4D8EA" />
+      <path transform="translate(8 -8) rotate(0) scale(3.8)" d="M0 -1 Q.09 -.12 .83 0 Q.09 .09 0 1 Q-.09 .09 -.83 0 Q-.09 -.12 0 -1Z" fill="white" />
+    </g>
+  </defs>
+  <use href="#cut0" />
+</svg>

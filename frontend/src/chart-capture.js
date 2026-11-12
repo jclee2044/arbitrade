@@ -1,5 +1,6 @@
-import {createChart,CandlestickSeries,HistogramSeries,LineSeries} from 'lightweight-charts'
+import {createChart,CandlestickSeries,HistogramSeries,LineSeries,LineStyle} from 'lightweight-charts'
 import {adaptCandles} from './chart-data.js'
+import {studyColor} from './chart-studies.js'
 // Bind a chart export to its frozen SQLite snapshot, without capturing page UI.
 export function captureManifest(saved) {
   const s=saved.snapshot,rows=s.chart.candles
@@ -36,9 +37,12 @@ export async function renderFrozenChart(container,saved) {
     const line=chart.addSeries(LineSeries,{color,lineWidth:2,priceLineVisible:false})
     line.setData(saved.snapshot.indicators.series.map(row=>({time:Date.parse(row.timestamp)/1000,...(row[field]===null?{}:{value:row[field]})})))
   }
-  const colors=['#7c3aed','#0e7490','#b91c1c','#4d7c0f'];let pane=2
-  for(const [i,item] of (saved.snapshot.chart.indicators||[]).entries()){
-    const line=chart.addSeries(LineSeries,{color:colors[i%colors.length],lineWidth:2,priceLineVisible:false},item.pane==='separate'?pane++:0)
+  let pane=2
+  const pair=saved.snapshot.indicators
+  for(const item of saved.snapshot.chart.indicators||[]){
+    if(item.preset && item.type==='sma' && [pair.short_window,pair.long_window].includes(item.settings.window))continue
+    const line=chart.addSeries(LineSeries,{color:studyColor(item),lineWidth:2,priceLineVisible:false,
+      lineStyle:item.type==='ema'?LineStyle.Dashed:LineStyle.Solid},item.pane==='separate'?pane++:0)
     line.setData(item.rows.map(row=>({time:Date.parse(row.timestamp)/1000,...(row.value===null?{}:{value:row.value})})))
   }
   chart.timeScale().fitContent()

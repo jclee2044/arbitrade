@@ -1,13 +1,16 @@
 """Session-aligned history derived on demand from available minute versions."""
 
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from bisect import bisect_left
+from datetime import UTC, date, datetime, timedelta
 from functools import lru_cache
+from itertools import groupby
+from calendar import monthrange
 import math
 
 from backend.candles import utc_datetime, utc_label
 
-TIMEFRAMES = {'1m': 1, '5m': 5, '15m': 15, '1h': 60, '1d': None}
+TIMEFRAMES = {'1m': 1, '5m': 5, '15m': 15, '30m': 30, '1h': 60, '1d': None, '1w': None, '1mo': None}
 
 
 @dataclass(frozen=True)
@@ -48,6 +51,34 @@ def exchange_sessions(name, start_date, end_date):
     return tuple(sessions)
 
 
+def period_sessions(sessions, timeframe):
+    if timeframe not in ('1w', '1mo'):
+        return sessions
+
+    def period(session):
+        day = date.fromisoformat(session.label)
+        return day.isocalendar()[:2] if timeframe == '1w' else (day.year, day.month)
+
+    result = []
+    for _, members in groupby(sessions, key=period):
+        group = list(members)
+        result.append(Session(group[0].label, group[0].opened, group[-1].closed,
+                              tuple(minute for session in group for minute in session.minutes)))
+    return tuple(result)
+
+
+@lru_cache(maxsize=16)
+def sessions_for_chart(calendar, timeframe, first, last):
+    start, end = first - timedelta(days=2), last + timedelta(days=2)
+    if timeframe == '1w':
+        start -= timedelta(days=start.weekday())
+        end += timedelta(days=6 - end.weekday())
+    elif timeframe == '1mo':
+        start = start.replace(day=1)
+        end = end.replace(day=monthrange(end.year, end.month)[1])
+    return period_sessions(exchange_sessions(calendar, start.isoformat(), end.isoformat()), timeframe)
+
+
 def derive_timeframe(versions, timeframe='1m', *, as_of=None, calendar='NASDAQ', sessions=None):
     if timeframe not in TIMEFRAMES:
         raise ValueError('Unsupported timeframe')
@@ -71,13 +102,11 @@ def derive_timeframe(versions, timeframe='1m', *, as_of=None, calendar='NASDAQ',
             latest[timestamp] = (available, candle)
     if sessions is None:
         if latest:
-            first, last = min(latest), max(latest)
-            sessions = exchange_sessions(
-                calendar, (first - timedelta(days=2)).date().isoformat(),
-                (last + timedelta(days=2)).date().isoformat(),
-            )
+            sessions = sessions_for_chart(calendar, timeframe, min(latest).date(), max(latest).date())
         else:
             sessions = ()
+    else:
+        sessions = period_sessions(sessions, timeframe)
     membership = {minute: session for session in sessions for minute in session.minutes}
     groups = {}
     excluded = []
@@ -100,7 +129,7 @@ def derive_timeframe(versions, timeframe='1m', *, as_of=None, calendar='NASDAQ',
 
     candles, statuses = [], []
     for (_, start), (session, end, base) in sorted(groups.items(), key=lambda item: item[0][1]):
-        expected = sum(start <= minute < end for minute in session.minutes)
+        expected = bisect_left(session.minutes, end) - bisect_left(session.minutes, start)
         volume_known = all(c['volume'] is not None for c in base)
         label = utc_label(start)
         candles.append({

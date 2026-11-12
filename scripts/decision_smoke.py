@@ -47,7 +47,7 @@ def verify(output):
                 c.row_factory=sqlite3.Row
                 saved=[dict(row) for row in c.execute('SELECT * FROM decisions ORDER BY created_at')]
                 snapshots=[dict(row) for row in c.execute('SELECT id,payload_json,payload_sha256 FROM decision_snapshots')]
-            assert [row['status'] for row in saved]==['valid','timeout','malformed_answer','missing_input']
+            assert [row['status'] for row in saved]==['valid','timeout','malformed_answer','missing_input','valid']
             assert saved[0]['proposal']=='hold' and not any(row['paper_order_eligible'] for row in saved)
             report.update(result='PASS',**json.loads(result.stdout),saved_decisions=saved,snapshots=snapshots,paper_ledger_unchanged=True)
         except BaseException as failure:

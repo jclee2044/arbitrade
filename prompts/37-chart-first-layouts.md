@@ -1,0 +1,1 @@
+Chart first, advice beside it, narrow collapsible green indicator sidebar, uncluttered market information. Compare chart backgrounds, explore candle hover, and leave room for grants, insider transactions and news. Prioritize the supplied Part 4.1 assignment requirements while allowing for later parts and the long-term project vision.

@@ -116,14 +116,14 @@ def main():
             if not args.http_only:
                 if not webbrowser.open(FRONTEND):
                     raise RuntimeError(f'No browser could be opened. Open {FRONTEND} manually and rerun with a browser available.')
-                print('In the browser: click Check connection; confirm Backend connected.')
+                print('In the browser: open Feed details and click Check connection; confirm Backend connected.')
                 print('Confirm default AAPL / 1m, Yahoo source, FastAPI connection, feed status and changing source age.')
                 print('Switch through 5m, 15m, 1h, Daily, then return to 1m; inspect a candle and aligned volume.')
                 input('Once observations appear, press Enter to select a stored candle for comparison: ')
                 observed = json.loads(request(BACKEND + '/api/history?source=observations')[1])
                 assert observed, 'No in-session observations; live UI check remains pending'
                 target = observed[0]
-                print('Select this candle in Inspect candle (UTC):', target['timestamp'])
+                print('Choose this candle under Inspect candle, then open Candle details:', target['timestamp'])
                 values = input('Enter displayed open high low close and volume (unknown if absent), separated by spaces: ').split()
                 assert len(values) == 5
                 expected = [target[key] for key in ('open', 'high', 'low', 'close', 'volume')]

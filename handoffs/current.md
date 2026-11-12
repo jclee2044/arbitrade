@@ -1,3 +1,72 @@
+# Redesign commit authorized · November 11, 2026
+
+The student approved committing the reviewed redesign and its associated brand, assignment, prompt and verification records. The production build passed again and the selected files passed credential checks. Commit message is `Redesign Arbitrade workspace with indicators and signals`. On resumption, verify the resulting HEAD and clean working tree with Git. The next task is student-directed review or submission preparation. [Approval](../prompts/50-commit-workspace-redesign.md) · [Verification](../docs/verification.md#reviewed-redesign-commit).
+
+# Indicators and Signals implemented · November 11, 2026
+
+Arbitrade is the local Python/FastAPI and Vue stock workstation at `/home/jlrj/Documents/arbitrade`. The live app now implements the approved parchment header, collapsible emerald Indicators/Signals rail, six SMA/EMA presets per type, eight exchange-session chart intervals, candle-specific AI summary and Voice below it. Paper trading, automation and Stop are in the header and account view. The actual app and its saved layouts are ready for student review. [Open dashboard](http://127.0.0.1:5173/) · [Desktop](../docs/screenshots/indicators-signals/desktop.png) · [Signals](../docs/screenshots/indicators-signals/signals.png) · [Mobile](../docs/screenshots/indicators-signals/mobile.png).
+
+Frontend changes are in `frontend/src/main.js`, `useMarketChart.js`, `chart-studies.js`, the chart/navigation/panel components and stylesheet. Python changes are in `backend/timeframes.py`, `indicators.py`, `indicator_store.py`, `main.py`, `decisions.py` and `automation.py`. Preset overrides use an additive table in the existing configuration database. Existing named indicators keep their IDs. The assignment, calculation notes, README, design pipeline, AI-use record and saved prompt document the implementation.
+
+The final backend suite passed 102 tests. The Vite build, Part 4.1 chart/outage browser check, standalone checks for all ten features and `./scripts/smoke-test` passed. Browser checks exercised actual recorded AAPL at five widths and followed a confirmed event to its evidence. The integration fixtures verified the selected model/voice decision and exactly three paper fills ending at $1,025 and zero shares. See [the verification log](../docs/verification.md#indicators-and-signals-workspace) for commands, failed iterations, corrections, output locations and coverage limits.
+
+Resume by reading AGENTS.md and checking Git status. The tree includes earlier uncommitted work on `main`. No dependency installation or commit was made. Reuse `/usr/bin/python` with `backend/.packages` and the current frontend dependencies. The review services on 8000 and 5173 were running. The next step is student review before committing. Part 4.1 still needs the student report, accessible 30–60 second demo and reviewed submission commit. The physical microphone demonstration remains outstanding.
+
+# Parchment header and Signals design review · November 11, 2026
+
+Arbitrade is the Vue/FastAPI workstation at `/home/jlrj/Documents/arbitrade`. The latest design review includes a clickable in-conversation preview and the [Indicators](../docs/brand/interface/23-parchment-indicators.png) and [Signals](../docs/brand/interface/24-parchment-signals.png) desktop views. Both show a parchment header with the Arbitrade wordmark, Replay and Paper trading. The green Signals tab shows six daily crossovers calculated with the existing 20/50 SMA strategy on illustrative data. Selecting a row pins and inspects its candle.
+
+See [prompt 48](../prompts/48-parchment-header-signals.md) and [verification](../docs/verification.md#parchment-header-and-confirmed-signals--november-11-2026) for the files, browser checks at four widths, backend tests and the preview icon correction. The student is reviewing the layout. The running workstation still exposes these signals under Indicators → Crossovers. Resume with Git status and the existing `/usr/bin/python` environment.
+
+The student then requested the [running workstation](http://127.0.0.1:5173/). The host served the Arbitrade page and its proxied API health check. The right-hand panel open request was queued. See the [opening check](../docs/verification.md#opening-the-running-workstation).
+
+# Indicator tabs and timeframe design review · November 11, 2026
+
+Arbitrade is the local Vue/FastAPI market workstation at `/home/jlrj/Documents/arbitrade`. The latest [desktop preview](../docs/brand/interface/22-tabbed-indicators-timeframes.png) pairs Indicators and Signals tabs with six SMA/EMA periods, a separate eight-button candle timeframe row and the brand diamond beside the right-hand AI title. The chart and summary use illustrative daily data. Signals is intended for the existing confirmed SMA crossovers.
+
+The live dashboard currently accepts AAPL. Local replay data contains AAPL only. The backend supports SMA, rolling price range and five candle timeframes. EMA, 30m, weekly and monthly bars are shown for design review. [Prompt 47](../prompts/47-tabbed-indicators-timeframes.md) and the [verification entry](../docs/verification.md#indicator-tabs-and-chart-timeframes--november-11-2026) record the files, Chromium render, read-only capability checks and nine passing tests. The next step is student review of the PNG. Use the existing `/usr/bin/python` environment on resumption.
+
+# Single workspace design review · November 11, 2026
+
+The latest requested design for Arbitrade at `/home/jlrj/Documents/arbitrade` is [the single-workspace PNG](../docs/brand/interface/21-single-workspace-sma-ema-voice.png). It replaces side navigation with separate SMA and proposed EMA period selectors, keeps the chart centered, and places Voice immediately below the AI summary. All daily prices and analysis are illustrative. [Prompt 46](../prompts/46-single-workspace-indicators-voice.md) and the [verification record](../docs/verification.md#single-workspace-with-indicator-controls--november-11-2026) describe the request and observed checks. The next step is owner review of the image. Application implementation is outside this design request.
+
+# Dedicated workstation page concepts · November 11, 2026
+
+At `/home/jlrj/Documents/arbitrade`, the owner requested a second design direction with three distinct desktop pages. The PNGs are `docs/brand/interface/18-page-concept-chart.png`, `19-page-concept-indicator-library.png`, and `20-page-concept-ai-conversation.png` in that same directory. All use the same recorded stock, time bounds, timeframe and active indicators. The AI conversation is illustrative. Chromium checked page structure, shared context, and dimensions. See [prompt 45](../prompts/45-dedicated-workstation-pages.md) and [verification](../docs/verification.md#dedicated-workstation-page-concepts--november-11-2026). The next step is the owner's design review. This session produced mockup images and design records only.
+
+# Indicator chooser and AI workspace design review · November 11, 2026
+
+The Arbitrade workstation is at `/home/jlrj/Documents/arbitrade`. Following the implemented desk redesign below, the student requested visual mockups of two proposed layouts. The images are in `docs/brand/interface/`: `15-indicators-chooser.png`, `16-ai-chart-workspace.png`, and `17-mobile-chart-and-voice.png`. Prompt 44 and the [verification entry](../docs/verification.md#chart-preserving-workspace-mockups--november-11-2026) record the request and source data.
+
+The previews use the existing wordmark, real diamond and native chart with 378 recorded AAPL candles. The AI example uses a separate cutoff for the frozen reference candle. Chromium confirmed the chart and controls fit in both desktop views and in the mobile Voice view. The three PNGs and conversation preview were checked. No application behavior, dependency or Git commit changed in this review. Student feedback on the panel sizing and chooser is the next design step. On resumption, inspect Git status and use the existing `/usr/bin/python` environment.
+
+# Trading desk redesign · November 11, 2026
+
+Arbitrade is the local Vue/FastAPI/SQLite market workstation at `/home/jlrj/Documents/arbitrade`. The approved chart-first interface is implemented. The student selected the green rail, ice-blue brand diamond, ivory plot, and parchment summary. Paper trading is in the top right. Indicators and AI open beside the chart. On small screens the panel follows the chart.
+
+The frontend changes are in `main.js`, `DeskNavigation.js`, `CandleChart.js`, `useMarketChart.js`, `ChartSummary.js`, `IndicatorPanel.js`, `style.css` and the existing paper, automation, decision and voice components. Active work survives navigation. The assignment, prompt 43, README, design pipeline, AI-use disclosure, feature inventory, verification record and screenshots document the change. The browser drivers follow the new controls. The backend integration and SQLite schemas are the existing ones. Existing uncommitted brand assets and design records belong to the student.
+
+Observed checks include the Vite production build, 99 backend tests, the Part 4.1 browser check, `./scripts/smoke-test`, and the ten individual feature SmokeTests. Chromium verified recorded Yahoo data on the desktop and touch layouts, navigation, and the icon assets. The constructed market check showed volume and loss of feed. The offline workstation check traced three simulated fills to $1,025 cash and zero shares. The indicator test needed to reopen Feed details after reloading. Full commands, failures, evidence and limits are in [verification](../docs/verification.md#trading-desk-redesign--november-11-2026).
+
+Use `/usr/bin/python` with `backend/.packages` and the existing frontend dependencies. The review app was reachable at `http://127.0.0.1:5173`. The test processes used separate loopback ports. There were no installations, dependency changes or commits. Git showed `main` tracking `origin/main`. At resumption, inspect the actual working tree and review the UI with the student before committing. Part 4.1 still needs a report, an accessible short demo and the reviewed commit. Later backtesting, text-chat and physical voice demonstration evidence remain separate from this redesign. [Assignment](../docs/assignment-4.md) · [Screenshots and results](../docs/screenshots/workstation-redesign/report.json).
+
+# Published to GitHub — November 11, 2026
+
+Arbitrade at /home/jlrj/Documents/arbitrade, Python/FastAPI/Vue market chart and
+reviewed paper simulator. Pushed approved non-logo initial project to
+https://github.com/jclee2044/arbitrade on main. Commit:
+a0588b0f95a52af986bba1b9018c4399f63013bf. Remote main verified to match local
+HEAD; upstream origin/main configured. No force push. All297 published files
+passed credential-pattern and exact-local-secret scans; diff check passed.
+Credentials, local SQLite files, dependencies/build output and logo work excluded.
+
+No application/dependency changes or installs this turn. Existing SmokeTest:
+./scripts/smoke-test; not rerun locally. Hosted workflow result not checked.
+Preserve local logo files/prompts and shared-document logo sections. Working
+tree also contains these post-push session records; no extra commit made.
+See [verification](../docs/verification.md). Next: await student direction;
+on resume inspect Git state and use /usr/bin/python. Older notes are historical.
+
 # GitHub publication authorized — November 11, 2026
 
 Project: Arbitrade at /home/jlrj/Documents/arbitrade, Python/FastAPI/Vue market
@@ -54,6 +123,30 @@ Git changes and staged secret scan, excluding docs/brand/, prompts24–28 and
 logo-only shared-document sections, then commit. No commit completed. Existing
 ./scripts/smoke-test remains available; not rerun for metadata preparation.
 Earlier feature/verification notes below are historical, not revalidated.
+
+# Diamond cuts — November 11, 2026
+
+Student favors the diamond. The [three new designs](../docs/brand/ledger-diamond-cuts.svg) share a redrawn b with a rounded lower stem. See [prompt 29](../prompts/29-diamond-cuts.md) and [verification](../docs/verification.md). Next decision is the diamond cut.
+
+# Jade candlestick comparison — November 11, 2026
+
+[The latest concept sheet](../docs/brand/ledger-jade.svg) compares a jade i with paired i and t candles. See [prompt 28](../prompts/28-jade-candlesticks.md) and [verification](../docs/verification.md). Awaiting student preference.
+
+# Faceted diamond and upper wick — November 11, 2026
+
+The latest [two logo revisions](../docs/brand/ledger-facets-wick.svg) and matching PNG are ready for student review. See [prompt 27](../prompts/27-refine-diamond-and-wick.md) and [render verification](../docs/verification.md). Next step is selecting the mark for size testing.
+
+# Ledger market variants — November 11, 2026
+
+[Three designs](../docs/brand/ledger-market.svg) and their PNG preview are ready for review. See [prompt 26](../prompts/26-ledger-market-variants.md) and [render verification](../docs/verification.md). Next step is student selection.
+
+# Revised Ledger logo — November 11, 2026
+
+Student chose Ledger. The tighter wordmark and three icon alternatives are in [the revised sheet](../docs/brand/ledger-tight.svg) and its PNG preview. See [prompt 25](../prompts/25-refine-ledger-logo.md) and [verification](../docs/verification.md) for render and Git results. Next decision is the app icon.
+
+# Logo concept review — November 11, 2026
+
+Three deep emerald wordmarks and matching app icons are ready in [the concept sheet](../docs/brand/concepts.svg) and its PNG preview. See [prompt 24](../prompts/24-logo-concepts.md) and [verification](../docs/verification.md) for the render check and Git status. Next step is student selection before refining a design for the header and launcher.
 
 # Latest review request — November 11, 2026
 
@@ -563,3 +656,27 @@ legacy fill P&L is recovered once. Older-bar corrections can't rewind current
 valuation. Large-history performance, pagination/retention, cancellation,
 old replay-account resume, execution liquidity, more symbols and decision agent
 remain future work. No dependency/approval blocker for completed P&L feature.
+
+Latest logo review: the student selected the brilliant profile. [Three sparkle treatments](../docs/brand/ledger-brilliant-sparkle.svg) and a PNG preview are ready for selection. See [prompt 31](../prompts/31-brilliant-sparkle.md) and [render verification](../docs/verification.md).
+
+Crown Flash is the selected direction. The [latest revision](../docs/brand/crown-flash-right.svg) moves its glint to the upper right and adds a rounded foot serif to the b. See [prompt 32](../prompts/32-crown-flash-right.md) and [verification](../docs/verification.md). Next step is student review.
+
+The approved logo now appears at the top left of the Vue app. The [three production SVGs](../frontend/public/brand/) include the wordmark, diamond and i icon. [Prompt 34](../prompts/34-export-and-apply-logo.md) and [verification](../docs/verification.md) cover the header and checks. Build, browser layout check and offline SmokeTest passed. Changes are ready for student review.
+
+The diamond now identifies the browser tab and the i logo identifies the installable standalone app and Apple home-screen shortcut. See [manifest](../frontend/public/manifest.webmanifest), [prompt 35](../prompts/35-tab-and-pwa-icons.md), and [verification](../docs/verification.md). Build, Chromium installability and SmokeTest passed. Changes await review.
+
+Three [dashboard mockups](../docs/brand/interface/) explore editorial, workstation and ice-blue chart directions for student selection. See [prompt 36](../prompts/36-interface-directions.md) and [verification](../docs/verification.md).
+
+[Chart-first options](../docs/brand/interface/) 04–06 compare chart backgrounds and collapsed/expanded indicator navigation. See [brief](../prompts/37-chart-first-layouts.md) and [verification](../docs/verification.md). These are static concepts for student review.
+
+[Interface studies](../docs/brand/interface/) 07–09 restore the original editorial cream and compare lighter chart surfaces. See [prompt 38](../prompts/38-editorial-chart-surfaces.md) and [verification](../docs/verification.md). Awaiting design feedback.
+
+Latest selected direction: [ivory chart with parchment summary](../docs/brand/interface/10-ivory-parchment-summary.svg), including a smaller company heading. See [prompt 39](../prompts/39-ivory-parchment-summary.md) and [verification](../docs/verification.md).
+
+Sidebar concepts 11-studies-panel, 11-paper-panel and 11-ai-panel are in [interface studies](../docs/brand/interface/). See [prompt 40](../prompts/40-sidebar-feature-panels.md) and [verification](../docs/verification.md). Proposed navigation awaits review.
+
+[Rail states](../docs/brand/interface/12-rail-states.svg) and the [feature preservation checklist](../docs/brand/interface/feature-checklist.md) govern the proposed navigation. See [prompt 41](../prompts/41-rail-feature-parity.md) and [verification](../docs/verification.md). Implementation and runtime parity checks are pending.
+
+[Diamond AI rail concept](../docs/brand/interface/13-diamond-ai.svg) and [Part 4.1 readiness review](../docs/verification.md) follow prompt 42. The redesign remains a presentation and navigation change. Part 4.1 packaging, video accessibility and selected submission revision need confirmation.
+
+User clarified that AI uses the original light-blue logo diamond. [Updated rail preview](../docs/brand/interface/14-brand-diamond-ai.png) supersedes the outlined treatment.

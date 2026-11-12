@@ -55,7 +55,7 @@ def health() -> dict[str, str]:
 @app.get("/api/history")
 def history(
     symbol: str = 'AAPL',
-    timeframe: Literal['1m', '5m', '15m', '1h', '1d'] = '1m',
+    timeframe: Literal['1m', '5m', '15m', '30m', '1h', '1d', '1w', '1mo'] = '1m',
     as_of: datetime | None = None,
     source: Literal['sample', 'observations'] = 'sample',
     calendar: str | None = None,
@@ -108,12 +108,14 @@ async def live(websocket: WebSocket, symbol: str = 'AAPL', timeframe: str = '1m'
                             'completion': completion, 'feed': snapshot['feed'],
                             'moving_averages': snapshot['moving_averages'],
                             'indicators': snapshot['indicators'],
+                            'presets': snapshot['presets'],
                         })
             await websocket.send_json({
                 'type': 'status', 'symbol': symbol, 'interval': timeframe,
                 'source': snapshot['source'], 'feed': snapshot['feed'],
                 'moving_averages': snapshot['moving_averages'],
                 'indicators': snapshot['indicators'],
+                'presets': snapshot['presets'],
             })
             previous = current
     except (WebSocketDisconnect, OSError):
@@ -185,13 +187,36 @@ class IndicatorCreate(BaseModel):
 
 
 def named_indicators(snapshot, symbol, timeframe):
-    instances = app.state.indicator_store.list(symbol, timeframe)
-    return dict(snapshot, indicators=configured_indicators(snapshot, instances))
+    store = app.state.indicator_store
+    return dict(snapshot, indicators=configured_indicators(snapshot, store.list(symbol, timeframe)),
+                presets=configured_indicators(snapshot, store.presets(symbol, timeframe)))
 
 
 @app.get('/api/indicators/types')
 def available_indicator_types():
     return indicator_types()
+
+
+class PresetSelection(BaseModel):
+    symbol: str
+    timeframe: str
+    enabled: bool
+
+
+@app.get('/api/indicator-presets')
+def active_presets(symbol: str = 'AAPL', timeframe: str = '1m'):
+    try:
+        return app.state.indicator_store.presets(symbol, timeframe)
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+
+
+@app.put('/api/indicator-presets/{kind}/{period}')
+def select_preset(kind: str, period: int, selection: PresetSelection):
+    try:
+        return app.state.indicator_store.set_preset(selection.symbol, selection.timeframe, kind, period, selection.enabled)
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
 
 
 @app.get('/api/indicators')
@@ -299,7 +324,7 @@ class DecisionRequest(BaseModel):
 async def create_decision_snapshot(request: DecisionSnapshotRequest):
     try:
         return app.state.decisions.freeze(**request.model_dump(),
-            instances=app.state.indicator_store.list(request.symbol,request.interval),
+            instances=app.state.indicator_store.chart_indicators(request.symbol,request.interval),
             replay=app.state.paper_replays.get(request.account_id))
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error

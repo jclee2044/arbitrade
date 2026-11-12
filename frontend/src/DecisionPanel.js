@@ -1,20 +1,45 @@
-import { h, ref, onBeforeUnmount, nextTick } from 'vue'
+import { h, ref, watch, onBeforeUnmount, nextTick } from 'vue'
 import { chartPng, renderFrozenChart } from './chart-capture.js'
 
 export default {
+  emits: ['discuss', 'outcome', 'busy'],
   props: { accountId:String, symbol:String, interval:String, candleTimestamp:String,
     shortWindow:Number, longWindow:Number, completed:Boolean, chartRange:Function },
-  setup(props) {
+  setup(props, { emit, expose }) {
     const frozen=ref(null),decision=ref(null),busy=ref(false),error=ref(''),container=ref(null)
     const capture=ref(null),questions=ref([]),imageRequested=ref(false)
-    let chart,disposed=false
+    let chart,disposed=false,frozenSelection
+    watch(busy, value => emit('busy', value))
     async function jsonRequest(path,options) {
       const response=await fetch(path,options);const result=await response.json()
       if(!response.ok)throw new Error(typeof result.detail==='string'?result.detail:'Request failed')
       return result
     }
+    function clearFrozen() {
+      chart?.remove();chart=null;frozen.value=null;frozenSelection=null
+      decision.value=null;capture.value=null;questions.value=[];imageRequested.value=false;error.value=''
+    }
+    async function reviewSelection(view) {
+      if (busy.value) return
+      const same = frozenSelection && frozenSelection.account_id===props.accountId && frozenSelection.symbol===props.symbol &&
+        frozenSelection.interval===props.interval && Date.parse(frozenSelection.candle_timestamp)===Date.parse(props.candleTimestamp) &&
+        frozenSelection.short_window===props.shortWindow && frozenSelection.long_window===props.longWindow
+      if (same && (!view || view.decision.id===decision.value?.id)) return
+      clearFrozen()
+      if (!view) return
+      busy.value=true
+      try {
+        frozenSelection=view.selection;frozen.value=view.frozen;decision.value=view.decision
+        capture.value=view.capture;questions.value=view.questions;imageRequested.value=Boolean(view.capture)
+        await nextTick()
+        chart=await renderFrozenChart(container.value,view.frozen)
+      } catch(failure){error.value=failure.message}
+      finally{if(!disposed)busy.value=false}
+    }
     async function freeze(withImage=false) {
-      busy.value=true;error.value='';decision.value=null;capture.value=null;imageRequested.value=withImage
+      if (busy.value) return
+      clearFrozen()
+      busy.value=true;imageRequested.value=withImage
       try {
         const range=withImage?props.chartRange?.():null
         const selection={account_id:props.accountId,symbol:props.symbol,interval:props.interval,
@@ -24,14 +49,15 @@ export default {
           body:JSON.stringify(selection)})
         if(disposed)return
         frozen.value=result
+        frozenSelection=selection
         await nextTick()
-        chart?.remove()
         chart=await renderFrozenChart(container.value,result)
         if(withImage){
           questions.value=await jsonRequest('/api/decision-questions/chart')
           await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)))
           if(!disposed)capture.value=chartPng(chart,result)
         }
+        return result.snapshot
       } catch(failure){error.value=failure.message}
       finally{if(!disposed)busy.value=false}
     }
@@ -40,15 +66,27 @@ export default {
       try {
         const result=await jsonRequest('/api/decisions',{method:'POST',headers:{'Content-Type':'application/json'},
           body:JSON.stringify({snapshot_id:frozen.value.snapshot.snapshot_id,...(capture.value?{capture:capture.value}:{})})})
-        if(!disposed)decision.value=result
+        if(!disposed) {
+          decision.value=result
+          emit('outcome', {selection:frozenSelection, decision:result, frozen:frozen.value, capture:capture.value, questions:questions.value})
+        }
       } catch(failure){if(!disposed)error.value=failure.message}
       finally{if(!disposed)busy.value=false}
     }
+    async function generateSummary() {
+      if (busy.value) return
+      const snapshot = await freeze()
+      if (!snapshot) return error.value
+      if (!snapshot.completeness.complete) return 'Analysis needs more recorded evidence: ' + snapshot.completeness.missing.join(', ').replaceAll('_', ' ') + '.'
+      await analyze()
+      return error.value
+    }
+    expose({generateSummary,reviewSelection})
     onBeforeUnmount(()=>{disposed=true;chart?.remove()})
     return()=>h('div',{class:'decision-panel','aria-labelledby':'decision-title'},[
-      h('h3',{id:'decision-title'},'Decision proposal · No order execution'),
-      h('p','Freeze one completed candle at its closing time. Review the exact saved chart and backend facts before asking the model. Later arrivals and fills are excluded.'),
-      h('p','Each analysis asks an analyst and then an independent reviewer, at most once per role. Python applies the final account and strategy checks.'),
+      h('h3',{id:'decision-title'},'Decision proposal'),
+      h('p','Freeze a completed candle to review its facts or ask about its chart. A proposal never places an order.'),
+      h('p',{class:'fine-print'},props.candleTimestamp ? 'Selected: '+props.symbol+' · '+props.candleTimestamp+' · '+(props.completed?'Ended':'Forming') : 'No candle selected.'),
       h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(false)},'Freeze selected candle'),
       h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(true)},'Ask about chart'),
       !props.completed?h('p','Select a completed candle in the candle inspector to freeze it.'):null,
@@ -86,6 +124,7 @@ export default {
         h('p',{id:'decision-status'},`Status: ${decision.value.status} · Validation: ${decision.value.validation_status}`),
         h('p',{id:'decision-proposal'},`Model proposal: ${decision.value.proposal||'None'}${decision.value.quantity!=null?` · Quantity ${decision.value.quantity}`:''}`),
         h('p',{id:'decision-explanation'},decision.value.explanation),
+        h('button',{onClick:()=>emit('discuss',decision.value.id)},'Discuss this decision'),
         decision.value.image_analysis?h('div',{id:'chart-answers'},[
           ...Object.entries(decision.value.image_analysis.answers||{}).map(([name,a])=>h('p',{'data-answer':name},`${name}: ${a.choice}`)),
           h('p',{id:'crossover-comparison'},`Visual comparison: ${decision.value.image_analysis.comparison} · Python crossover: ${frozen.value.snapshot.indicators.crossover||'none'}`),

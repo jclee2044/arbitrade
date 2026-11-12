@@ -20,7 +20,7 @@ const page=await context.newPage(),errors=[],checks=[]
 page.on('pageerror',e=>errors.push(e.message))
 const button=name=>page.getByRole('button',{name,exact:true})
 async function until(fn){for(let i=0;i<200;i++){if(await fn())return;await new Promise(done=>setTimeout(done,100))}throw Error('Voice UI timed out')}
-async function released(){assert.equal(await page.locator('#voice-microphone').textContent(),'Microphone: off');assert(await page.evaluate(()=>window.__streams.every(s=>s.getTracks().every(t=>t.readyState==='ended'))));assert(await page.evaluate(()=>window.__peers.every(p=>p.connectionState==='closed')))}
+async function released(){assert.equal(await page.locator('#voice-microphone').textContent(),'Mic off');assert(await page.evaluate(()=>window.__streams.every(s=>s.getTracks().every(t=>t.readyState==='ended'))));assert(await page.evaluate(()=>window.__peers.every(p=>p.connectionState==='closed')))}
 await page.route('**/api/voice/sessions',async route=>{
  const r=await route.fetch()
  if(!r.ok()){await route.fulfill({response:r});return}
@@ -46,6 +46,7 @@ await page.route('**/api/voice/sessions',async route=>{
 async function closeRemote(){await page.evaluate(()=>{window.__remotePeer?.close();window.__remoteAudio?.dest.stream.getTracks().forEach(t=>t.stop());window.__remoteAudio?.osc.stop();window.__remoteAudio?.ac.close()})}
 try{
  await page.goto(base,{waitUntil:'networkidle'})
+ await page.getByRole('button', { name: 'Choose decision', exact: true }).click()
  await until(async()=>await page.locator('#voice-decision option').count()>1)
  const list=await(await page.request.get(base+'/api/voice/decisions')).json();const selected=list.find(d=>d.proposal==='hold');assert(selected)
  await page.locator('#voice-decision').selectOption(selected.id)
@@ -53,7 +54,10 @@ try{
  const record=await(await page.request.get(base+'/api/voice/decisions/'+selected.id)).json()
  assert.equal(record.paper_outcome.trade_recorded,false);assert.equal(record.current_recorded_account.cash,'948')
  await button('Start voice').click();await until(async()=>(await page.locator('#voice-status').textContent()).startsWith('Voice connected'))
- assert.equal(await page.locator('#voice-microphone').textContent(),'Microphone: active')
+ assert.equal(await page.locator('#voice-microphone').textContent(),'Mic on')
+ await button('Paper trading').click()
+ await page.getByRole('button', { name: 'Voice active', exact: true }).click()
+ assert.equal(await page.locator('#voice-microphone').innerText(), 'Mic on')
  assert(await page.evaluate(()=>window.__receivedAudio>0&&document.querySelector('audio').srcObject.getAudioTracks().length===1))
  const heard=[] // Mocked captions, not a live listening result.
  for(const [question,reply] of [

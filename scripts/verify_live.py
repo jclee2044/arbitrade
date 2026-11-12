@@ -69,7 +69,7 @@ async def verify(recorded, browser=False):
             if browser:
                 if not webbrowser.open('http://127.0.0.1:5173'):
                     raise RuntimeError('No browser could be opened; UI check pending')
-                print('In the browser: click Check connection. Confirm AAPL / 1m and the source label.')
+                print('In the browser: open Feed details and click Check connection. Confirm AAPL / 1m and the source label.')
                 assert (await asyncio.to_thread(input, 'Does the connection button show Backend connected? [yes/no] ')).strip().lower() == 'yes'
             async with connect('ws://127.0.0.1:5173/api/live?symbol=AAPL&timeframe=1m') as ws:
                 initial = json.loads(await ws.recv())
@@ -102,10 +102,10 @@ async def verify(recorded, browser=False):
                                   'websocket_candle': candle, 'completion': matched['completion']}, indent=2), flush=True)
 
                 if browser:
-                    print('Select candle in Inspect candle:', candle['timestamp'])
+                    print('Choose this candle under Inspect candle, then open Candle details:', candle['timestamp'])
                     print('Expected OHLCV:', candle)
                     assert (await asyncio.to_thread(input, 'Do the visible time and OHLCV match (null means Unknown)? [yes/no] ')).strip().lower() == 'yes'
-                    assert (await asyncio.to_thread(input, 'Switch through all five timeframes and back to 1m. Do the chart, interval label and aligned volume update? [yes/no] ')).strip().lower() == 'yes'
+                    assert (await asyncio.to_thread(input, 'Switch through all eight timeframes and back to 1m. Do the chart, interval label and aligned volume update? [yes/no] ')).strip().lower() == 'yes'
                 if recorded:
                     with ObservationStore(feed.database) as store:
                         feed.accept({'id': 'AAPL', 'time': int(datetime.fromisoformat('2026-11-10T15:00:40+00:00').timestamp() * 1000),
@@ -144,12 +144,12 @@ async def verify(recorded, browser=False):
                     print('PASS: human-observed browser SmokeTest.', flush=True)
                 print('PASS: upstream disconnected; same proxied FastAPI WebSocket remains OPEN and reports disconnected.', flush=True)
 
-            for timeframe in ('1m', '5m', '15m', '1h', '1d'):
+            for timeframe in ('1m', '5m', '15m', '30m', '1h', '1d', '1w', '1mo'):
                 async with connect(f'ws://127.0.0.1:5173/api/live?symbol=AAPL&timeframe={timeframe}') as ws:
                     snapshot = json.loads(await ws.recv())
                     expected = history_response(timeframe=timeframe, source='observations', database=feed.database)
                     assert snapshot['candles'] == expected['candles'] and snapshot['interval'] == timeframe
-            print('PASS: all five timeframe snapshots equal backend observation aggregation through Vite.', flush=True)
+            print('PASS: all eight timeframe snapshots equal backend observation aggregation through Vite.', flush=True)
             async with connect('ws://127.0.0.1:8000/api/live?timeframe=bad') as ws:
                 assert json.loads(await ws.recv())['type'] == 'error'
                 await ws.wait_closed()

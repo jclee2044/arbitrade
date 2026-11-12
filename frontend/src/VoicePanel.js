@@ -1,9 +1,12 @@
-import {h,ref,onMounted,onBeforeUnmount,nextTick} from 'vue'
+import {h,ref,onMounted,onBeforeUnmount,nextTick,watch} from 'vue'
 import {VoiceConnection} from './voice-connection.js'
+import {formatUtc} from './chart-data.js'
 
 export default {
- setup(){
+ emits:['session'],
+ setup(props,{emit,expose}){
   const choices=ref([]),selected=ref(''),record=ref(null),phase=ref('idle'),message=ref('Select a recorded decision to discuss.'),mic=ref(false),audio=ref(null),captions=ref([]),session=ref(''),mode=ref(''),error=ref('')
+  const chooser=ref(false)
   let connection,disposed=false,selectionVersion=0
   async function load(){
    try{
@@ -37,12 +40,29 @@ export default {
    },fragment=>{if(!disposed)captions.value=[...captions.value,fragment]})
    await connection.start(selected.value)
   }
+  async function selectDecision(id,open=true){
+   if(open)chooser.value=true
+   if(selected.value===id&&record.value)return
+   selected.value=id
+   const detail=choose()
+   if(!choices.value.some(choice=>choice.id===id))await load()
+   await detail
+  }
+  function openChooser(){chooser.value=true;load()}
+  expose({selectDecision,openChooser})
+  watch(phase,value=>emit('session',['requesting','connecting','active','ending'].includes(value)))
   onMounted(load)
   onBeforeUnmount(()=>{disposed=true;selectionVersion++;connection?.cleanup()})
   const busy=()=>['requesting','connecting','active','ending'].includes(phase.value)
   return()=>h('section',{class:'voice-panel','aria-labelledby':'voice-title'},[
-   h('h3',{id:'voice-title'},'Discuss a recorded decision by voice'),
-   h('p','Two-way voice about one saved record. Ask a question, listen, then ask a follow-up in the same session. Voice cannot change the paper account.'),
+   h('header',[h('h2',{id:'voice-title'},'Voice chat'),h('span',{id:'voice-microphone',class:mic.value?'mic-active':''},mic.value?'Mic on':'Mic off')]),
+   h('p',{class:'voice-intro'},record.value ? 'Discuss '+record.value.symbol+' · '+record.value.interval+' · '+(record.value.analyst.proposal||record.value.status||'saved decision')+' · '+formatUtc(Date.parse(record.value.cutoff)/1000) : 'Choose a recorded decision to discuss.'),
+   h('div',{class:'voice-actions'},[
+    h('button',{class:'primary',disabled:busy()||!record.value,onClick:start},'Start voice'),
+    busy()?h('button',{onClick:()=>connection?.end()},'End voice'):null,
+    h('button',{class:'review-link','aria-expanded':chooser.value,'aria-controls':'voice-chooser',onClick:()=>{if(chooser.value)chooser.value=false;else openChooser()}},chooser.value?'Close decision list':'Choose decision'),
+   ]),
+   h('div',{id:'voice-chooser',hidden:!chooser.value},[
    h('label',{for:'voice-decision'},'Selected decision '),
    h('select',{id:'voice-decision',value:selected.value,onChange:e=>{selected.value=e.target.value;choose()}},[
     h('option',{value:''},'Choose a saved decision'),...choices.value.map(d=>h('option',{value:d.id},`${d.symbol} / ${d.interval} · ${d.proposal||'No proposal'} · ${d.status} · ${d.id}`)),
@@ -54,15 +74,12 @@ export default {
     h('p',{id:'voice-record-outcome'},record.value.paper_outcome.fill?`Recorded fill ${record.value.paper_outcome.fill.quantity} @ ${record.value.paper_outcome.fill.price} · Cash ${record.value.paper_outcome.fill_account?.cash} · Shares ${record.value.paper_outcome.fill_account?.shares}`:`No recorded fill · ${record.value.paper_outcome.application?.reason||record.value.paper_outcome.order?.status||record.value.paper_outcome.application?.status||'Manual analysis; no linked order'}`),
     h('p',`Record read at ${record.value.summary_read_at}. End and start again to refresh later outcomes.`),
    ]):h('p','No saved decision selected. Create a manual decision or choose one from the saved list.'),
-   h('button',{disabled:busy()||!record.value,onClick:start},'Start voice'),
-   h('button',{disabled:!busy(),onClick:()=>connection?.end()},'End voice'),
-   h('p',{id:'voice-status',role:'status'},message.value),
-   h('p',{id:'voice-microphone'},`Microphone: ${mic.value?'active':'off'}`),
+   ]),
+   h('p',{id:'voice-status',role:'status',hidden:phase.value==='idle'&&!session.value},message.value),
    session.value?h('p',{id:'voice-session'},`Session ${session.value} · ${mode.value}`):null,
    error.value?h('p',{role:'alert'},error.value):null,
-   h('audio',{ref:audio,autoplay:true,controls:true,'aria-label':'Voice assistant audio'}),
-   h('p','Try: “What did the agents decide for this symbol?” Then: “What happened to the paper account?”'),
-   h('div',{id:'voice-transcript'},[
+   h('audio',{ref:audio,autoplay:true,controls:true,hidden:!busy()&&!session.value,'aria-label':'Voice assistant audio'}),
+   h('div',{id:'voice-transcript',hidden:!captions.value.length},[
     ...['You','Assistant'].map(speaker=>h('p',{'data-speaker':speaker},[h('strong',speaker+': '),captions.value.filter(f=>f.speaker===speaker).map(f=>f.delta).join('')])),
    ]),
   ])

@@ -22,6 +22,7 @@ async function values() {
 }
 try {
   await page.goto('http://127.0.0.1:15173', { waitUntil: 'networkidle' })
+  await page.locator('.feed-details summary').click()
   await page.getByText('Feed: disabled', { exact: false }).waitFor()
   checks.push('Backend started with live Yahoo feed disabled')
   await page.locator('#mode').selectOption('replay')
@@ -53,13 +54,14 @@ try {
   checks.push('Two UI replays show identical OHLCV; close and volume match SQLite expectations')
   if (selection.constructed) checks.push('Late revision appears only at its receipt step; repeated payload does not change volume')
   await page.getByRole('heading', { name: 'Replay · AAPL · 1m candles', exact: true }).waitFor()
-  // Exercise automatic playback and an alternate timeframe.
-  await page.locator('#timeframe').selectOption('5m')
-  await until(async () => (await page.locator('#replay-status').textContent()).startsWith('0 /'))
-  await page.getByRole('button', { name: 'Play replay', exact: true }).click()
-  await until(async () => (await page.locator('#replay-status').textContent()).includes('Finished'))
-  assert.equal((await values()).Close, selection.close)
-  checks.push('Play replay and timeframe change work')
+  for (const frame of ['5m','30m','1w','1mo']) {
+    await page.locator('[data-frame="' + frame + '"]').click()
+    await until(async () => (await page.locator('#replay-status').textContent()).startsWith('0 /'))
+    await page.getByRole('button', { name: 'Play replay', exact: true }).click()
+    await until(async () => (await page.locator('#replay-status').textContent()).includes('Finished'))
+    assert.equal((await values()).Close, selection.close)
+  }
+  checks.push('5-minute, 30-minute, weekly and monthly replay preserve the recorded close')
   await page.locator('#replay-start').fill('2020-01-01T00:00:00Z')
   await page.locator('#replay-end').fill('2020-01-02T00:00:00Z')
   await page.getByRole('button', { name: 'Load / restart replay', exact: true }).click()

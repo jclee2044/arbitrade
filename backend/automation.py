@@ -158,7 +158,7 @@ class AutomationService:
                 (identifier,run_id,r['account_id'],r['strategy'],r['symbol'],r['interval'],stamp,cutoff.isoformat(),'capturing',self.broker.clock().isoformat()))
         try:
             frozen=self.decisions.freeze(account_id=r['account_id'],symbol=r['symbol'],interval=r['interval'],candle_timestamp=stamp,
-                short_window=r['short_window'],long_window=r['long_window'],instances=self.indicators.list(r['symbol'],r['interval']))
+                short_window=r['short_window'],long_window=r['long_window'],instances=self.indicators.chart_indicators(r['symbol'],r['interval']))
             with self.broker.transaction() as c:c.execute('UPDATE automation_attempts SET snapshot_id=? WHERE id=?',(frozen['snapshot']['snapshot_id'],identifier))
         except ValueError as error:
             with self.broker.transaction() as c:c.execute("UPDATE automation_attempts SET status='skipped',reason='snapshot_unavailable' WHERE id=?",(identifier,))

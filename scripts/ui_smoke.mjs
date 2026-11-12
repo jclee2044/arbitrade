@@ -52,6 +52,8 @@ async function compare(snapshot, index = snapshot.candles.length - 1) {
   await until(async () => await page.locator('#candle-time option').count() === snapshot.candles.length,
     'matching number of candle options')
   await page.locator('#candle-time').selectOption(selection)
+  const disclosure = page.locator('.facts-disclosure')
+  if (!await disclosure.evaluate(details => details.open)) await disclosure.locator('summary').click()
   const expected = {
     'Date and time': utc(candle.timestamp), Open: String(candle.open), High: String(candle.high),
     Low: String(candle.low), Close: String(candle.close),
@@ -60,13 +62,14 @@ async function compare(snapshot, index = snapshot.candles.length - 1) {
     Coverage: completion.coverage_complete ? 'Complete' : 'Partial',
   }
   await until(async () => JSON.stringify(await inspector()) === JSON.stringify(expected), 'inspector equals stored backend candle')
-  assert.equal(await page.locator('#timeframe').inputValue(), snapshot.interval)
+  assert.equal(await page.locator('#timeframe [aria-pressed=true]').getAttribute('data-frame'), snapshot.interval)
   await page.getByRole('heading', { name: `AAPL · ${snapshot.interval} candles`, exact: true }).waitFor()
   assert.equal(await page.getByRole('alert').count(), 0)
 }
 try {
-  await page.goto('http://127.0.0.1:5173', { waitUntil: 'networkidle' })
-  assert.equal(await page.locator('#timeframe').inputValue(), '1m')
+  await page.goto(process.argv[4] || 'http://127.0.0.1:5173', { waitUntil: 'networkidle' })
+  assert.equal(await page.locator('#timeframe [aria-pressed=true]').getAttribute('data-frame'), '1m')
+  await page.locator('.feed-details summary').click()
   await page.getByRole('button', { name: 'Check connection', exact: true }).click()
   await page.getByText('Backend connected:', { exact: false }).waitFor()
   checks.push('Clicked Check connection; visible backend-connected result; default 1m')
@@ -95,17 +98,18 @@ try {
     await page.screenshot({ path: resolve(output, 'prior-minute-ended.png'), fullPage: true })
     checks.push('Next minute adds a candle; preceding minute visibly ended')
   }
-  for (const interval of ['5m', '15m', '1h', '1d', '1m']) {
-    await page.locator('#timeframe').selectOption(interval)
+  for (const interval of ['5m', '15m', '30m', '1h', '1d', '1w', '1mo', '1m']) {
+    await page.locator('[data-frame="' + interval + '"]').click()
     await compare(snapshots[interval])
     await page.screenshot({ path: resolve(output, `timeframe-${interval}.png`), fullPage: true })
   }
   checks.push('All timeframe selectors load matching backend history; daily included')
-  const status = page.locator('section [role=status]')
+  const status = page.locator('#transport-status')
   await until(async () => /Source age: \d+ seconds/.test(await status.textContent()), 'source age shown')
   const firstAge = (await status.textContent()).match(/Source age: (\d+)/)[1]
   await until(async () => (await status.textContent()).match(/Source age: (\d+)/)?.[1] !== firstAge, 'source age advances')
   await request('disconnect')
+  await until(async () => (await page.locator('#market-status').innerText()).toLowerCase() === 'disconnected', 'feed outage visible on desk')
   await until(async () => /Chart: Connected to FastAPI.*Feed: disconnected/.test(await status.textContent()), 'upstream loss shown with connected chart transport')
   await until(() => sockets.size === 1, 'one surviving chart WebSocket')
   checks.push('Source age advances; disconnected upstream displayed while chart WebSocket remains open')

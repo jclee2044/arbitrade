@@ -9,6 +9,8 @@ from backend.indicators import validate_settings
 from backend.timeframes import TIMEFRAMES
 
 DEFAULT_CONFIG_DATABASE = Path(__file__).resolve().parent / 'data' / 'chart-config.sqlite3'
+PRESET_PERIODS = (10, 20, 30, 50, 100, 200)
+DEFAULT_PRESETS = {('sma', 20), ('sma', 200), ('ema', 30)}
 
 
 def chart_selection(symbol, timeframe):
@@ -46,6 +48,37 @@ class IndicatorStore:
                     UNIQUE(symbol, timeframe, name)
                 )
             ''')
+            connection.execute('''
+                CREATE TABLE IF NOT EXISTS indicator_presets (
+                    symbol TEXT NOT NULL, timeframe TEXT NOT NULL, kind TEXT NOT NULL,
+                    period INTEGER NOT NULL, enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),
+                    PRIMARY KEY(symbol,timeframe,kind,period)
+                )
+            ''')
+
+    def presets(self, symbol, timeframe):
+        symbol, timeframe = chart_selection(symbol, timeframe)
+        with closing(sqlite3.connect(self.path)) as connection:
+            overrides = {(kind, period): enabled for kind, period, enabled in connection.execute(
+                'SELECT kind,period,enabled FROM indicator_presets WHERE symbol=? AND timeframe=?',
+                (symbol, timeframe))}
+        return [dict(id=f'{kind}-{period}', name=f'{kind.upper()} {period}', type=kind,
+                     settings={'window': period}, preset=True, pane='price')
+                for kind in ('sma', 'ema') for period in PRESET_PERIODS
+                if overrides.get((kind, period), (kind, period) in DEFAULT_PRESETS)]
+
+    def set_preset(self, symbol, timeframe, kind, period, enabled):
+        symbol, timeframe = chart_selection(symbol, timeframe)
+        if kind not in ('sma', 'ema') or period not in PRESET_PERIODS:
+            raise ValueError('Choose a supported SMA or EMA preset')
+        with closing(sqlite3.connect(self.path)) as connection, connection:
+            connection.execute('''INSERT INTO indicator_presets VALUES (?,?,?,?,?)
+                                  ON CONFLICT(symbol,timeframe,kind,period) DO UPDATE SET enabled=excluded.enabled''',
+                               (symbol, timeframe, kind, period, enabled))
+        return self.presets(symbol, timeframe)
+
+    def chart_indicators(self, symbol, timeframe):
+        return self.list(symbol, timeframe) + self.presets(symbol, timeframe)
 
     def list(self, symbol, timeframe):
         symbol, timeframe = chart_selection(symbol, timeframe)

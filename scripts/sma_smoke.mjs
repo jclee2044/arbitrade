@@ -37,6 +37,9 @@ async function inspect(row) {
 }
 try {
   await page.goto('http://127.0.0.1:15173', { waitUntil: 'networkidle' })
+  await page.getByRole('tab', { name: 'Signals', exact: true }).click()
+ await page.getByText('Crossover windows', {exact:true}).click()
+  await page.locator('.feed-details summary').click()
   await page.getByText('Feed: disabled', { exact: false }).waitFor()
   // Server validation is independent of native input validation.
   for (const [short, long] of [['0', '3'], ['2', '2'], ['1.5', '3']]) {
@@ -54,7 +57,7 @@ try {
   await page.locator('#sma-short').fill('2')
   await page.locator('#sma-long').fill('3')
   await page.getByRole('button', { name: 'Apply SMA windows', exact: true }).click()
-  await until(async () => (await page.locator('.sma-legend').textContent()).includes('short SMA (2)'))
+  await until(async () => (await page.locator('.pair-caption').textContent()).includes('SMA 2 and SMA 3'))
   checks.push('UI and HTTP reject zero, fractional and unordered windows; user applies 2/3')
   const params = new URLSearchParams({ source: 'observations', include_status: 'true', as_of: fixture.end,
     short_window: '2', long_window: '3' })
@@ -63,6 +66,7 @@ try {
   const batch = (await response.json()).moving_averages.rows
   assert.deepEqual(batch, fixture.expected)
   checks.push('Batch Python result matches all seven hand-calculated rows including warm-up gaps')
+  await page.getByText('Selected candle values',{exact:true}).click()
   await inspect(batch.at(-1))
   await until(async () => await page.locator('.sma-crossovers li').count() === 2)
   checks.push('Live WebSocket with custom 2/3 windows displays the same completed-history averages and signals with Yahoo off')
@@ -92,8 +96,10 @@ try {
   await page.getByText('Source: Replay · CONSTRUCTED test_data=true', { exact: false }).waitFor()
   const signals = await page.locator('.sma-crossovers li').allTextContents()
   assert.equal(signals.length, 2)
-  assert.match(signals[0], /15:04 UTC · Upward · Short 16 · Long 13/)
-  assert.match(signals[1], /15:06 UTC · Downward · Short 4 · Long 9/)
+  assert.match(signals[0], /Downward.*15:06.*Short 4.*Long 9/)
+  assert.match(signals[1], /Upward.*15:04.*Short 16.*Long 13/)
+  await page.locator('.sma-crossovers').getByRole('button', { name: /Upward.*15:04/ }).click()
+  assert.equal(await page.locator('#candle-time').inputValue(), String(Date.parse(batch.find(row => row.signal === 'up').timestamp) / 1000))
   assert.equal(await page.getByRole('alert').count(), 0)
   await page.locator('.chart').screenshot({ path: resolve(output, 'two-crossovers.png') })
   await page.screenshot({ path: resolve(output, 'reference-desktop.png'), fullPage: true })
@@ -104,7 +110,7 @@ try {
   const box = await page.locator('.chart').boundingBox()
   assert(box.x >= 0 && box.x + box.width <= 391)
   // Interval change must recompute, without carrying 1m averages or markers.
-  await page.locator('#timeframe').selectOption('5m')
+  await page.locator('[data-frame="5m"]').click()
   await until(() => frames.at(-1)?.interval === '5m' && frames.at(-1)?.replay.position === 0)
   assert.equal(await page.locator('.sma-crossovers li').count(), 0)
   await page.getByRole('button', { name: 'Play replay', exact: true }).click()
