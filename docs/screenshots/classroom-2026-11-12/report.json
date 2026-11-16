@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "provider": "controlled",
+  "market_data": "constructed",
+  "ids": [
+    "8a33e06b-809f-42d1-8300-b0bdcf7f57a9",
+    "526d8031-d9f4-4bf1-8163-ccf3fe901065",
+    "03ad84b9-d74a-4a69-8f93-7ddea781de94",
+    "61d2f842-039c-429b-aba4-266d39c25324",
+    "e0f1863d-fb39-499b-934c-d05ddfd0e726",
+    "6b6375d3-e648-41c0-a8a9-a2d73823f60e"
+  ],
+  "checks": [
+    "Browser displays long, short, wait and distinct malformed/timeout/provider failures; errors have no substitute choice",
+    "Actual Vue request has only pixels and exact context fields; stored image equals preview and retrieval",
+    "Educational flowchart renders; desktop/mobile image stays within viewport; no uncaught browser errors"
+  ],
+  "paper_ledger_unchanged": true,
+  "outgoing_payload_checked": true
+}
