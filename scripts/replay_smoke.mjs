@@ -45,7 +45,7 @@ try {
     }
     const visible = await values()
     assert.equal(visible.Close, selection.close)
-    assert.equal(visible.Volume, selection.volume)
+    assert.equal(visible.Volume, selection.volume === 'Unknown' ? undefined : selection.volume)
     runs.push(visible)
     await page.screenshot({ path: resolve(output, `replay-${run + 1}.png`), fullPage: true })
   }

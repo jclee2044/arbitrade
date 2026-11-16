@@ -1,3 +1,4 @@
+import DrawingLayer from './DrawingLayer.js'
 import { h, ref } from 'vue'
 import { formatUtc, price } from './chart-data.js'
 import { timeframes } from './chart-studies.js'
@@ -28,7 +29,7 @@ function inspector(m) {
   if (!bar) return null
   const facts = [
     ['Date and time', formatUtc(bar.time)], ['Open', bar.open], ['High', bar.high], ['Low', bar.low], ['Close', bar.close],
-    ['Volume', bar.volume == null ? 'Unknown' : bar.volume.toLocaleString('en-US') + ' shares'],
+    ...(bar.volume == null ? [] : [['Volume', bar.volume.toLocaleString('en-US') + ' shares']]),
     ['Interval', m.selectedCoverage?.ended ? 'Ended' : 'Still forming'],
     ['Coverage', m.selectedCoverage?.coverage_complete ? 'Complete' : 'Partial'],
   ]
@@ -40,12 +41,14 @@ function inspector(m) {
     h('div', { class: 'inspect-controls' }, [
       h('label', { for: 'candle-time' }, 'Inspect candle'),
       h('select', { id: 'candle-time', value: m.selectedTime, onChange: e => m.pin(Number(e.target.value)) },
-        m.candles.map(c => h('option', { value: c.time }, formatUtc(c.time)))),
+        (m.candles.length > 1000 ? m.candles.filter(c => c.timestamp.startsWith(m.visibleDay) || c.time === m.selectedTime) : m.candles).map(c => h('option', { value: c.time }, formatUtc(c.time)))),
       m.pinned ? h('button', { class: 'text-button', onClick: m.followLatest }, 'Follow latest') : null,
     ]),
     h('details', { class: 'facts-disclosure' }, [
       h('summary', 'Candle details'),
       h('dl', { class: 'candle-values facts' }, facts.flatMap(([key, value]) => [h('dt', key), h('dd', String(value))])),
+      bar.volume != null && m.selectedCoverage?.volume_provenance === 'yahoo_quote_counter'
+        ? h('p', { class: 'fine-print', id: 'volume-basis' }, 'Volume: observed cumulative change from saved Yahoo updates.') : null,
     ]),
   ])
 }
@@ -54,7 +57,7 @@ function hoverCard(m) {
   const bar = m.hoveredCandle
   if (!bar) return null
   const rows = [['Open', price(bar.open)], ['High', price(bar.high)], ['Low', price(bar.low)], ['Close', price(bar.close)],
-    ['Volume', bar.volume == null ? 'Unknown' : bar.volume.toLocaleString('en-US')]]
+    ...(bar.volume == null ? [] : [['Volume', bar.volume.toLocaleString('en-US')]])]
   return h('div', { class: 'hover-card', 'aria-hidden': 'true',
     style: { left: `clamp(4px, ${m.hover.x + 14}px, calc(100% - 178px))`,
       top: `clamp(4px, ${m.hover.y + 14}px, calc(100% - 166px))` } }, [
@@ -71,7 +74,7 @@ function feedAge(seconds) {
 }
 
 export default {
-  props: { market: Object, chartHost: Function },
+  props: { market: Object, chartHost: Function, drawingOpen: Boolean },
   setup(props) {
     const result = ref('')
     const checking = ref(false)
@@ -91,8 +94,6 @@ export default {
     return () => {
       const m = props.market
       const last = m.latest
-      const previous = m.candles.at(-2)
-      const delta = last && previous ? last.close - previous.close : null
       const sourceName = /construct|test_data=true/i.test(m.source) ? 'Constructed data' :
         m.mode === 'replay' ? 'Recorded observations' : 'Yahoo Finance'
       const linkDown = /disconnected|error/i.test(m.transport)
@@ -100,15 +101,7 @@ export default {
       const isCurrent = !linkDown && (m.mode === 'replay' || m.feed.status === 'live')
       const lastAge = m.mode === 'live' && m.feed.source_time_utc ? feedAge(parseInt(m.age, 10)) : null
       return h('section', { class: 'market-column', 'aria-labelledby': 'chart-title' }, [
-        h('div', { class: 'quote-toolbar' }, [
-          h('h2', { id: 'chart-title', class: 'sr-only' }, `${m.mode === 'replay' ? 'Replay · ' : ''}${m.symbol} · ${m.timeframe} candles`),
-          h('div', { class: 'quote-group' }, [
-            h('span', { class: 'last-price' }, price(last?.close)),
-            h('span', { class: 'quote-label' }, m.mode === 'replay' ? 'Replay price' : 'Last price'),
-            delta != null ? h('span', { class: ['price-move', delta < 0 && 'negative'],
-              title: 'Change from the preceding candle close' }, (delta >= 0 ? '+' : '−') + price(Math.abs(delta))) : null,
-          ]),
-        ]),
+        h('h2', { id: 'chart-title', class: 'sr-only' }, `${m.mode === 'replay' ? 'Replay · ' : ''}${m.symbol} · ${m.timeframe} candles`),
         h('div', { id: 'timeframe', role: 'group', 'aria-label': 'Candle timeframe' }, [
           h('span', 'Timeframe'), ...Object.entries(timeframes).map(([value, label]) => h('button', {
             'data-frame': value, 'aria-pressed': m.timeframe === value,
@@ -116,17 +109,26 @@ export default {
           }, label)),
         ]),
         m.mode === 'replay' ? replayControls(m) : null,
+        h('div', { class: 'history-navigation actions', 'aria-label': 'Chart history' }, [
+          h('button', { disabled: m.historyDays.indexOf(m.visibleDay) <= 0, onClick: m.previousDay }, 'Previous day'),
+          h('label', { for: 'history-day' }, 'Go to date · UTC'),
+          h('select', { id: 'history-day', value: m.visibleDay, disabled: !m.historyDays.length,
+            onChange: e => m.showDay(e.target.value) }, m.historyDays.map(day => h('option', { value: day }, day))),
+          h('button', { disabled: !last, onClick: m.followLatest }, 'Latest candles'),
+        ]),
         h('div', { class: 'overlay-legend', 'aria-label': 'Plotted indicators' }, m.chartStudies.map(item =>
           h('span', { class: ['study-key', item.type === 'ema' && 'dashed'], style: { '--line': item.color } }, item.name))),
         h('div', { class: 'plot-wrap' }, [
           h('div', { ref: props.chartHost, class: 'chart', role: 'img', 'aria-label': `${m.symbol} candlesticks with aligned volume below. Use Inspect candle for values.` }),
+          h(DrawingLayer, { market: m, active: props.drawingOpen }),
           !last ? h('p', { class: 'chart-empty' }, m.mode === 'replay' ? 'No regular-session candles at this replay step.' : 'Waiting for stored or live observations in a regular exchange session.') : null,
           hoverCard(m),
         ]),
-        h('div', { class: 'plot-key' }, [
-          h('span', last && last.volume == null ? 'Latest volume unavailable' : 'Volume · shares'),
-          h('span', 'UTC'),
-        ]),
+        !m.historyDays.length ? h('p', { class: 'fine-print' }, 'Historical candles appear as observations are recorded.') : null,
+        m.mode === 'live' && ['unavailable', 'cached'].includes(m.feed.historical?.status)
+          ? h('p', { class: 'fine-print', role: 'status' }, m.feed.historical.status === 'unavailable'
+            ? 'Historical download unavailable. Showing recorded candles; retrying automatically.'
+            : 'Cached history; download retry pending.') : null,
         h('div', { class: 'feed-strip' }, [
           h('span', { id: 'market-status', class: ['feed-state', !isCurrent && 'feed-muted'] }, status),
           h('span', { id: 'market-source' }, sourceName),

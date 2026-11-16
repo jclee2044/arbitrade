@@ -1,6 +1,6 @@
 import {createChart,CandlestickSeries,HistogramSeries,LineSeries,LineStyle} from 'lightweight-charts'
 import {adaptCandles} from './chart-data.js'
-import {studyColor} from './chart-studies.js'
+import {movingAverageColors,studyColor} from './chart-studies.js'
 // Bind a chart export to its frozen SQLite snapshot, without capturing page UI.
 export function captureManifest(saved) {
   const s=saved.snapshot,rows=s.chart.candles
@@ -33,8 +33,8 @@ export async function renderFrozenChart(container,saved) {
   const volume=chart.addSeries(HistogramSeries,{color:'#64748b',priceFormat:{type:'volume'}},1)
   chart.panes()[1].setHeight(80)
   const adapted=adaptCandles(saved.snapshot.chart.candles);prices.setData(adapted.prices);volume.setData(adapted.volumes)
-  for(const [field,color] of [['short','#2563eb'],['long','#b45309']]){
-    const line=chart.addSeries(LineSeries,{color,lineWidth:2,priceLineVisible:false})
+  for(const field of ['short','long']){
+    const line=chart.addSeries(LineSeries,{color:movingAverageColors.sma,lineWidth:2,priceLineVisible:false})
     line.setData(saved.snapshot.indicators.series.map(row=>({time:Date.parse(row.timestamp)/1000,...(row[field]===null?{}:{value:row[field]})})))
   }
   let pane=2

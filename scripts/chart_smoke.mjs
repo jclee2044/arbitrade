@@ -23,7 +23,8 @@ try {
    assert(chosen,'Need completed candle with SMA values');stamp=String(Date.parse(chosen.timestamp)/1000)
  }
  await page.locator('#candle-time').selectOption(stamp)
- await page.getByRole('button', { name: 'Review decision proposal', exact: true }).click()
+ await page.getByRole('tab', {name:'AI', exact:true}).click()
+ await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  await button('Ask about chart').click()
  await page.locator('#chart-preview').waitFor({state:'visible'})
  assert.equal(await page.locator('.decision-result').count(),0)

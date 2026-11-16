@@ -1,5 +1,7 @@
 # Ask about a frozen chart
 
+
+> This document describes the separate paper proposal/automation workflow under **Review paper proposal**. The assignment’s main **Decision API** control uses [image-only chart reading](classroom-decisions.md) with long/short/wait. Keys now load from process settings, project-root `.env`, then legacy `backend/.env`.
 Explicit Start/Stop paper automation can now apply approved decisions through a
 separate guarded path; manual questions remain read-only. See
 [paper-automation.md](paper-automation.md) for current execution/dedup rules.
@@ -68,7 +70,7 @@ a faithful rendering. This is a local application, without capture attestation.
 The additive decision_images table stores the PNG bytes, metadata/hashes, questions,
 answers and comparison under the existing decision ID. Existing decision records
 are preserved. PNGs live in the state SQLite database, not in market observations
-or a remote image host. The key stays in backend/.env; no frontend credentials or
+or a remote image host. The key stays in backend environment settings; no frontend credentials or
 new dependency are needed. Snapshot-only decisions continue to work.
 
 ## Repeatable checks and live result

@@ -84,8 +84,8 @@ export default {
     expose({generateSummary,reviewSelection})
     onBeforeUnmount(()=>{disposed=true;chart?.remove()})
     return()=>h('div',{class:'decision-panel','aria-labelledby':'decision-title'},[
-      h('h3',{id:'decision-title'},'Decision proposal'),
-      h('p','Freeze a completed candle to review its facts or ask about its chart. A proposal never places an order.'),
+      h('h3',{id:'decision-title'},'Paper decision proposal'),
+      h('p','Separate paper workflow: frozen candle/account evidence, position-aware actions and reviewer checks. A proposal never places an order.'),
       h('p',{class:'fine-print'},props.candleTimestamp ? 'Selected: '+props.symbol+' · '+props.candleTimestamp+' · '+(props.completed?'Ended':'Forming') : 'No candle selected.'),
       h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(false)},'Freeze selected candle'),
       h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(true)},'Ask about chart'),
@@ -111,7 +111,7 @@ export default {
         capture.value?h('div',{class:'chart-capture'},[
           h('h4','Captured chart · Blue short SMA / amber long SMA'),
           h('p',{id:'capture-cutoff'},`${capture.value.manifest.symbol} / ${capture.value.manifest.interval} · Cutoff ${capture.value.manifest.cutoff} · Range ${capture.value.manifest.range_start} to ${capture.value.manifest.range_end}`),
-          h('p','Volume pane: unknown volume remains a gap. Only frozen chart pixels are submitted.'),
+          h('p','This separate paper workflow submits the frozen chart with saved candle and account evidence.'),
           h('img',{id:'chart-preview',src:capture.value.image_url,alt:'Frozen chart PNG to submit for analysis'}),
           h('h4','Questions sent with this chart'),
           ...questions.value.map(q=>h('div',{class:'chart-question'},[h('strong',q.name),h('p',q.instructions),h('p',q.choices.map(c=>`${c.value}: ${c.description}`).join(' · '))])),

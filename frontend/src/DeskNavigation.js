@@ -13,7 +13,13 @@ export default {
       h('a', { class: 'skip-link', href: '#desk' }, 'Skip to workspace'),
       h('header', { class: 'masthead' }, [
         h('h1', { class: 'app-brand' }, [
-          h('img', { src: '/brand/arbitrade-wordmark.svg', alt: 'Arbitrade', width: 165, height: 36 }),
+          h('a', { href: '/', 'aria-label': 'Arbitrade home', onClick: event => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+            event.preventDefault()
+            emit('navigate', 'chart')
+          } }, [
+            h('img', { src: '/brand/arbitrade-wordmark.svg', alt: 'Arbitrade', width: 165, height: 36 }),
+          ]),
         ]),
         h('div', { class: 'header-actions' }, [
           props.voiceOn ? h('button', { class: 'session-action', onClick: () => emit('voice') }, 'Voice active') : null,
@@ -21,9 +27,9 @@ export default {
           h('label', { class: 'sr-only', for: 'mode' }, 'Market mode'),
           h('select', { id: 'mode', class: 'mode-select', value: props.mode, onChange: e => emit('mode', e.target.value) },
             [h('option', { value: 'live' }, 'Live'), h('option', { value: 'replay' }, 'Replay')]),
-          h('button', { class: 'paper-entry', 'aria-pressed': props.tool === 'paper', 'aria-controls': 'paper-workspace',
+          h('button', { class: 'paper-entry primary', 'aria-expanded': props.tool === 'paper', 'aria-controls': 'paper-workspace',
             onClick: () => emit('navigate', props.tool === 'paper' ? 'chart' : 'paper') },
-          [icon('M3 7h18v12H3z M4 7V5l13-2v4 M16 12h5'), 'Paper trading']),
+          [icon('M3 7h18v12H3z M4 7V5l13-2v4 M16 12h5'), 'Trade']),
         ]),
       ]),
     ]

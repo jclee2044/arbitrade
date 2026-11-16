@@ -57,11 +57,14 @@ async function compare(snapshot, index = snapshot.candles.length - 1) {
   const expected = {
     'Date and time': utc(candle.timestamp), Open: String(candle.open), High: String(candle.high),
     Low: String(candle.low), Close: String(candle.close),
-    Volume: candle.volume === null ? 'Unknown' : `${candle.volume.toLocaleString('en-US')} shares`,
+    ...(candle.volume == null ? {} : { Volume: `${candle.volume.toLocaleString('en-US')} shares` }),
     Interval: completion.ended ? 'Ended' : 'Still forming',
     Coverage: completion.coverage_complete ? 'Complete' : 'Partial',
   }
   await until(async () => JSON.stringify(await inspector()) === JSON.stringify(expected), 'inspector equals stored backend candle')
+  if (candle.volume != null && completion.volume_provenance === 'yahoo_quote_counter') {
+    assert.match(await page.locator('#volume-basis').innerText(), /observed cumulative change/)
+  }
   assert.equal(await page.locator('#timeframe [aria-pressed=true]').getAttribute('data-frame'), snapshot.interval)
   await page.getByRole('heading', { name: `AAPL · ${snapshot.interval} candles`, exact: true }).waitFor()
   assert.equal(await page.getByRole('alert').count(), 0)
@@ -80,6 +83,33 @@ try {
   }
   let snapshots = await request('seed')
   await compare(snapshots['1m'])
+  if (!live) {
+    const recovery = await context.newPage()
+    const attempts = { voice: 0, replay: 0 }
+    try {
+      for (const [kind, path] of [['voice', '/api/voice/decisions'], ['replay', '/api/replay/selections']]) {
+        await recovery.route('**' + path, async route => {
+          if (++attempts[kind] === 1) await route.fulfill({ status: 503, json: { detail: 'Temporary test outage' } })
+          else await route.continue()
+        })
+      }
+      await recovery.goto(process.argv[4] || 'http://127.0.0.1:5173')
+      await until(async () => attempts.voice === 1 && attempts.replay === 1, 'initial simulated outages')
+      await recovery.selectOption('#mode', 'replay')
+      await until(async () => attempts.voice >= 2 && attempts.replay >= 2, 'saved lists automatically retry', 15000)
+      await until(async () => (await recovery.locator('#replay-start').inputValue()).length > 0, 'saved replay range recovers')
+      const nextReceipt = recovery.getByRole('button', { name: 'Next observation', exact: true })
+      await until(async () => await nextReceipt.isEnabled(), 'replay connects after saved range recovers')
+      await nextReceipt.click()
+      await until(async () => (await recovery.locator('#replay-status').textContent()).startsWith('1 /'), 'replay advances one stored receipt')
+      await recovery.getByRole('tab', { name: 'AI', exact: true }).click()
+      await until(async () => await recovery.getByText('Cannot load saved decisions', { exact: true }).count() === 0, 'voice outage error clears')
+      await recovery.screenshot({ path: resolve(output, 'saved-list-recovery.png'), fullPage: true })
+      checks.push('Initial voice/replay HTTP 503 retries without reload; voice error clears, replay range loads and Next advances a stored receipt')
+    } finally {
+      await recovery.close()
+    }
+  }
   await page.getByText(live ? 'Source: Yahoo Finance' : 'Source: CONSTRUCTED replay', { exact: false }).waitFor()
   checks.push(live ? 'Actual Yahoo stored quote/time/OHLCV equals visible inspector' : 'Labeled constructed input; exact OHLCV and still-forming label')
   const initialCount = await page.locator('#candle-time option').count()

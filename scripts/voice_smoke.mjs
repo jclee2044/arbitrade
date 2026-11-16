@@ -17,6 +17,11 @@ await context.addInitScript(()=>{
  }
 })
 const page=await context.newPage(),errors=[],checks=[]
+let listAttempts=0
+await page.route('**/api/voice/decisions',async route=>{
+ if(++listAttempts===1)await route.fulfill({status:503,json:{detail:'Temporary test outage'}})
+ else await route.continue()
+})
 page.on('pageerror',e=>errors.push(e.message))
 const button=name=>page.getByRole('button',{name,exact:true})
 async function until(fn){for(let i=0;i<200;i++){if(await fn())return;await new Promise(done=>setTimeout(done,100))}throw Error('Voice UI timed out')}
@@ -46,6 +51,10 @@ await page.route('**/api/voice/sessions',async route=>{
 async function closeRemote(){await page.evaluate(()=>{window.__remotePeer?.close();window.__remoteAudio?.dest.stream.getTracks().forEach(t=>t.stop());window.__remoteAudio?.osc.stop();window.__remoteAudio?.ac.close()})}
 try{
  await page.goto(base,{waitUntil:'networkidle'})
+ await until(async()=>listAttempts>=2&&await button('Start voice').isEnabled())
+ assert.equal(await page.getByText('Cannot load saved decisions',{exact:true}).count(),0)
+ checks.push('Initial saved-decision HTTP 503 retries automatically; selected record loads, error clears and Start voice enables')
+ await page.getByRole('tab', {name:'AI', exact:true}).click()
  await page.getByRole('button', { name: 'Choose decision', exact: true }).click()
  await until(async()=>await page.locator('#voice-decision option').count()>1)
  const list=await(await page.request.get(base+'/api/voice/decisions')).json();const selected=list.find(d=>d.proposal==='hold');assert(selected)
@@ -55,7 +64,7 @@ try{
  assert.equal(record.paper_outcome.trade_recorded,false);assert.equal(record.current_recorded_account.cash,'948')
  await button('Start voice').click();await until(async()=>(await page.locator('#voice-status').textContent()).startsWith('Voice connected'))
  assert.equal(await page.locator('#voice-microphone').textContent(),'Mic on')
- await button('Paper trading').click()
+ await button('Trade').click()
  await page.getByRole('button', { name: 'Voice active', exact: true }).click()
  assert.equal(await page.locator('#voice-microphone').innerText(), 'Mic on')
  assert(await page.evaluate(()=>window.__receivedAudio>0&&document.querySelector('audio').srcObject.getAudioTracks().length===1))

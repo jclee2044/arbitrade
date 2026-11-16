@@ -1,5 +1,6 @@
 """Local FastAPI transport for Arbitrade."""
 
+from bisect import bisect_left
 import asyncio
 import json
 import os
@@ -23,6 +24,7 @@ from backend.indicator_store import IndicatorStore, DEFAULT_CONFIG_DATABASE
 
 from backend.replay import Replay, selections
 from backend.live import LiveFeed
+from backend.provider_history import ProviderHistory
 from backend.observations import DEFAULT_DATABASE
 from backend.timeframes import TIMEFRAMES
 
@@ -30,11 +32,14 @@ from backend.timeframes import TIMEFRAMES
 @asynccontextmanager
 async def lifespan(app):
     # Backend only: existing process environment takes precedence; never log values.
+    load_dotenv(Path(__file__).resolve().parent.parent / '.env', override=False, interpolate=False)
+    # Compatibility for existing installations; root and process settings take precedence.
     load_dotenv(Path(__file__).resolve().parent / '.env', override=False, interpolate=False)
     app.state.indicator_store = IndicatorStore(os.environ.get('ARBITRADE_CONFIG_DATABASE', str(DEFAULT_CONFIG_DATABASE)))
     app.state.feed = LiveFeed(Path(os.environ.get('ARBITRADE_DATABASE', str(DEFAULT_DATABASE))))
     setup_paper(app)
     if os.environ.get('ARBITRADE_LIVE_FEED', 'on').lower() not in {'off', '0', 'false'}:
+        app.state.feed.history = ProviderHistory(app.state.feed.database.with_suffix('.history.json'), background=True)
         await app.state.feed.start()
     else:
         app.state.feed.status = 'disabled'
@@ -74,8 +79,42 @@ def history(
     return named_indicators(result, symbol, timeframe) if include_status else result['candles']
 
 
+async def shared_snapshot(feed, key, build):
+    loop = asyncio.get_running_loop()
+    if not hasattr(feed, 'snapshot_tasks'):
+        feed.snapshot_tasks = {}
+    cache = feed.snapshot_tasks
+    for old_key, (task, expires) in list(cache.items()):
+        if task.done() and expires <= loop.time():
+            del cache[old_key]
+    if key not in cache:
+        task = asyncio.create_task(asyncio.to_thread(build))
+        cache[key] = (task, float('inf'))
+
+        def finished(result):
+            if result.cancelled() or result.exception():
+                cache.pop(key, None)
+            else:
+                cache[key] = (result, loop.time() + 1)
+        task.add_done_callback(finished)
+    return await asyncio.shield(cache[key][0])
+
+
+def live_page(snapshot, oldest=None, extend=False):
+    candles = snapshot['candles']
+    start = len(candles) if oldest is None else bisect_left(candles, oldest, key=lambda row: row['timestamp'])
+    if oldest is None or extend:
+        start = max(0, start - 256)
+    def page_study(study):
+        return dict(study, rows=study['rows'][start:])
+    return dict(snapshot, candles=candles[start:], coverage=snapshot['coverage'][start:],
+                moving_averages=page_study(snapshot['moving_averages']),
+                indicators=[page_study(item) for item in snapshot['indicators']],
+                presets=[page_study(item) for item in snapshot['presets']], has_older=start > 0)
+
+
 @app.websocket('/api/live')
-async def live(websocket: WebSocket, symbol: str = 'AAPL', timeframe: str = '1m',
+async def live(websocket: WebSocket, paged: bool = False, oldest: str | None = None, symbol: str = 'AAPL', timeframe: str = '1m', matrix: bool = False,
                short_window: int = DEFAULT_SHORT, long_window: int = DEFAULT_LONG):
     await websocket.accept()
     if symbol != 'AAPL' or timeframe not in TIMEFRAMES:
@@ -83,21 +122,39 @@ async def live(websocket: WebSocket, symbol: str = 'AAPL', timeframe: str = '1m'
         await websocket.close(code=1008)
         return
     feed = websocket.app.state.feed
+    def live_snapshot():
+        snapshot = with_averages(feed.snapshot(timeframe), short_window, long_window)
+        return named_indicators(snapshot, symbol, timeframe, feed.snapshot if matrix else None)
+
     previous = {}
     try:
         validate_windows(short_window, long_window)
-        snapshot = with_averages(await asyncio.to_thread(feed.snapshot, timeframe), short_window, long_window)
-        snapshot = named_indicators(snapshot, symbol, timeframe)
+        snapshot = await shared_snapshot(feed, (symbol, timeframe, matrix, short_window, long_window), live_snapshot)
+        if paged:
+            snapshot = live_page(snapshot, oldest)
         await websocket.send_json(snapshot)
+        studies = ('moving_averages', 'indicators', 'presets')
+        previous_studies = {key: snapshot[key] for key in studies}
         previous = {c['timestamp']: (c, s) for c, s in zip(snapshot['candles'], snapshot['coverage'])}
         while True:
             # A periodic snapshot also advances completion without a new quote
             # and reports upstream loss independently of the browser socket.
-            await asyncio.sleep(1)
-            snapshot = with_averages(await asyncio.to_thread(feed.snapshot, timeframe), short_window, long_window)
-            snapshot = named_indicators(snapshot, symbol, timeframe)
+            extend = False
+            if paged:
+                try:
+                    request = await asyncio.wait_for(websocket.receive_json(), timeout=1)
+                    extend = request == {'action': 'older'}
+                except TimeoutError:
+                    pass
+            else:
+                await asyncio.sleep(1)
+            oldest = snapshot['candles'][0]['timestamp'] if snapshot['candles'] else None
+            snapshot = await shared_snapshot(feed, (symbol, timeframe, matrix, short_window, long_window), live_snapshot)
+            if paged:
+                snapshot = live_page(snapshot, oldest, extend)
             current = {c['timestamp']: (c, s) for c, s in zip(snapshot['candles'], snapshot['coverage'])}
-            if previous.keys() - current.keys():
+            added = current.keys() - previous.keys()
+            if extend or previous.keys() - current.keys() or len(added) > 1:
                 await websocket.send_json(snapshot)
             else:
                 for timestamp, (candle, completion) in current.items():
@@ -106,17 +163,14 @@ async def live(websocket: WebSocket, symbol: str = 'AAPL', timeframe: str = '1m'
                             'type': 'candle', 'symbol': symbol, 'interval': timeframe,
                             'source': snapshot['source'], 'candle': candle,
                             'completion': completion, 'feed': snapshot['feed'],
-                            'moving_averages': snapshot['moving_averages'],
-                            'indicators': snapshot['indicators'],
-                            'presets': snapshot['presets'],
+                            **{key: snapshot[key] for key in studies},
                         })
             await websocket.send_json({
                 'type': 'status', 'symbol': symbol, 'interval': timeframe,
                 'source': snapshot['source'], 'feed': snapshot['feed'],
-                'moving_averages': snapshot['moving_averages'],
-                'indicators': snapshot['indicators'],
-                'presets': snapshot['presets'],
+                **{key: snapshot[key] for key in studies if snapshot[key] != previous_studies[key]},
             })
+            previous_studies = {key: snapshot[key] for key in studies}
             previous = current
     except (WebSocketDisconnect, OSError):
         pass
@@ -132,7 +186,7 @@ def replay_selections():
 
 @app.websocket('/api/replay')
 async def replay(websocket: WebSocket, symbol: str, start: str, end: str,
-                 timeframe: str = '1m', calendar: str | None = None,
+                 timeframe: str = '1m', calendar: str | None = None, matrix: bool = False,
                  short_window: int = DEFAULT_SHORT, long_window: int = DEFAULT_LONG):
     await websocket.accept()
     session = None
@@ -141,7 +195,7 @@ async def replay(websocket: WebSocket, symbol: str, start: str, end: str,
                          short_window=short_window, long_window=long_window)
         account_id = websocket.app.state.paper.create_account('replay', now=session.start)
         websocket.app.state.paper_replays[account_id] = session
-        initial = named_indicators(session.snapshot(), symbol, timeframe)
+        initial = named_indicators(session.snapshot(), symbol, timeframe, session.snapshot if matrix else None)
         initial['paper_account_id'] = account_id
         await websocket.send_json(initial)
         while True:
@@ -163,7 +217,7 @@ async def replay(websocket: WebSocket, symbol: str, start: str, end: str,
                 snapshot = session.snapshot()
             else:
                 raise ValueError('Expected next or refresh replay action')
-            snapshot = named_indicators(snapshot, symbol, timeframe)
+            snapshot = named_indicators(snapshot, symbol, timeframe, session.snapshot if matrix else None)
             snapshot['paper_account_id'] = account_id
             await websocket.send_json(snapshot)
     except WebSocketDisconnect:
@@ -186,8 +240,30 @@ class IndicatorCreate(BaseModel):
     settings: dict
 
 
-def named_indicators(snapshot, symbol, timeframe):
+def named_indicators(snapshot, symbol, timeframe, source_snapshot=None):
     store = app.state.indicator_store
+    if source_snapshot:
+        presets = store.matrix_presets(symbol)
+        for frame in dict.fromkeys(item['timeframe'] for item in presets):
+            items = [item for item in presets if item['timeframe'] == frame]
+            source = snapshot if frame == timeframe else source_snapshot(frame)
+            for item, calculated in zip(items, configured_indicators(source, items)):
+                rows = calculated['rows']
+                if frame != timeframe:
+                    # Sample the last known source close at each displayed candle's close.
+                    completed = iter((status['interval_end'], row['value'])
+                                     for status, row in zip(source['coverage'], rows) if row['value'] is not None)
+                    following = next(completed, None)
+                    value = None
+                    rows = []
+                    for bar in snapshot['coverage']:
+                        cutoff = min(bar['interval_end'], snapshot['as_of'])
+                        while following and following[0] <= cutoff:
+                            _, value = following
+                            following = next(completed, None)
+                        rows.append(dict(timestamp=bar['timestamp'], value=value))
+                item.update(rows=rows, units='price')
+        return dict(snapshot, indicators=configured_indicators(snapshot, store.list(symbol, timeframe)), presets=presets)
     return dict(snapshot, indicators=configured_indicators(snapshot, store.list(symbol, timeframe)),
                 presets=configured_indicators(snapshot, store.presets(symbol, timeframe)))
 
@@ -204,17 +280,20 @@ class PresetSelection(BaseModel):
 
 
 @app.get('/api/indicator-presets')
-def active_presets(symbol: str = 'AAPL', timeframe: str = '1m'):
+def active_presets(symbol: str = 'AAPL', timeframe: str = '1m', matrix: bool = False):
     try:
+        if matrix:
+            return app.state.indicator_store.matrix_presets(symbol)
         return app.state.indicator_store.presets(symbol, timeframe)
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
 
 
 @app.put('/api/indicator-presets/{kind}/{period}')
-def select_preset(kind: str, period: int, selection: PresetSelection):
+def select_preset(kind: str, period: int, selection: PresetSelection, matrix: bool = False):
     try:
-        return app.state.indicator_store.set_preset(selection.symbol, selection.timeframe, kind, period, selection.enabled)
+        saved = app.state.indicator_store.set_preset(selection.symbol, selection.timeframe, kind, period, selection.enabled)
+        return app.state.indicator_store.matrix_presets(selection.symbol) if matrix else saved
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
 
@@ -256,6 +335,9 @@ def setup_paper(application):
                          clock=getattr(application.state, 'paper_clock', None),
                          order_size=int(os.environ.get('ARBITRADE_PAPER_ORDER_SIZE', '1')))
     broker.create_account('live')
+    from backend.classroom_decisions import ClassroomDecisions
+    application.state.classroom_decisions = ClassroomDecisions(broker.path,
+        provider=getattr(application.state, 'classroom_provider', None))
     application.state.paper = broker
     application.state.paper_replays = {}
     application.state.feed.on_record = broker.catch_up_live
@@ -316,6 +398,7 @@ class DecisionSnapshotRequest(BaseModel):
 
 
 class DecisionRequest(BaseModel):
+    model_config = {'extra': 'forbid'}
     snapshot_id: str | None = None
     capture: dict | None = None
 
@@ -340,6 +423,18 @@ def get_decision_snapshot(snapshot_id: str, include_records: bool = False):
 
 @app.post('/api/decisions')
 async def create_decision(request: DecisionRequest):
+    if request.snapshot_id is None and request.capture is not None:
+        from backend.classroom_decisions import ChartCapture
+        from backend.decision_provider import ProviderFailure
+        from pydantic import ValidationError
+        try:
+            capture = ChartCapture.model_validate(request.capture)
+        except ValidationError:
+            raise HTTPException(status_code=422, detail='Invalid chart capture context') from None
+        try:
+            return await app.state.classroom_decisions.decide(capture)
+        except ProviderFailure as error:
+            raise HTTPException(status_code=422, detail=error.code) from None
     if request.capture is not None:
         from backend.chart_decisions import decide_image
         return await decide_image(app.state.decisions,request.snapshot_id,request.capture)
@@ -357,14 +452,21 @@ def decision_image(decision_id: str):
     from contextlib import closing
     with closing(sqlite3.connect(app.state.decisions.path)) as c:
         row=c.execute('SELECT png FROM decision_images WHERE decision_id=?',(decision_id,)).fetchone()
-    if not row or not row[0]:raise HTTPException(status_code=404,detail='No saved chart capture')
+    if not row or not row[0]:
+        try:
+            return Response(app.state.classroom_decisions.image(decision_id), media_type='image/png', headers={'Cache-Control':'no-store'})
+        except ValueError:
+            raise HTTPException(status_code=404, detail='No saved chart capture') from None
     return Response(row[0],media_type='image/png',headers={'Cache-Control':'no-store'})
 
 
 @app.get('/api/decisions/{decision_id}')
 def get_decision(decision_id: str):
     try:
-        return app.state.decisions.get_decision(decision_id)
+        try:
+            return app.state.classroom_decisions.get(decision_id)
+        except ValueError:
+            return app.state.decisions.get_decision(decision_id)
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error)) from error
 

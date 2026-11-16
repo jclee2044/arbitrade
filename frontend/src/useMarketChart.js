@@ -1,7 +1,9 @@
+import { compositeDrawings } from './DrawingLayer.js'
 import { reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { createChart, CandlestickSeries, HistogramSeries, LineSeries, LineStyle, createSeriesMarkers } from 'lightweight-charts'
 import { adaptCandles, formatUtc } from './chart-data.js'
-import { periodColor, studyColor } from './chart-studies.js'
+import { movingAverageColors, studyColor } from './chart-studies.js'
+import { chartGestures } from './chart-gestures.js'
 
 export function useMarketChart(container) {
   const availableTypes = ref([])
@@ -30,16 +32,16 @@ export function useMarketChart(container) {
   }
   const selectedType = computed(() => availableTypes.value.find((item) => item.type === indicatorType.value))
   const configuredSeries = new Map()
-  async function togglePreset(kind, period) {
+  async function togglePreset(kind, period, frame) {
     if (presetSaving.value) return
     const token = generation
-    const enabled = !presets.value.some(item => item.type === kind && item.settings.window === period)
+    const enabled = !presets.value.some(item => item.timeframe === frame && item.type === kind && item.settings.window === period)
     presetSaving.value = true
     indicatorError.value = ''
     try {
-      const response = await fetch('/api/indicator-presets/' + kind + '/' + period, {
+      const response = await fetch('/api/indicator-presets/' + kind + '/' + period + '?matrix=true', {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbol: symbol.value, timeframe: timeframe.value, enabled }),
+        body: JSON.stringify({ symbol: symbol.value, timeframe: frame, enabled }),
       })
       const result = await response.json()
       if (!response.ok) throw Error(result.detail || 'Could not save this preset.')
@@ -131,6 +133,30 @@ export function useMarketChart(container) {
   const pinned = ref(false)
   const hover = ref(null)
   const candles = ref([])
+  const visibleDay = ref('')
+  const historyDays = computed(() => [...new Set(candles.value.map(c => c.timestamp.slice(0, 10)))])
+  let hasOlder = false
+  function trackRange(range) {
+    if (hasOlder && range && range.from < 32 && socket?.readyState === WebSocket.OPEN) {
+      hasOlder = false
+      socket.send(JSON.stringify({ action: 'older' }))
+    }
+    const index = range ? Math.max(0, Math.min(candles.value.length - 1, Math.floor((range.from + range.to) / 2))) : -1
+    visibleDay.value = candles.value[index]?.timestamp.slice(0, 10) || ''
+  }
+  function showDay(day) {
+    gestures?.stop()
+    const first = candles.value.findIndex(c => c.timestamp.startsWith(day))
+    if (first < 0) return
+    const count = candles.value.filter(c => c.timestamp.startsWith(day)).length
+    const range = chart.timeScale().getVisibleLogicalRange()
+    const width = Math.min(count, range ? range.to - range.from : 60)
+    chart.timeScale().setVisibleLogicalRange({ from: first, to: first + Math.max(1, width - 1) })
+  }
+  function previousDay() {
+    const index = historyDays.value.indexOf(visibleDay.value)
+    if (index > 0) showDay(historyDays.value[index - 1])
+  }
   const coverage = ref({})
   const selectedTime = ref(null)
   const timeframe = ref('1m')
@@ -144,12 +170,37 @@ export function useMarketChart(container) {
     ? `${Math.max(0, (clock.value - Date.parse(feed.value.source_time_utc)) / 1000).toFixed(0)} seconds`
     : 'No source observation received in this session')
   let chart, prices, volume, shortLine, longLine, markers, socket, retry, timer
+  const drawingRevision = ref(0)
+  const drawingTool = ref(null)
+  let gestures
   let generation = 0
   let disposed = false
+  let selectionsRetry
+
+  async function loadSelections() {
+    clearTimeout(selectionsRetry)
+    try {
+      const response = await fetch('/api/replay/selections', { signal: AbortSignal.timeout(10000) })
+      if (!response.ok) throw new Error('Could not load saved selections')
+      const items = await response.json()
+      if (disposed) return
+      saved.value = items
+      if (!start.value && !end.value) {
+        chooseSymbol(items.find(item => item.symbol === symbol.value)?.symbol ?? items[0]?.symbol ?? symbol.value)
+      }
+      if (failure.value === 'Could not load saved selections · retrying') failure.value = ''
+      if (mode.value === 'replay' && !socket && start.value && end.value) connect()
+    } catch (error) {
+      if (disposed) return
+      failure.value = 'Could not load saved selections · retrying'
+      selectionsRetry = setTimeout(loadSelections, 3000)
+    }
+  }
 
   function renderRows(rows, statuses) {
     const data = adaptCandles(rows, { up: '#608b78', down: '#a36f7e' })
     const wasEmpty = candles.value.length === 0
+    const previousFirst = candles.value[0]?.time
     const previousLatest = candles.value.at(-1)?.time
     const following = !pinned.value
     const scale = chart.timeScale()
@@ -165,13 +216,20 @@ export function useMarketChart(container) {
     }
     const count = data.candles.length
     const capacity = Math.max(25, Math.floor(container.value.clientWidth / 10))
-    if (wasEmpty && count > capacity) {
+    if (!wasEmpty && visible && !showingTail) {
+      // A live revision or rollover must not pull a reader out of history.
+      const offset = Math.max(0, data.candles.findIndex(c => c.time === previousFirst))
+      scale.setVisibleLogicalRange({ from: visible.from + offset, to: visible.to + offset })
+    } else if (wasEmpty && ['1d', '1w', '1mo'].includes(timeframe.value)) {
+      scale.fitContent()
+    } else if (wasEmpty && count > capacity) {
       scale.setVisibleLogicalRange({ from: count - capacity, to: count + 1 })
     } else if (count && (wasEmpty || (following && showingTail && visible.from <= 0 && count <= capacity))) {
       scale.fitContent()
     } else if (following && showingTail && data.candles.at(-1)?.time > previousLatest) {
       scale.scrollToRealTime()
     }
+    trackRange(scale.getVisibleLogicalRange())
   }
 
   function renderAverages(value) {
@@ -203,8 +261,8 @@ export function useMarketChart(container) {
   }
 
   const pair = computed(() => [
-    { name: 'SMA ' + appliedShort.value, color: periodColor(appliedShort.value), type: 'sma', value: selectedAverage.value?.short },
-    { name: 'SMA ' + appliedLong.value, color: periodColor(appliedLong.value, '#81394e'), type: 'sma', value: selectedAverage.value?.long },
+    { name: 'SMA ' + appliedShort.value, color: movingAverageColors.sma, type: 'sma', value: selectedAverage.value?.short },
+    { name: 'SMA ' + appliedLong.value, color: movingAverageColors.sma, type: 'sma', value: selectedAverage.value?.long },
   ])
   const chartStudies = computed(() => tab.value === 'signals' ? pair.value : [...presets.value, ...configured.value].map(item => ({
     name: item.name, type: item.type, color: studyColor(item),
@@ -213,8 +271,8 @@ export function useMarketChart(container) {
 
   function drawStudies() {
     const showPair = tab.value === 'signals'
-    shortLine.applyOptions({ visible: showPair, color: periodColor(appliedShort.value) })
-    longLine.applyOptions({ visible: showPair, color: periodColor(appliedLong.value, '#81394e') })
+    shortLine.applyOptions({ visible: showPair, color: movingAverageColors.sma })
+    longLine.applyOptions({ visible: showPair, color: movingAverageColors.sma })
     const instances = showPair ? [] : [...presets.value, ...configured.value]
     const ids = new Set(instances.map((item) => item.id))
     for (const [id, series] of configuredSeries) {
@@ -254,7 +312,8 @@ export function useMarketChart(container) {
     connect()
   }
 
-  function connect() {
+  function connect(retain = false) {
+    gestures?.stop()
     symbol.value = mode.value === 'live' ? 'AAPL' : replaySymbol.value
     paperAccount.value = mode.value === 'live' ? 'live' : null
     clearTimeout(playback)
@@ -266,30 +325,34 @@ export function useMarketChart(container) {
     clearTimeout(retry)
     socket?.close()
     socket = null
-    candles.value = []
-    coverage.value = {}
-    selectedTime.value = null
-    pinned.value = false
-    hover.value = null
-    source.value = mode.value === 'replay' ? 'Recorded observations' : 'Yahoo Finance'
-    feed.value = { status: 'connecting' }
-    prices.setData([])
-    volume.setData([])
-    renderAverages(null)
-    configured.value = []
-    presets.value = []
-    drawStudies()
+    hasOlder = false
+    if (retain !== true) {
+      candles.value = []
+      coverage.value = {}
+      selectedTime.value = null
+      pinned.value = false
+      hover.value = null
+      visibleDay.value = ''
+      prices.setData([])
+      volume.setData([])
+      renderAverages(null)
+      configured.value = []
+      presets.value = []
+      drawStudies()
+      source.value = mode.value === 'replay' ? 'Recorded observations' : 'Yahoo Finance'
+    }
+    feed.value = { ...feed.value, status: 'connecting' }
     chart.timeScale().applyOptions({ timeVisible: !['1d', '1w', '1mo'].includes(timeframe.value) })
     failure.value = ''
     transport.value = 'Connecting'
     const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const params = new URLSearchParams({ symbol: symbol.value, timeframe: timeframe.value,
+    const params = new URLSearchParams({ matrix: true, symbol: symbol.value, timeframe: timeframe.value,
       short_window: String(appliedShort.value), long_window: String(appliedLong.value) })
     if (mode.value === 'replay') {
       if (!start.value || !end.value) {
         transport.value = 'Waiting for replay range'
         replay.value = { done: true, message: saved.value.length ? 'Choose a recorded receipt-time range.' : 'No saved range selected.' }
-        fetch('/api/indicator-presets?' + new URLSearchParams({symbol:symbol.value,timeframe:timeframe.value}))
+        fetch('/api/indicator-presets?' + new URLSearchParams({symbol:symbol.value,matrix:true}))
           .then(response => { if (!response.ok) throw Error('Could not load presets.'); return response.json() })
           .then(items => { if (token === generation) { presets.value = items.map(item => ({ ...item, rows: [] })); drawStudies() } })
           .catch(error => { if (token === generation) indicatorError.value = error.message })
@@ -298,6 +361,8 @@ export function useMarketChart(container) {
       params.set('start', start.value)
       params.set('end', end.value)
     }
+    if (mode.value === 'live') params.set('paged', 'true')
+    if (retain === true && candles.value.length) params.set('oldest', candles.value[0].timestamp)
     socket = new WebSocket(`${protocol}//${location.host}/api/${mode.value}?${params}`)
     socket.onopen = () => { if (token === generation) transport.value = 'Connected to FastAPI' }
     socket.onmessage = ({ data }) => {
@@ -315,7 +380,11 @@ export function useMarketChart(container) {
         }
         feed.value = message.feed
         source.value = message.source
-        if (message.type === 'snapshot') renderRows(message.candles, message.coverage)
+        if (message.type === 'snapshot') {
+          renderRows(message.candles, message.coverage)
+          hasOlder = Boolean(message.has_older)
+          trackRange(chart.timeScale().getVisibleLogicalRange())
+        }
         if (message.type === 'candle') {
           const rows = candles.value.filter((c) => c.timestamp !== message.candle.timestamp)
           rows.push(message.candle)
@@ -341,13 +410,14 @@ export function useMarketChart(container) {
       transport.value = 'Disconnected from FastAPI · retrying'
       playing.value = false
       clearTimeout(playback)
-      if (mode.value === 'live') retry = setTimeout(connect, 3000)
+      if (mode.value === 'live') retry = setTimeout(() => connect(true), 3000)
       else transport.value = 'Disconnected from FastAPI'
     }
     socket.onerror = () => { if (token === generation) transport.value = 'FastAPI connection error' }
   }
 
   function pin(time) {
+    gestures?.stop()
     const index = candles.value.findIndex(c => c.time === time)
     if (index < 0) return
     selectedTime.value = time
@@ -362,6 +432,7 @@ export function useMarketChart(container) {
   }
 
   function followLatest() {
+    gestures?.stop()
     pinned.value = false
     selectedTime.value = candles.value.at(-1)?.time
     renderMarkers()
@@ -393,23 +464,31 @@ export function useMarketChart(container) {
       autoSize: true,
       layout: { attributionLogo: true, textColor: '#53655d', background: { type: 'solid', color: '#faf8f2' } },
       grid: { vertLines: { visible: false }, horzLines: { color: '#e3e2d8' } },
-      rightPriceScale: { borderVisible: false },
+      // Reserve label space across volume tick-format changes (e.g. 999 -> 1K).
+      // Otherwise the shared plot width changes and bars jump horizontally.
+      rightPriceScale: { borderVisible: false, minimumWidth: 96 },
       crosshair: { vertLine: { color: '#739db0' }, horzLine: { color: '#739db0' } },
       localization: { timeFormatter: formatUtc },
       timeScale: { timeVisible: true, secondsVisible: false, borderVisible: false },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
+      kineticScroll: { mouse: true, touch: true },
     })
     prices = chart.addSeries(CandlestickSeries, {
       upColor: '#084c3d', downColor: '#682d40', borderVisible: false,
       wickUpColor: '#084c3d', wickDownColor: '#682d40',
     }, 0)
     volume = chart.addSeries(HistogramSeries, { priceFormat: { type: 'volume' }, title: 'Volume (shares)' }, 1)
-    shortLine = chart.addSeries(LineSeries, { color: '#427e9c', lineWidth: 2, priceLineVisible: false, lastValueVisible: false }, 0)
-    longLine = chart.addSeries(LineSeries, { color: '#956b36', lineWidth: 2, priceLineVisible: false, lastValueVisible: false }, 0)
+    volume.priceScale().applyOptions({ scaleMargins: { top: 0.1, bottom: 0 } })
+    shortLine = chart.addSeries(LineSeries, { color: movingAverageColors.sma, lineWidth: 2, priceLineVisible: false, lastValueVisible: false }, 0)
+    longLine = chart.addSeries(LineSeries, { color: movingAverageColors.sma, lineWidth: 2, priceLineVisible: false, lastValueVisible: false }, 0)
+    prices.attachPrimitive({ updateAllViews() { drawingRevision.value++ } })
     markers = createSeriesMarkers(prices, [])
     chart.panes()[0].setStretchFactor(1)
     chart.panes()[1].setStretchFactor(0.25)
     chart.subscribeCrosshairMove(inspect)
     chart.subscribeClick(clickCandle)
+    chart.timeScale().subscribeVisibleLogicalRangeChange(trackRange)
+    gestures = chartGestures(chart, container.value, volume)
     timer = setInterval(() => { clock.value = Date.now() }, 1000)
     connect()
     fetch('/api/indicators/types').then((response) => {
@@ -417,38 +496,58 @@ export function useMarketChart(container) {
       return response.json()
     }).then((types) => { availableTypes.value = types; chooseType(types[0]?.type || '') })
       .catch((error) => { indicatorError.value = error.message })
-    fetch('/api/replay/selections').then((response) => {
-      if (!response.ok) throw new Error('Could not load saved selections')
-      return response.json()
-    }).then((items) => {
-      saved.value = items
-      chooseSymbol(items.find(item => item.symbol === symbol.value)?.symbol ?? items[0]?.symbol ?? symbol.value)
-      if (!disposed && mode.value === 'replay' && !socket && start.value && end.value) connect()
-    })
-      .catch((error) => { failure.value = error.message })
+    loadSelections()
   })
 
   onBeforeUnmount(() => {
     disposed = true
     generation++
     clearTimeout(retry)
+    clearTimeout(selectionsRetry)
     clearTimeout(playback)
     clearInterval(timer)
     socket?.close()
+    gestures?.dispose()
     chart?.unsubscribeClick(clickCandle)
     chart?.unsubscribeCrosshairMove(inspect)
+    chart?.timeScale().unsubscribeVisibleLogicalRangeChange(trackRange)
     markers?.detach()
     chart?.remove()
   })
 
+  async function captureVisibleChart() {
+    if (!chart || waiting.value) throw Error('Wait for the chart to finish loading.')
+    const range = chart.timeScale().getVisibleLogicalRange()
+    if (!range) throw Error('No visible chart to capture.')
+    const visible = candles.value.filter((row, index) => index >= Math.ceil(range.from) && index <= Math.floor(range.to))
+    if (!visible.length) throw Error('Scroll to visible candles before requesting a decision.')
+    const observation = feed.value.latest_observation
+    const sourceTime = feed.value.source_time_utc
+    const screenshot = chart.takeScreenshot()
+    const capture = {
+      ticker: symbol.value, interval: timeframe.value,
+      captured_at: new Date().toISOString(), candle_timestamp: visible.at(-1).timestamp,
+      visible_candles: visible.length,
+      last_quote_at: observation?.backend_received_at_utc ?? null,
+      last_source_at: sourceTime ?? null,
+      is_stale: feed.value.status !== 'live' || !sourceTime || Date.now() - Date.parse(sourceTime) > 30000,
+      volume_status: visible.some(row => row.volume != null) ? 'visible' : 'unavailable',
+    }
+    await compositeDrawings(screenshot, container.value)
+    return { ...capture, image: screenshot.toDataURL('image/png') }
+  }
+
   return reactive({
+    drawingRevision, drawingTool, drawingAxes: () => chart && ({ scale: chart.timeScale(), prices, size: chart.paneSize(0) }),
     mode, changeMode, symbol, timeframe, connect, source, feed, transport, failure, age,
     candles, coverage, selected, selectedTime, pinned, pin, followLatest, hover,
+    historyDays, visibleDay, showDay, previousDay,
     selectedCoverage: computed(() => coverage.value[selectedTime.value]),
     latest: computed(() => candles.value.at(-1)),
     lastEnded: computed(() => candles.value.findLast(c => coverage.value[c.time]?.ended)),
     completed: computed(() => Object.values(coverage.value).filter(c => c.ended)),
     hoveredCandle: computed(() => hover.value && candles.value.find(c => c.time === hover.value.time)),
+    captureVisibleChart,
     visibleRange: () => chart?.timeScale().getVisibleRange(),
     saved, start, end, replaySymbol, chooseSymbol, replay, playing, waiting, next, togglePlayback, paperAccount,
     configured, presets, presetSaving, togglePreset, tab, selectTab, chartStudies, editedWindows, availableTypes, indicatorType, indicatorName, indicatorSettings,

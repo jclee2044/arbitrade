@@ -7,6 +7,7 @@ import IndicatorPanel from './IndicatorPanel.js'
 import PaperTrading from './PaperTrading.js'
 import AutomationPanel from './AutomationPanel.js'
 import DecisionPanel from './DecisionPanel.js'
+import ClassroomDecision from './ClassroomDecision.js'
 import VoicePanel from './VoicePanel.js'
 import './style.css'
 
@@ -22,10 +23,12 @@ createApp({
     const setChartHost = el => { chartHost.value = el }
     const m = useMarketChart(chartHost)
     const tool = ref('chart')
+    const menu = ref('indicators')
     const collapsed = ref(window.matchMedia('(max-width: 700px)').matches)
-    const paperTab = ref('Trade')
+    const paperTab = ref('Orders')
     const proposalOpen = ref(false)
     const decisionPanel = ref(null)
+    const classroomPanel = ref(null)
     const analysis = ref(null)
     const busy = ref(false)
     const notice = ref(null)
@@ -46,10 +49,7 @@ createApp({
       if (analysis.value.key === currentKey.value && !voiceOn.value) voice.value?.selectDecision(decision.id, false)
     }
     async function analyze() {
-      const key = currentKey.value
-      notice.value = null
-      const message = await decisionPanel.value.generateSummary()
-      if (message) notice.value = { key, message }
+      await classroomPanel.value.analyze()
     }
     async function toggleProposal() {
       proposalOpen.value = !proposalOpen.value
@@ -64,7 +64,9 @@ createApp({
       window.scrollTo({ top: 0 })
     }
     async function openVoice(id) {
-      if (tool.value !== 'chart') await navigate('chart')
+      if (window.matchMedia('(max-width: 910px)').matches) tool.value = 'chart'
+      menu.value = 'ai'
+      collapsed.value = false
       proposalOpen.value = false
       if (id) await voice.value.selectDecision(id)
       else voice.value.openChooser()
@@ -81,38 +83,41 @@ createApp({
       h(DeskNavigation, { tool: tool.value, mode: m.mode, automationOn: automationOn.value, voiceOn: voiceOn.value,
         onNavigate: navigate, onMode: m.changeMode, onStop: stopAutomation, onVoice: () => openVoice() }),
       h('main', { id: 'desk', tabindex: -1 }, [
-        h('div', { class: ['workspace', collapsed.value && 'rail-closed', tool.value !== 'chart' && 'parked'], inert: tool.value !== 'chart' }, [
-          h(IndicatorPanel, { market: m, collapsed: collapsed.value, onCollapse: value => { collapsed.value = value } }),
+        h('div', { class: ['workspace', collapsed.value && 'rail-closed', tool.value === 'chart' && 'trade-closed'] }, [
+          h(IndicatorPanel, { market: m, collapsed: collapsed.value, menu: menu.value,
+            onSelect: value => { menu.value = value }, onCollapse: value => { collapsed.value = value } }, {
+            default: () => h('div', { class: 'rail-ai', 'aria-label': 'Analysis and voice' }, [
+              h(ChartSummary, { market: m, decision: selectedAnalysis.value?.decision,
+                busy: busy.value, message: notice.value?.key === currentKey.value ? notice.value.message : '',
+                proposalOpen: proposalOpen.value, onAnalyze: analyze, onReview: toggleProposal }, {
+                default: () => [h(ClassroomDecision, { ref: classroomPanel, capture: m.captureVisibleChart,
+                  onBusy: value => { busy.value = value } }), view('proposal-view', proposalOpen.value, [h(DecisionPanel, {
+                  ref: decisionPanel, chartRange: m.visibleRange, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe,
+                  candleTimestamp: m.selected?.timestamp, completed: Boolean(m.selectedCoverage?.ended),
+                  shortWindow: m.appliedShort, longWindow: m.appliedLong, onOutcome: receiveAnalysis, onBusy: value => { busy.value = value },
+                  onDiscuss: openVoice,
+                })])],
+              }),
+              h(VoicePanel, { ref: voice, onSession: value => { voiceOn.value = value } }),
+            ]),
+          }),
           h('div', { class: 'market-desk' }, [
             h('div', { class: 'instrument' }, [h('h2', m.symbol === 'AAPL' ? 'Apple Inc.' : m.symbol), h('span', { class: 'ticker' }, m.symbol)]),
-            h(CandleChart, { market: m, chartHost: setChartHost }),
+            h(CandleChart, { market: m, chartHost: setChartHost, drawingOpen: menu.value === 'drawing' && !collapsed.value }),
           ]),
-          h('aside', { class: 'analysis-column', 'aria-label': 'Analysis and voice' }, [
-            h(ChartSummary, { market: m, decision: selectedAnalysis.value?.decision,
-              busy: busy.value, message: notice.value?.key === currentKey.value ? notice.value.message : '',
-              proposalOpen: proposalOpen.value, onAnalyze: analyze, onReview: toggleProposal }, {
-              default: () => view('proposal-view', proposalOpen.value, [h(DecisionPanel, {
-                ref: decisionPanel, chartRange: m.visibleRange, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe,
-                candleTimestamp: m.selected?.timestamp, completed: Boolean(m.selectedCoverage?.ended),
-                shortWindow: m.appliedShort, longWindow: m.appliedLong, onOutcome: receiveAnalysis, onBusy: value => { busy.value = value },
-                onDiscuss: openVoice,
-              })]),
-            }),
-            h(VoicePanel, { ref: voice, onSession: value => { voiceOn.value = value } }),
+
+          h('aside', { id: 'paper-workspace', inert: tool.value !== 'paper', tabindex: -1,
+            'aria-label': 'Paper trading account' }, [
+            h('h2', 'Paper trading'),
+            h('div', { class: 'subnav' }, ['Orders', 'Automation'].map(name => h('button', {
+              'aria-pressed': paperTab.value === name, onClick: () => { paperTab.value = name },
+            }, name))),
+            view('trade-view', paperTab.value === 'Orders', [h(PaperTrading, { accountId: m.paperAccount, symbol: m.symbol })]),
+            view('automation-view', paperTab.value === 'Automation', [h(AutomationPanel, {
+              ref: automation, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe, shortWindow: m.appliedShort,
+              longWindow: m.appliedLong, completed: m.completed, onRunning: value => { automationOn.value = value },
+            })]),
           ]),
-        ]),
-        h('section', { id: 'paper-workspace', class: tool.value !== 'paper' ? 'parked' : '', inert: tool.value !== 'paper', tabindex: -1,
-          'aria-label': 'Paper trading account' }, [
-          h('button', { class: 'text-button', onClick: () => navigate('chart') }, 'Back to chart'),
-          h('h2', 'Paper trading'), h('p', { class: 'simulation-label' }, 'Simulation only'),
-          h('div', { class: 'subnav' }, ['Trade', 'Automation'].map(name => h('button', {
-            'aria-pressed': paperTab.value === name, onClick: () => { paperTab.value = name },
-          }, name))),
-          view('trade-view', paperTab.value === 'Trade', [h(PaperTrading, { accountId: m.paperAccount, symbol: m.symbol })]),
-          view('automation-view', paperTab.value === 'Automation', [h(AutomationPanel, {
-            ref: automation, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe, shortWindow: m.appliedShort,
-            longWindow: m.appliedLong, completed: m.completed, onRunning: value => { automationOn.value = value },
-          })]),
         ]),
       ]),
     ]

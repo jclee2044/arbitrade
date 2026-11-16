@@ -84,13 +84,13 @@ export default {
         onInput: (event) => { quantity.value = event.target.value } }),
       h('div', { class: 'paper-actions' }, [
         ...[['buy', 'Buy shares'], ['sell', 'Sell shares'], ['close', 'Close position'], ['hold', 'Hold'], ['wait', 'Wait']].map(([action, label]) =>
-          h('button', { disabled: busy.value || !state.value, onClick: () => send(action) }, label)),
+          h('button', { class: action, disabled: busy.value || !state.value, onClick: () => send(action) }, label)),
         h('button', { disabled: busy.value || !lastRequest.value, onClick: () => send(null, true) }, 'Retry last request'),
       ]),
       message.value ? h('p', { id: 'paper-result', role: 'status' }, message.value) : null,
       error.value ? h('p', { role: 'alert' }, error.value) : null,
       connectionError.value ? h('p', { role: 'alert' }, connectionError.value) : null,
-      h('h4', 'Paper order history'),
+      h('details', [h('summary', 'Paper order history'),
       h('div', { class: 'paper-history', role: 'region', 'aria-label': 'Paper order history', tabindex: 0 }, [h('table', [
         h('thead', [h('tr', ['ID', 'Symbol', 'Side', 'Quantity', 'Submitted (UTC)', 'Status / reason', 'Fill'].map((text) => h('th', text)))]),
         h('tbody', (state.value?.orders || []).map((order) => {
@@ -102,10 +102,10 @@ export default {
           ].map((text) => h('td', String(text))))
         })),
       ])]),
-      !state.value?.orders.length ? h('p', 'No paper orders. Hold and wait do not create orders.') : null,
+      !state.value?.orders.length ? h('p', 'No paper orders. Hold and wait do not create orders.') : null]),
       h('div', { class: 'pnl-panel', 'aria-labelledby': 'pnl-title' }, [
         h('h4', { id: 'pnl-title' }, 'Profit and loss · USD'),
-        h('p', 'Weighted average purchase cost. Fill rows and completed 1m candle valuations are retained; reprocessing the same event adds no duplicate.'),
+        h('p', 'Based on weighted average purchase cost.'),
         h('dl', { class: 'paper-balances pnl-summary' }, [
           h('dt', 'Average cost / share'), h('dd', { id: 'pnl-average' }, holding() ? pnlUsd(pnlSummary.value?.average_cost) : '—'),
           h('dt', 'Realized P&L'), h('dd', { id: 'pnl-realized' }, pnlUsd(pnlSummary.value?.realized ?? '0')),
@@ -115,7 +115,7 @@ export default {
         h('p', { id: 'pnl-price' }, pnlSummary.value?.price != null
           ? `Valuation price: ${usd(pnlSummary.value.price)} · ${pnlSummary.value.price_source} · Price time (UTC): ${pnlSummary.value.price_time}`
           : holding() ? 'Valuation unavailable: no usable price for this open position.' : 'No open position to value.'),
-        h('h4', 'P&L history'),
+        h('details', [h('summary', 'P&L history'),
         h('div', { class: 'pnl-history', role: 'region', 'aria-label': 'Profit and loss history', tabindex: 0 }, [h('table', { id: 'pnl-history' }, [
           h('thead', [h('tr', ['Event / time (UTC)', 'Price / source / price time (UTC)', 'Cash', 'Shares', 'Average cost', 'Realized', 'Unrealized', 'Total P&L'].map((label) => h('th', label)))]),
           h('tbody', pnlRows.value.map((row) => h('tr', { key: row.id, 'data-pnl-event': row.event_key }, [
@@ -125,7 +125,7 @@ export default {
             pnlUsd(row.realized), pnlUsd(row.unrealized), pnlUsd(row.total),
           ].map((value) => h('td', value))))),
         ])]),
-        !pnlRows.value.length ? h('p', 'No P&L events yet. A fill starts the history; completed candle marks update open positions.') : null,
+        !pnlRows.value.length ? h('p', 'No P&L events yet. A fill starts the history; completed candle marks update open positions.') : null]),
       ]),
     ])
   },

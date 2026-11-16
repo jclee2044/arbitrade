@@ -1,5 +1,5 @@
-import { h, nextTick } from 'vue'
-import { periods, periodColor, timeframes } from './chart-studies.js'
+import { h, nextTick, ref, watch } from 'vue'
+import { periods, movingAverageColors, timeframes } from './chart-studies.js'
 import { average, formatUtc } from './chart-data.js'
 
 function strategy(m) {
@@ -48,14 +48,22 @@ function namedStudies(m) {
   ]
 }
 
-function presets(m, kind, description) {
+const presetFrames = { '1m': '1m', '5m': '5m', '15m': '15m', '1h': '1hr', '1d': '1D', '1w': '1W' }
+
+function presets(m, kind) {
+  const title = kind.toUpperCase()
   return h('section', { class: 'study-group' }, [
-    h('h3', kind.toUpperCase()), h('p', description),
-    h('div', { class: 'periods', role: 'group', 'aria-label': description }, periods.map(period =>
-      h('button', { type: 'button', 'aria-label': kind.toUpperCase() + ' ' + period,
-        'aria-pressed': m.presets.some(item => item.type === kind && item.settings.window === period),
-        disabled: m.presetSaving, style: { '--line': periodColor(period) },
-        onClick: () => m.togglePreset(kind, period) }, String(period)))),
+    h('h3', title),
+    ...Object.entries(presetFrames).map(([frame, label]) =>
+      h('div', { class: 'periods', role: 'group', 'aria-label': title + ' ' + label }, [
+        h('span', label),
+        ...periods.map(period => h('button', {
+          type: 'button', 'aria-label': title + ' ' + period + ' · ' + label,
+          'aria-pressed': m.presets.some(item => item.timeframe === frame && item.type === kind && item.settings.window === period),
+          disabled: m.presetSaving, style: { '--line': movingAverageColors[kind] },
+          onClick: () => m.togglePreset(kind, period, frame),
+        }, String(period))),
+      ])),
   ])
 }
 
@@ -85,38 +93,85 @@ function crossoverHistory(m) {
   ]
 }
 
+const drawingIcons = {
+  line: 'M6 18L18 6 M2 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0 M18 4a2 2 0 1 0 4 0a2 2 0 1 0 -4 0',
+  freehand: 'M2 17C5 17 7 4 11 4C16 4 5 20 11 20C15 20 16 10 19 11C21 12 19 16 22 15',
+  eraser: 'M3 14l11-11a1 1 0 0 1 2 0l5 5a1 1 0 0 1 0 2L11 20H8l-5-5z M8 9l8 8 M11 20h10',
+}
+
+function drawingPanel(m) {
+  function tool(name, value) {
+    return h('button', {
+      'aria-pressed': m.drawingTool === value, disabled: !m.latest,
+      onClick: () => { m.drawingTool = m.drawingTool === value ? null : value },
+    }, drawingIcons[value] ? [
+      h('svg', { viewBox: '0 0 24 24', width: 21, height: 21, fill: 'none', stroke: 'currentColor',
+        'stroke-width': 1.8, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' },
+      [h('path', { d: drawingIcons[value] })]), name,
+    ] : name)
+  }
+  return [
+    h('div', { class: 'drawing-buttons drawing-tool-list' }, [tool('Trend Line', 'line'), tool('Freehand', 'freehand'), tool('Eraser', 'eraser')]),
+    h('h3', { class: 'risk-heading' }, 'Risk/Reward'),
+    h('div', { class: 'drawing-buttons risk-presets' }, [2, 3, 4].map(r => tool('1:' + r, r))),
+    !m.latest ? h('p', { class: 'pair-caption' }, 'Waiting for candles.') : null,
+  ]
+}
+
+const labels = { indicators: 'Indicators', signals: 'Signals', drawing: 'Drawing Tools', ai: 'AI' }
+
+function railIcon(tab) {
+  if (tab === 'ai') return h('img', { src: '/brand/arbitrade-diamond.svg', alt: '', width: 25, height: 25 })
+  const path = tab === 'drawing' ? 'M-9 9l1-6L5-10l5 5L-3 8z M2-7l5 5' : tab === 'indicators' ? 'M-10 -4H10 M-10 4H10 M-5 -8V0 M5 0V8' : 'M-10 7V-7 M-10 7H11 M-7 2L-2 -3L2 0L9 -6'
+  return h('svg', { viewBox: '-13 -13 26 26', width: 25, height: 25, fill: 'none', stroke: 'currentColor',
+    'stroke-width': 1.6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }, [h('path', { d: path })])
+}
+
 export default {
-  props: { market: Object, collapsed: Boolean },
-  emits: ['collapse'],
-  setup(props, { emit }) {
-    const tabs = ['indicators', 'signals']
+  props: { market: Object, collapsed: Boolean, menu: String },
+  emits: ['collapse', 'select'],
+  setup(props, { emit, slots }) {
+    const rail = ref(null)
+    watch(() => props.menu, () => { rail.value.scrollTop = 0 })
+    const tabs = Object.keys(labels)
     function select(tab) {
-      props.market.selectTab(tab)
+      if (tab === 'indicators' || tab === 'signals') props.market.selectTab(tab)
+      emit('select', tab)
       emit('collapse', false)
     }
     function tabKey(event) {
       if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return
       event.preventDefault()
-      const tab = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[1] : tabs.find(t => t !== props.market.tab)
+      const direction = event.key === 'ArrowRight' ? 1 : -1
+      const tab = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs.at(-1) : tabs[(tabs.indexOf(props.menu) + direction + tabs.length) % tabs.length]
       select(tab)
       nextTick(() => document.getElementById('tab-' + tab).focus())
     }
     return () => {
       const m = props.market
-      return h('aside', { class: 'study-rail', 'aria-label': 'Chart tools' }, [
+      return h('aside', { ref: rail, class: 'study-rail', 'aria-label': 'Chart tools' }, [
         h('div', { class: 'rail-heading' }, [
           h('div', { class: 'rail-tabs', role: 'tablist', 'aria-label': 'Chart tools', onKeydown: tabKey }, tabs.map(tab =>
-            h('button', { id: 'tab-' + tab, role: 'tab', 'aria-selected': m.tab === tab, tabindex: m.tab === tab ? 0 : -1,
-              'aria-controls': 'rail-content', onClick: () => select(tab) }, tab === 'signals' ? 'Signals' : 'Indicators'))),
+            h('button', { id: 'tab-' + tab, role: 'tab', 'aria-selected': props.menu === tab, tabindex: props.menu === tab ? 0 : -1,
+              title: labels[tab], 'aria-label': labels[tab], 'aria-controls': 'rail-content', onClick: () => select(tab) }, railIcon(tab)))),
           h('button', { class: 'collapse-rail', title: props.collapsed ? 'Expand sidebar' : 'Collapse sidebar',
             'aria-label': props.collapsed ? 'Expand sidebar' : 'Collapse sidebar', 'aria-controls': 'rail-content',
             'aria-expanded': !props.collapsed, onClick: () => emit('collapse', !props.collapsed) }, props.collapsed ? '›' : '‹'),
         ]),
-        h('div', { key: m.tab, id: 'rail-content', role: 'tabpanel', hidden: props.collapsed, 'aria-labelledby': 'tab-' + m.tab }, m.tab === 'signals'
-          ? crossoverHistory(m)
-          : [presets(m, 'sma', 'Simple moving average'), presets(m, 'ema', 'Exponential moving average'),
-            h('details', { class: 'rail-details custom-studies' }, [h('summary', 'Rolling price range & custom indicators'), ...namedStudies(m)]),
-            m.indicatorError ? h('p', { role: 'alert' }, m.indicatorError) : null]),
+        h('div', { class: 'rail-reveal', inert: props.collapsed }, [
+          h('div', { id: 'rail-content', role: 'tabpanel', 'aria-labelledby': 'tab-' + props.menu },
+            h('div', { class: 'rail-track', style: { '--slide': (-100 * tabs.indexOf(props.menu)) + '%' } },
+              tabs.map(tab => h('div', { key: tab, class: 'rail-pane', inert: tab !== props.menu }, tab === 'ai' ? slots.default?.() : [
+                h('h2', labels[tab]),
+                ...(tab === 'drawing' ? drawingPanel(m) : tab === 'signals' ? crossoverHistory(m) : [
+                  h('details', { class: 'moving-averages rail-details', open: true }, [
+                    h('summary', 'Moving Averages'), presets(m, 'sma'), presets(m, 'ema'),
+                  ]),
+                  h('details', { class: 'rail-details custom-studies' }, [h('summary', 'Rolling price range & custom indicators'), ...namedStudies(m)]),
+                  m.indicatorError ? h('p', { role: 'alert' }, m.indicatorError) : null,
+                ]),
+              ])))),
+        ]),
       ])
     }
   },

@@ -49,7 +49,7 @@ class ReplayFeed(LiveFeed):
                 'source': self.source, 'feed': self.feed_state()}
 
 
-async def verify(live, output):
+async def verify(live, output, require_volume=False):
     package = ROOT / 'frontend/node_modules/playwright-core/package.json'
     if not package.is_file():
         raise RuntimeError('playwright-core is missing. Obtain AGENTS.md dependency approval before installing it.')
@@ -116,8 +116,9 @@ async def verify(live, output):
                         break
                     if action == 'seed':
                         if live:
-                            async with asyncio.timeout(45):
-                                while not feed.latest or not feed.snapshot()['candles']:
+                            async with asyncio.timeout(90 if require_volume else 45):
+                                while (not feed.latest or not feed.snapshot()['candles']
+                                       or (require_volume and feed.snapshot()['candles'][-1]['volume'] is None)):
                                     await asyncio.sleep(0.2)
                             # Freeze the actual recorded input after the open page
                             # has received quotes, so inspector comparison is exact.
@@ -142,7 +143,8 @@ async def verify(live, output):
                     elif action == 'same':
                         assert not live
                         feed.evaluation = '2026-11-10T15:00:50+00:00'
-                        feed.add('2026-11-10T15:00:40+00:00', 101, 1013)
+                        # A second counter update shares the prior source timestamp.
+                        feed.add('2026-11-10T15:00:20+00:00', 101, 1013)
                     elif action == 'rollover':
                         assert not live
                         feed.evaluation = '2026-11-10T15:01:10+00:00'
@@ -183,6 +185,9 @@ async def verify(live, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true')
+    parser.add_argument('--require-volume', action='store_true', help='With --live, wait up to 90s for a computable observed volume')
     parser.add_argument('--output', type=Path, default=Path('/tmp/arbitrade-ui-results'))
     args = parser.parse_args()
-    asyncio.run(verify(args.live, args.output.resolve()))
+    if args.require_volume and not args.live:
+        parser.error('--require-volume requires --live')
+    asyncio.run(verify(args.live, args.output.resolve(), args.require_volume))

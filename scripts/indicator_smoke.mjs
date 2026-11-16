@@ -35,10 +35,34 @@ async function add(type, name, window) {
 try {
   await page.goto('http://127.0.0.1:15173', { waitUntil: 'networkidle' })
   await page.getByRole('tab', {name:'Indicators', exact:true}).click()
- await page.locator('.custom-studies > summary').click()
+  await page.setViewportSize({ width: 1280, height: 640 })
+  await page.locator('.custom-studies > summary').click()
+  const rail = page.locator('.study-rail')
+  const heading = rail.locator('.rail-heading')
+  await rail.evaluate(el => { el.scrollTop = 0 })
+  const headingY = (await heading.boundingBox()).y
+  const pageY = await page.evaluate(() => window.scrollY)
+  await heading.hover()
+  await page.mouse.wheel(0, 300)
+  await until(() => rail.evaluate(el => el.scrollTop > 0))
+  assert.equal((await heading.boundingBox()).y, headingY)
+  await rail.evaluate(el => { el.scrollTop = el.scrollHeight })
+  await rail.hover()
+  await page.mouse.wheel(0, 500)
+  await page.waitForTimeout(200)
+  assert.equal(await page.evaluate(() => window.scrollY), pageY)
+  assert.equal((await heading.boundingBox()).y, headingY)
+  checks.push('Wheel over the menu scrolls its content, keeps tabs stationary and contains scrolling at the bottom')
+  await page.setViewportSize({ width: 1400, height: 1200 })
   const squares = page.locator('.periods')
+  assert.equal(await squares.count(), 12)
   for (const group of await squares.all()) assert.deepEqual(await group.locator('button').allTextContents(), ['10','20','30','50','100','200'])
-  const ema10 = page.getByRole('button',{name:'EMA 10',exact:true})
+  const buttonColors = await squares.locator('button').evaluateAll(buttons => [...new Set(buttons.map(button => {
+    const style = getComputedStyle(button)
+    return style.color + ' on ' + style.backgroundColor
+  }))])
+  assert.deepEqual(buttonColors, ['rgb(8, 76, 61) on rgb(220, 247, 235)'])
+  const ema10 = page.getByRole('button',{name:'EMA 10 · 1m',exact:true})
   await ema10.click()
   await until(async () => await ema10.getAttribute('aria-pressed') === 'true' && await page.locator('.overlay-legend .dashed').filter({hasText:'EMA 10'}).count() === 1)
   await page.locator('.feed-details summary').click()
@@ -59,7 +83,7 @@ try {
   await page.getByRole('tab', {name:'Indicators', exact:true}).click()
  await page.locator('.custom-studies > summary').click()
   await until(async () => await ema10.getAttribute('aria-pressed') === 'true')
-  checks.push('Both six-period rows render and the dashed EMA 10 overlay persists after reload')
+  checks.push('All twelve six-period rows render and the dashed EMA 10 overlay persists after reload')
   await expectValue('Range 2', '5')
   await expectValue('Range 3', '6')
   checks.push('Refresh restores both names, settings and values')
@@ -80,6 +104,31 @@ try {
   await add('ema', 'EMA 2', 2)
   await expectValue('EMA 2', '13.166667')
   assert.equal(await page.getByRole('alert').count(), 0)
+  const legendColors = await page.locator('.overlay-legend .study-key').evaluateAll(items => items.map(item => ({
+    name: item.textContent, color: getComputedStyle(item, '::before').borderTopColor,
+  })))
+  for (const item of legendColors.filter(item => /^(EMA|SMA) /.test(item.name))) {
+    assert.equal(item.color, item.name.startsWith('EMA') ? 'rgb(200, 117, 25)' : 'rgb(48, 116, 146)')
+  }
+  for (const kind of ['sma', 'ema']) {
+    const colors = await page.locator('.periods[aria-label^="' + kind.toUpperCase() + ' "] button').evaluateAll(buttons =>
+      [...new Set(buttons.map(button => button.style.getPropertyValue('--line')))])
+    assert.deepEqual(colors, [kind === 'ema' ? '#c87519' : '#307492'])
+  }
+  // Check rendered canvas colors as well as the legend and preset selection keys.
+  const painted = await page.locator('.chart canvas').evaluateAll(canvases => {
+    const found = { orange: false, blue: false }
+    for (const canvas of canvases) {
+      const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i] === 200 && data[i+1] === 117 && data[i+2] === 25) found.orange = true
+        if (data[i] === 48 && data[i+1] === 116 && data[i+2] === 146) found.blue = true
+      }
+    }
+    return found
+  })
+  assert.deepEqual(painted, { orange: true, blue: true })
+  checks.push('EMA presets/custom lines are orange and SMA blue in rendered chart, legend and every interval/period selection key')
   checks.push('SMA created through same catalog/settings interface; third-candle SMA 2 equals 14')
   // HTTP aligns warm-up gaps and values independently for each configuration.
   const params = new URLSearchParams({ source: 'observations', include_status: 'true', as_of: fixture.end })
@@ -120,7 +169,7 @@ try {
   await page.locator('[data-frame="1m"]').click()
   await until(() => latest?.interval === '1m' && latest?.replay.position === 0)
   assert.equal(latest.indicators.length, 4)
-  assert(latest.presets.some(item => item.id === 'ema-10'))
+  assert(latest.presets.some(item => item.id === '1m-ema-10'))
   await page.getByRole('button', { name: 'Play replay', exact: true }).click()
   await until(() => latest?.replay.done)
   await expectValue('Range 3', '6')

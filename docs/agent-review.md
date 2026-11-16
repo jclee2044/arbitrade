@@ -1,5 +1,7 @@
 # Analyst and reviewer decisions
 
+
+> This document describes the separate paper proposal/automation workflow under **Review paper proposal**. The assignment’s main **Decision API** control uses [image-only chart reading](classroom-decisions.md) with long/short/wait. Keys now load from process settings, project-root `.env`, then legacy `backend/.env`.
 Explicit Start/Stop paper automation can now apply approved decisions through a
 separate guarded path; manual questions remain read-only. See
 [paper-automation.md](paper-automation.md) for current execution/dedup rules.
@@ -92,6 +94,6 @@ no order was placed. Both role outputs and shared snapshot/image hashes match
 SQLite. See screenshots/review-live-2026-11-11/report.json and
 [verification.md](verification.md) for actual and controlled observations separately.
 
-No new package or credential setup is needed. The existing private backend/.env
+No new package or credential setup is needed. The private project-root .env (or legacy backend/.env)
 and [OpenAI Decisions request format](https://developers.openai.com/api/reference/resources/decisions/methods/create)
 are reused.

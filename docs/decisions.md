@@ -1,5 +1,7 @@
 # Candle-close decision proposals
 
+
+> This document describes the separate paper proposal/automation workflow under **Review paper proposal**. The assignment’s main **Decision API** control uses [image-only chart reading](classroom-decisions.md) with long/short/wait. Keys now load from process settings, project-root `.env`, then legacy `backend/.env`.
 Explicit Start/Stop paper automation can now apply approved decisions through a
 separate guarded path; manual questions remain read-only. See
 [paper-automation.md](paper-automation.md) for current execution/dedup rules.
@@ -14,9 +16,9 @@ Review the saved candle/SMA chart, cash, position, decision time and snapshot ID
 or receiving another quote does not change it. Each click creates a new decision.
 The panel never sends a paper order.
 
-The backend loads `/home/jlrj/Documents/arbitrade/backend/.env` on startup using
-existing python-dotenv. Set `OPENAI_API_KEY=your_actual_key` there; see
-`backend/.env.example` for placeholders. Restart the backend after saving. Process
+The backend loads the project-root `.env`, then legacy `backend/.env`, on startup using
+existing python-dotenv. Set `OPENAI_API_KEY=your_actual_key` in the root `.env`; see
+`.env.example` for placeholders. Restart the backend after saving. Process
 environment variables take precedence. Keep the file private and out of Git;
 never set a frontend `VITE_` key. No credentials are returned or logged.
 

@@ -24,14 +24,14 @@ export default {
       const signal = m.tab === 'signals' && m.selectedAverage?.signal
       const candleLabel = m.pinned ? 'Pinned candle' : 'Latest candle'
       return h('section', { class: 'summary-card', 'aria-labelledby': 'summary-title' }, [
-        h('h2', { id: 'summary-title' }, ['AI summary', h('img', { class: 'summary-diamond', src: '/brand/arbitrade-diamond.svg', alt: '' })]),
+        h('h2', { id: 'summary-title' }, 'AI summary'),
         result ? h('div', { class: 'model-summary', 'aria-live': 'polite' }, [
           h('p', { class: 'summary-meta' }, [result.model_call_kind, result.provider, result.model].filter(Boolean).join(' · ')),
           h('h3', result.proposal ? 'Model proposal · ' + result.proposal : 'Analysis unavailable'),
           result.image_analysis?.answers?.crossover ? h('p', 'Chart reading · ' + result.image_analysis.answers.crossover.choice) : null,
           result.review?.reviewer?.verdict ? h('p', 'Reviewer · ' + result.review.reviewer.verdict.replaceAll('_',' ')) : null,
           h('p', result.error_code ? 'Result · ' + result.error_code.replaceAll('_',' ') : 'Validation · ' + result.validation_status),
-        ]) : bar && !ended ? h('p', { class: 'summary-meta' }, 'Model analysis is available after the candle closes.') : null,
+        ]) : bar && !ended ? h('p', { class: 'summary-meta' }, 'Decision API can interpret the visible chart, including a forming candle.') : null,
         h('div', { class: 'observed-candle' }, [
           h('p', { class: 'summary-meta' }, bar ? candleLabel + ' · ' + formatUtc(bar.time) : 'Candle evidence'),
           h('h3', !bar ? 'Awaiting a candle' : signal ? (signal === 'up' ? 'Upward' : 'Downward') + ' SMA crossover' : (ended ? 'Close ' : 'Latest price ') + price(bar.close)),
@@ -45,10 +45,10 @@ export default {
         props.message ? h('p', { class: 'summary-note', role: 'status' }, props.message) : null,
         m.lastEnded && !ended ? h('button', { class: 'text-button inspect-last', onClick: () => m.pin(m.lastEnded.time) }, 'Inspect last close') : null,
         h('div', { class: 'summary-actions' }, [
-          h('button', { class: 'primary', disabled: props.busy || !ended || !m.paperAccount, onClick: () => emit('analyze') },
-            props.busy ? 'Analyzing…' : 'Analyze candle'),
+          h('button', { class: 'primary', disabled: props.busy || !m.candles.length, onClick: () => emit('analyze') },
+            props.busy ? 'Analyzing…' : 'Decision API'),
           h('button', { class: 'review-link', 'aria-expanded': props.proposalOpen, 'aria-controls': 'proposal-view',
-            onClick: () => emit('review') }, props.proposalOpen ? 'Close decision proposal' : 'Review decision proposal'),
+            onClick: () => emit('review') }, props.proposalOpen ? 'Close paper proposal' : 'Review paper proposal'),
         ]),
         slots.default?.(),
       ])

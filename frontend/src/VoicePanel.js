@@ -7,23 +7,28 @@ export default {
  setup(props,{emit,expose}){
   const choices=ref([]),selected=ref(''),record=ref(null),phase=ref('idle'),message=ref('Select a recorded decision to discuss.'),mic=ref(false),audio=ref(null),captions=ref([]),session=ref(''),mode=ref(''),error=ref('')
   const chooser=ref(false)
-  let connection,disposed=false,selectionVersion=0
+  let connection,disposed=false,selectionVersion=0,retry,loading=false
   async function load(){
+   if(disposed||loading)return
+   clearTimeout(retry);loading=true
    try{
-    const r=await fetch('/api/voice/decisions');if(!r.ok)throw Error('Cannot load saved decisions')
-    choices.value=await r.json()
-    if(!selected.value&&choices.value.length){selected.value=choices.value[0].id;await choose()}
-   }catch(e){error.value=e.message}
+    const r=await fetch('/api/voice/decisions',{signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error('Cannot load saved decisions')
+    const items=await r.json();if(disposed)return
+    choices.value=items;error.value=''
+    if(!selected.value&&choices.value.length)selected.value=choices.value[0].id
+    if(selected.value&&!record.value)await choose()
+   }catch(e){if(!disposed){error.value=e.message;retry=setTimeout(load,3000)}}
+   finally{loading=false}
   }
   async function choose(){
    selectionVersion++;const token=selectionVersion
    connection?.cleanup();record.value=null;captions.value=[];session.value='';mode.value='';error.value=''
    if(!selected.value)return
    try{
-    const r=await fetch('/api/voice/decisions/'+encodeURIComponent(selected.value));const d=await r.json()
+    const r=await fetch('/api/voice/decisions/'+encodeURIComponent(selected.value),{signal:AbortSignal.timeout(10000)});const d=await r.json()
     if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:'Cannot load decision')
     if(!disposed&&token===selectionVersion)record.value=d
-   }catch(e){if(token===selectionVersion)error.value=e.message}
+   }catch(e){if(!disposed&&token===selectionVersion){error.value=e.message;clearTimeout(retry);retry=setTimeout(load,3000)}}
   }
   async function start(){
    if(busy())return
@@ -52,7 +57,7 @@ export default {
   expose({selectDecision,openChooser})
   watch(phase,value=>emit('session',['requesting','connecting','active','ending'].includes(value)))
   onMounted(load)
-  onBeforeUnmount(()=>{disposed=true;selectionVersion++;connection?.cleanup()})
+  onBeforeUnmount(()=>{disposed=true;selectionVersion++;clearTimeout(retry);connection?.cleanup()})
   const busy=()=>['requesting','connecting','active','ending'].includes(phase.value)
   return()=>h('section',{class:'voice-panel','aria-labelledby':'voice-title'},[
    h('header',[h('h2',{id:'voice-title'},'Voice chat'),h('span',{id:'voice-microphone',class:mic.value?'mic-active':''},mic.value?'Mic on':'Mic off')]),

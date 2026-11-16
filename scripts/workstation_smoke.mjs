@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { checkDrawings } from './drawing_smoke.mjs'
 import { resolve } from 'node:path'
 import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
 const output=process.argv[2], base='http://127.0.0.1:15173', checks=[], errors=[]
@@ -38,6 +39,8 @@ try{
  await button('Load / restart replay').click();await button('Play replay').click()
  await until(async()=>(await page.locator('#replay-status').textContent()).includes('8 / 8'))
  await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:04:00Z')/1000))
+ await checkDrawings(page, resolve(output, 'drawing-tools.png'))
+ checks.push('Trend Line, Freehand, drag-sized ratio previews, locked resizing, contact eraser and drawing undo')
  await page.getByRole('tab', {name:'Indicators', exact:true}).click()
  await page.locator('.custom-studies > summary').click()
  await page.locator('#indicator-type').selectOption('sma');await page.locator('#indicator-name').fill('Smoke SMA');await page.locator('#indicator-window').fill('2');await button('Add indicator').click()
@@ -53,7 +56,8 @@ try{
  await page.screenshot({path:resolve(output,'trading-desk.png')})
  await button('Expand sidebar').click()
  await page.locator('.configured-indicators').screenshot({path:resolve(output,'sma.png')})
- await page.getByRole('button', { name: 'Review decision proposal', exact: true }).click()
+ await page.getByRole('tab', {name:'AI', exact:true}).click()
+ await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  await button('Ask about chart').click();await page.locator('#chart-preview').waitFor({state:'visible'})
  const sid=(await page.locator('#snapshot-id').textContent()).replace('Snapshot ID: ','')
  const saved=await api('/api/decision-snapshots/'+sid)
@@ -70,12 +74,12 @@ try{
  const replayPosition=await page.locator('#replay-status').innerText()
  try {
    await Promise.all([page.waitForRequest(isAnalysis),button('Analyze captured chart').click()])
-   await button('Close decision proposal').click()
+   await button('Close paper proposal').click()
    assert.equal(await page.locator('#candle-time').inputValue(),selectedTime)
    assert.equal(await page.locator('#replay-status').innerText(),replayPosition)
  } finally { releaseAnalysis() }
  assert((await analyzed).ok())
- await page.getByRole('button', { name: 'Review decision proposal', exact: true }).click()
+ await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  await until(async()=>(await page.locator('#decision-status').innerText()).includes('Status: valid'))
  for(const [name,value] of Object.entries({action:'wait',crossover:'up',evidence:'sufficient'}))assert.equal(await page.locator(`[data-answer="${name}"]`).textContent(),`${name}: ${value}`)
  assert.deepEqual((await api('/api/paper/account?account_id='+account.id)).fills,before.fills)
@@ -84,7 +88,7 @@ try{
  await button('Discuss this decision').click()
  await until(async()=>await page.locator('#voice-selected').isVisible() && (await page.locator('#voice-selected').innerText()).includes(decisionId))
  assert.equal(await page.locator('#voice-microphone').innerText(),'Mic off')
- await page.getByRole('button', { name: 'Review decision proposal', exact: true }).click()
+ await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  assert.equal(await page.locator('#chart-preview').getAttribute('src'),capture)
  await control({scenario:'failure'});await button('Analyze captured chart').click()
  await until(async()=>(await page.locator('#decision-status').textContent()).includes('Status: provider_error'))
@@ -92,15 +96,15 @@ try{
  checks.push('Analysis finishes while viewing Chart; pinned replay selection and progress persist. Saved PNG and decision survive a round trip to Voice. Stub answers and provider failure leave fills unchanged')
  await page.locator('.decision-result').screenshot({path:resolve(output,'provider-failure.png')})
  await control({scenario:'manual'});await page.locator('#mode').selectOption('live')
- await page.getByRole('button', { name: 'Paper trading', exact: true }).click()
+ await page.getByRole('button', { name: 'Trade', exact: true }).click()
  await page.getByRole('button', { name: 'Automation', exact: true }).click()
  await button('Start paper automation').click();await until(async()=>(await page.locator('#automation-status').textContent()).includes('enabled'))
  const initial=await state();assert.equal(initial.state.account.cash,'1000');assert.equal(initial.state.fills.length,0);assert.equal(initial.state.fees,'0');assert.deepEqual(initial.state.positions,[])
- await button('Back to chart').click()
+ await button('Trade').click()
  await completed(7,13)
  const buy=await completed(8,19,'buy');assert.equal(buy.signal,'up');assert.equal(buy.status,'pending')
  await event(clock(9,10),100);await until(async()=>(await state()).state.fills.length===1);await balances('600',4,'0','0')
- await page.getByRole('button', { name: 'Paper trading', exact: true }).click()
+ await page.getByRole('button', { name: 'Trade', exact: true }).click()
  assert.equal(await button('Stop paper automation').isEnabled(), true)
  await api('/api/paper/automation/attempts/'+buy.id+'/apply',{})
  await event(clock(9,10),100) // duplicate receipt/event must not add another fill
@@ -124,7 +128,7 @@ try{
  await until(async()=>(await page.locator('#automation-pnl').textContent())==='Realized P&L: 25 · Unrealized P&L: 0')
  await page.locator('.automation-panel').screenshot({path:resolve(output,'final-account.png')})
  checks.push('Approved close3 fills at $105: visible cash1025/shares0/realized25/unrealized0; SQLite audited independently by runner')
- await button('Back to chart').click();await button('Stop automation').click()
+ await button('Trade').click();await button('Stop automation').click()
  await until(async()=>await page.locator('#automation-status').isVisible() && (await page.locator('#automation-status').innerText()).includes('stopped'))
  const stopped=await state();await event(clock(17),500)
  await page.waitForTimeout(1800)
