@@ -1,0 +1,1 @@
+Open the app. Under Indicators → Moving Averages, give SMA and EMA separate grids. Each has rows for 1m, 5m, 15m, 1hr, 1D and 1W. Each row has square toggle buttons for 10, 20, 30, 50, 100 and 200 candles that show the corresponding line on the chart.

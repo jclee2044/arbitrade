@@ -1,0 +1,1 @@
+let’s go with Drawing Tools and the pencil icon. add it to the left side, to the right of signals and the left of the AI menu, with Trend Line, Freehand, and draggable 1:2, 1:3, and 1:4 risk/reward boxes that keep their ratio when resized. use emerald and maroon at 50% opacity.

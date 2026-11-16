@@ -2981,3 +2981,1399 @@ The live subscription is AAPL. The latest recorded minute had unknown volume. Th
 The student authorized a local commit of the reviewed updates. Git inspection found the implementation, brand assets and associated prompt, assignment and design records on main. The 147 existing changed/new files totaled about 7.1 MB. Credential-pattern and exact local credential scans found no matches. The frontend production build passed again with 29 modules. The prior implementation's 102 backend tests and browser results remain recorded above. The commit also includes this approval record and prompt 50. Verify the resulting commit with `git log -1` and `git status --short`. [Approval](../prompts/50-commit-workspace-redesign.md).
 
 The first staging attempt encountered the sandbox’s read-only Git metadata. The approved host command staged the files. Its whitespace check found an extra blank line at the end of the newly added IndicatorPanel.js. Removing that blank line resolved the check before committing.
+
+## Open dashboard · November 12, 2026
+
+The student requested “open it so i can see.” Git status was clean and HEAD was `d2f46b7` (`Redesign Arbitrade workspace with indicators and signals`). Read AGENTS.md and the current handoff. The sandbox loopback `curl -I --max-time 3 http://127.0.0.1:5173/` failed to connect. Repeating a read-only HTTP status probe on the host returned the expected HTTP 200. The health probe returned no visible body, so API health was not confirmed. `open_in_codex` queued `http://127.0.0.1:5173/` in the right browser panel. Visible rendering remains unverified. No services were started, packages installed, or application files changed. SmokeTest was not rerun for this opening request.
+
+
+## Live candles and previous-day navigation · November 12, 2026
+
+Request: [prompt 51](../prompts/51-live-candles-chart-history.md). Inspected AGENTS.md, handoff instructions/current state, Git status, chart composable/component, live/history routes and existing test runners before editing. Git is a repository; existing changes to this log and the handoff were preserved. No commit or dependency changes.
+
+CHECK: Omarchy 4.5.0, `/usr/bin/python` 3.14.8 with prefix `/usr`, Node 26.13.0/npm 11.20.0, system Chromium. Existing backend/.packages imports: FastAPI 0.156.8, Uvicorn 0.54.0, exchange-calendars 4.13.2, yfinance 1.8.0. Inspected frontend/package.json/package-lock.json and backend requirements. Reused installed Vue/Lightweight Charts/Playwright; no installation needed.
+
+Diagnosis: host-level `curl -sS --max-time 10 http://127.0.0.1:8000/api/health` failed with connection refused; process inspection found Vite but no backend. Sandbox-local checks could not establish host state, so repeated outside the sandbox. Restarted the review backend with `ARBITRADE_LIVE_FEED=on PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`; log `/tmp/arbitrade-review/backend.log`. Initially waiting with 378 historical candles, November 10–11; subsequently received actual Yahoo observations on November 12. A local WebSocket check observed live 15:17 UTC candles and OHLC/volume updates. Yahoo sometimes delivers older source times, temporarily producing the existing Stale label. Connection and data freshness remain separate.
+
+Implemented Previous day, UTC date picker, Latest candles and a history-start hint. Explicit mouse/touch scrolling is enabled. Off-tail viewport is restored after candle updates. History is the currently loaded subscription: replay never receives unrevealed future days. Weekly/monthly options use period starts. No provider backfill; actual recorded history begins November 10. README and design pipeline describe these bounds.
+
+| Command/check | Expected | Observed |
+| --- | --- | --- |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_live backend.test_timeframes -q` | Live feed/timeframe regression passes | PASS, 20 tests; existing pandas calendar deprecation warnings |
+| `npm --prefix frontend run build` | Build current frontend | PASS, 29 modules; rerun after boundary correction also passed |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-history-smoke` | Previous-day date boundary matches first candle | FAIL: a half-bar range included the preceding day's last candle; services/browser cleaned up |
+| Same command with `--output /tmp/arbitrade-history-smoke-2` | Three-day navigation, rollover preservation, drag, latest, mobile | PASS after one correction: exact first logical index; 360 candles initially, 361 after streamed rollover. Earlier-day visible range unchanged. Earliest boundary disables Previous day; mobile date selection works, no page overflow/errors. Screenshots visually inspected. All isolated services stopped and disposable databases removed |
+| `node /tmp/arbitrade-live-ui.mjs` | Real dashboard displays updating candles and navigates recorded dates | First run FAIL: test waited for hidden select option to be visible. Changed test-only wait to attached; rerun PASS: actual 15:19 UTC OHLC changed visibly, dates November 10/11/12 available, Previous day and Latest candles work. Screenshot `/tmp/arbitrade-live-chart.png`; final feed label Stale, with visible real revisions observed |
+| `./scripts/smoke-test --output /tmp/arbitrade-history-regression` | Existing full workstation/browser/SQLite regression | PASS: replay, indicators, pinned selection, decisions, Voice navigation, automation stop and three fixture fills; SQLite ends cash 1025, shares 0, realized 25. All test services stopped |
+| `git diff --check` | No whitespace errors | PASS |
+
+The live review backend and existing frontend remain running intentionally. Browser checks placed no live paper orders or model requests; workstation orders were isolated fixtures. Evidence under `/tmp` is temporary. No claim of continuous Yahoo availability or backfill. Physical touch gestures were not exercised; mobile layout/date control and desktop mouse dragging were checked. Changes await student review before any commit.
+
+
+## Emerald Paper trading button · November 12, 2026
+
+[Prompt 52](../prompts/52-emerald-paper-trading-button.md). Inspected Git status, AGENTS.md, current handoff, navigation and CSS; preserved all existing uncommitted chart/history work. Applied the existing `primary` class to the header button and removed its conflicting outline/transparent overrides. README/design pipeline describe its appearance. No packages, manifests, lockfiles or commits changed.
+
+CHECK: Linux, `/usr/bin/python` 3.14.8 (prefix `/usr`), Node 26.13.0, npm 11.20.0; inspected existing dependency manifests/lockfile and reused installed Vite/Playwright/Chromium.
+
+- `npm --prefix frontend run build`: expected successful bundle; PASS, 29 modules.
+- `git diff --check`: expected valid whitespace; PASS before final records.
+- `node /tmp/arbitrade-emerald-check.mjs` with host browser access: PASS against running port 5173. Computed default and selected background `rgb(8, 76, 61)`, white text, hover `rgb(21, 62, 51)`; clicking opened account and returned to chart. Browser closed; no orders placed.
+- Repeatable existing SmokeTest: `./scripts/smoke-test --output /tmp/arbitrade-emerald-smoke-host`. Initial sandbox attempt failed creating sockets. Host retry started isolated services/browser and passed replay/indicator and saved-analysis/Voice checks, then timed out in `scripts/workstation_smoke.mjs:100` waiting for automation fixture completion after returning to chart. Service log also reports ECONNRESET. All isolated services stopped. This broader automation check remains failing/unresolved; no unrelated automation changes made. Evidence: `/tmp/arbitrade-emerald-smoke-host/`.
+
+Student review pending; no commit. Existing live review services remain running.
+
+
+## Responsive two-finger chart zoom · November 12, 2026
+
+Request: [prompt 53](../prompts/53-responsive-chart-zoom.md). Preserved all earlier uncommitted chart/history and documentation work. Read the current handoff, handoff procedure, AGENTS.md, chart implementation, dependency manifests/lockfile, and installed Lightweight Charts 5.3.0 primary source/types. Its default small wheel delta produces a very small horizontal scale change and has no sensitivity option. Implemented an eightfold small-delta response in the chart composable using the public logical-range API, with pointer anchoring, pixel/line/page normalization, a per-event factor cap, and eight-interval minimum. Ctrl-wheel pinch is consumed by the chart; horizontal wheel swipes still pan natively. Touchscreen pinch continues through the chart library's native handling. No dependency/source-library modifications or installations.
+
+CHECK confirmed Omarchy 4.5.0, `/usr/bin/python` 3.14.8 prefix `/usr`, Uvicorn 0.54.0 in backend/.packages, Node 26.13.0/npm 11.20.0. Existing Vue/Lightweight Charts/Playwright dependencies reused.
+
+- `npm --prefix frontend run build`: expected valid production bundle; PASS, 29 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-responsive-zoom`: FAIL in test measurement after zoom-out succeeded. Comparing elapsed seconds across an overnight gap distorted the reverse-zoom threshold. Corrected the browser measurement to count candle intervals.
+- Same command with `--output /tmp/arbitrade-responsive-zoom-2`: FAIL because ports 18000/15173 were occupied by another test. Its fixture had only eight candles, so the history runner's initial 360-candle assertion timed out. Did not terminate the other processes. Added a port preflight and separate history-test ports 18152/15252.
+- Same command with `--output /tmp/arbitrade-responsive-zoom-3`: PASS. A small 20-pixel wheel movement changed 74 visible candle intervals to 88 (about 19% wider horizontal coverage); the reverse gesture restored the range within 4% rounding tolerance. Ctrl-wheel pinch in both directions passed without page zoom. Horizontal wheel panning, mouse dragging, Previous day/date navigation, live rollover viewport preservation, Latest candles, and mobile layout/date selection passed. No page errors. Isolated services/browser stopped and disposable databases removed. Report/screenshots in `/tmp/arbitrade-responsive-zoom-3`.
+- `git diff --check`: PASS.
+
+Two correction cycles, then success. No live account or stored production market data changed by the fixture test. No commit. Physical trackpad feel and hardware-specific gesture delivery await student review; browser checks used real wheel input plus synthetic ctrl-wheel pinch events. Existing full workstation/backend regression results remain in the prior entry; not rerun for this input-only change.
+
+
+## Chart zoom and scrolling momentum · November 12, 2026
+
+Request: [prompt 54](../prompts/54-chart-gesture-momentum.md), including a sketched steep-to-flat slowdown curve. Read Git status, current handoff/procedure, AGENTS.md and existing gesture/history code before editing; preserved all earlier work, including the separate Paper trading style changes. CHECK: Omarchy 4.5.0, `/usr/bin/python` 3.14.8 prefix `/usr`, Node 26.13.0/npm 11.20.0, existing Uvicorn 0.54.0 and current frontend manifest/lockfile, backend requirement files and installed Lightweight Charts primary source. No dependencies installed or changed.
+
+Implemented `frontend/src/chart-gestures.js`, integrated in `useMarketChart.js`: zoom coefficient 0.011 versus 0.008 (37.5% increase), pointer-centered horizontal transforms, frame-driven exponential release decay (180ms zoom, 220ms horizontal wheel pan), bounded release duration and zoom range. New wheel events replace old momentum, including OS-generated small tail events. Release starts on the next frame without a waiting pause. Enabled the existing library's kinetic mouse drag and retained touch drag. Cancel custom motion on new chart pointer input, date/latest/pinned navigation, reconnect, blur/visibility change and teardown. Updated README/design pipeline, saved prompt and extended the existing history browser test.
+
+Verification:
+
+- Resume and final `npm --prefix frontend run build`: PASS (initial baseline 29 modules; final 30).
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-chart-momentum`: FAIL, release animation stopped after its first frame. Immediate readback of a newly requested chart range still returned the old range because rendering is deferred. Corrected the stop condition to compare the requested range instead.
+- Same command with `--output /tmp/arbitrade-chart-momentum-2`: PASS for zoom/pan release movement, deceleration, stopping, reverse pinch, no page zoom, date cancellation, history navigation, live rollover preservation and mobile layout. All isolated processes stopped.
+- Added an explicit quick mouse-drag coast assertion; `--output /tmp/arbitrade-chart-momentum-3`: PASS, including drag release.
+- Removed the initial 60ms release pause for a seamless transition. `--output /tmp/arbitrade-chart-momentum-final`: FAIL in the test's date-cancel comparison: it sampled the old viewport before the requested date jump rendered. Corrected the test to await the date boundary before sampling.
+- Final `--output /tmp/arbitrade-chart-momentum-final-2`: PASS. Visible candle-interval counts sampled about every 100ms after release were `[93,103,109,114,117,117,119,119,119]`; scrolling start indices were `[132,137,142,144,146,147,147,148,148]`. Both continued, slowed and settled; a later settled-state comparison confirmed stopping. Quick drag continued after mouse release. Reverse pinch and date cancellation passed. Three-day navigation, 360→361 streamed candles, earlier viewport preservation, Latest candles and mobile checks passed; no browser page errors. All test services/browser stopped; temporary databases removed. Test ports 18152/15252. Reports/screenshots are temporary under the output paths.
+- Final `git diff --check`: PASS.
+
+AutoLoop: one implementation correction and one test synchronization correction, both followed by successful reruns. Existing full workstation/backend checks were not rerun for this frontend input change. Hardware-specific trackpad feel, native OS momentum and physical touchscreen gestures still need student review; automated coverage uses Chromium wheel input, synthetic ctrl-wheel pinch and real mouse dragging. No live orders/model requests, no commit, no changes to retained review services. Repeat without source edits: `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke`.
+
+
+## Start server and open · November 12, 2026
+
+Preserved existing uncommitted work; inspected Git status, AGENTS.md, handoff procedure/current state, README startup commands, frontend manifest/lockfile presence and backend requirement pins. Reused Linux, `/usr/bin/python` 3.14.8 (prefix `/usr`), Node 26.13.0/npm 11.20.0 and existing local packages; import check passed for FastAPI 0.156.8, Uvicorn 0.54.0 and yfinance 1.8.0. No installation or application edits.
+
+Sandbox port inspection failed (netlink permission); sandbox curl could not reach the host frontend. Host `ss -ltnp` confirmed Vite already listening on 5173 and no backend on 8000. Started `ARBITRADE_LIVE_FEED=on PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000` with output in `/tmp/arbitrade-review/backend.log` (exec session 81254). Host `curl -fsS --max-time 10 http://127.0.0.1:5173/api/health` expected healthy proxy, observed `{"status":"ok"}`; dashboard curl expected 200, observed HTTP 200. Both services intentionally retained for user review.
+
+Codex browser panel open for http://127.0.0.1:5173/ returned queued. CUA in-app-browser attempt reported unavailable; inventory had no browsers/apps. Visible browser rendering and live quote freshness were not verified; no full SmokeTest run for this startup-only request. Existing repeatable SmokeTest remains `./scripts/smoke-test`. No commit.
+
+## Decision API status inspection · November 12, 2026
+
+User asked whether the Decision API is implemented. Inspected Git status, AGENTS.md, handoff instructions/current state, backend/main.py routes, decisions.py, decision_provider.py, frontend DecisionPanel.js, docs/decisions.md and prior live verification. Implementation exists; November 11 live provider success is recorded above. No fresh provider request made. Existing source changes preserved.
+
+Environment: Linux, /usr/bin/python 3.14.8, Node v26.13.0, npm 11.20.0; inspected existing requirements and frontend manifest/lockfile inventory. No installations or dependency changes.
+
+Attempted `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_decisions -q`, expecting the decision unit suite to pass. It emitted pandas timezone deprecation warnings, then produced no result before interruption (exit 130). This is not a pass; a completed fresh unit run and fresh browser SmokeTest remain unverified in this status-only inspection. Prior recorded unit/browser/live results remain historical evidence. No application source edits or commit.
+
+## Decision API classroom comparison · November 12, 2026
+
+Read the user-supplied activity text and inspected current Git status, backend/chart_decisions.py, backend/decision_provider.py, backend/main.py dotenv location, frontend/src/DecisionPanel.js and main.js, README and docs/chart-questions.md. Core chart-image decision integration exists, but differs from the classroom prompt: model receives PNG plus structured frozen snapshot (including candle data), uses buy/sell/hold/wait/close instead of long/short/wait, and captures a reconstructed frozen chart. Analyze candle uses snapshot-only analysis; Ask about chart followed by Analyze captured chart selects the image path. Backend loads backend/.env, rather than the project-root .env specified in the activity. No educational flowchart found in searched frontend/docs/README text.
+
+Read-only source inspection; no fresh tests, browser check or provider requests performed. Prior live image result is historical and recorded in docs/chart-questions.md. Search exit 1 means no matching flowchart text, not an application failure. Added prompt 56 and records only; no dependency/source changes or commit.
+
+## Assignment image-only Decision API · November 12, 2026
+
+Implemented prompt 57 in `/home/jlrj/Documents/arbitrade`, preserving all existing
+chart/history/gesture/button edits and records. No dependency installation, manifest
+or lockfile change, credential migration or commit. Environment checks: Linux,
+`/usr/bin/python` 3.14.8, Node v26.13.0, npm 11.20.0, existing Vue/Vite/Playwright
+manifest and pinned calendar/Yahoo requirements. Existing backend/.packages reused.
+`git check-ignore .env backend/.env` confirms both private paths ignored.
+
+### Implemented contract
+
+Main **Decision API** button exports the actual visible chart canvas, including
+volume/overlays, with only the supplied activity's context fields. It allows a
+forming candle and does not require an account or SMA warm-up. New
+`backend/classroom_decisions.py` accepts a strict context allowlist, validates PNGs,
+prepares one question with exactly long/short/wait, makes one bounded provider
+call and stores sanitized results/images separately in `classroom_decisions`.
+No candle/indicator/account lookup, analyst/reviewer call, paper order, or automation
+attempt occurs in this handler. Extra capture fields are rejected before a call.
+Provider failures retain a null choice rather than inventing wait. Optional
+probability metadata is validated and inspectable when supplied.
+
+`POST /api/decisions` dispatches capture-only requests to this handler. Explicit
+snapshot_id requests retain the paper path. Shared GET routes retrieve classroom
+or existing paper records/images. Root .env loads after existing process variables
+and before legacy backend/.env; no secret files were changed. Root .env.example
+contains a placeholder. New UI shows capture timestamps, image/result, inspectable
+question/context/answer and six connected educational flowchart boxes.
+**Review paper proposal** retains the frozen numeric-data, position-aware workflow;
+**Paper trading → Automation** remains on its existing buy/sell/hold/wait/close
+implementation. Updated existing smoke selectors and removed obsolete main-button
+snapshot-only expectations from the paper smoke; new classroom smoke covers them.
+README, design pipeline and paper workflow documentation distinguish both paths.
+
+### CHECK / TAKE ACTION / VERIFY and AutoLoop
+
+- `npm --prefix frontend run build`: expected production bundle; PASS after initial
+  implementation and final changes (31 modules). `git diff --check`: PASS.
+- Import check using `PYTHONPATH=backend/.packages /usr/bin/python`: classroom
+  models/service and FastAPI import successfully.
+- First sandboxed classroom unit attempt hung at asyncio.to_thread. A minimal
+  `timeout 8 /usr/bin/python -c 'import asyncio; asyncio.run(asyncio.to_thread(print, "thread OK"))'`
+  also timed out (124). Interrupted suite (130); neither is a pass. Unsandboxed
+  controlled execution resolves this environment issue, also explaining the prior
+  status-inspection unit interruption. No application workaround was introduced.
+- First unsandboxed classroom suite: 4 tests passed, HTTP integration test failed
+  because httpx is absent. Corrected the test to invoke ASGI directly, using the
+  installed stack, without installing a dependency. Corrected test connection
+  cleanup after nonfatal ResourceWarnings. Subsequent tests passed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_classroom_decisions backend.test_automation -v`:
+  expected classroom contract and paper regressions; PASS, 16 tests.
+- Final focused suite:
+  `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_classroom_decisions backend.test_decisions backend.test_chart_decisions backend.test_decision_review backend.test_automation -q`:
+  PASS, 34 tests in 3.841s. Existing pandas timezone deprecation warnings remain
+  nonfatal. Covers allowed choices, optional probabilities, rejected extra data,
+  PNG and timestamp validation, durable images/results, HTTP dispatch and errors,
+  and preserved paper/reviewer/automation behavior.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.classroom_smoke --output /tmp/arbitrade-classroom-final`:
+  PASS (also passed before final text corrections). Starts disposable backend18162,
+  Vite15262 and Chromium; exercises real UI captures and all three answers, malformed
+  answer, timeout and provider error. Browser compares preview and retrieved PNG,
+  answers and SQLite. Provider receipts confirm exact image/context-only input and
+  choices. All paper tables identical before/after; zero paper decisions and zero
+  automation attempts. Desktop/mobile screenshots visually inspected. Browser had
+  no uncaught errors. Services/browser stopped and temporary databases removed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.automation_smoke --output /tmp/arbitrade-classroom-automation`:
+  PASS: approved paper buy yields exactly one four-share fill at20, cash920/shares4;
+  duplicate application, reviewer veto and actual backend restart behave correctly.
+  Isolated services/browser cleaned up.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.decision_smoke --output /tmp/arbitrade-classroom-paper`:
+  PASS: existing frozen snapshot, valid hold, timeout/malformed/missing-input states,
+  unchanged ledger and mobile panel behavior. Isolated services/browser cleaned up.
+- Inspected running review ports: Vite5173 remained, backend8000 was absent. Started
+  updated live backend with `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`,
+  exec session8134, log `/tmp/arbitrade-assignment-backend.log`. Chromium checked
+  proxied health200, loaded app, Decision API control and six flowchart stages;
+  PASS, no model request. Screenshot `/tmp/arbitrade-assignment-live-ui.png`.
+  Backend/frontend intentionally remain running for student review.
+
+### Evidence and remaining checks
+
+[Successful controlled result](screenshots/classroom-2026-11-12/success.png),
+[mobile error/flowchart layout](screenshots/classroom-2026-11-12/mobile.png),
+[final browser report](screenshots/classroom-2026-11-12/report.json).
+All new model-response checks were controlled, using constructed data and no key.
+No fresh live OpenAI decision was requested; current provider/account access and a
+live long/short/wait response remain unverified. Historical paper/image provider
+checks do not establish that new contract. No full workstation regression rerun
+was needed after the focused backend/classroom/paper automation checks passed.
+Student review required before any commit; no commit made.
+
+## Restart and open assignment app · November 12, 2026
+
+Inspected Git status and handoff; preserved all edits. Verified process cwd and command identity before stopping backend642259 and Vite6971 with SIGTERM. Restarted `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000` (session63238) and `npm --prefix frontend run dev` (session48559). Logs: /tmp/arbitrade-assignment-backend.log and /tmp/arbitrade-assignment-frontend.log. HTTP checks for backend health, frontend page and proxied health all returned200. Requested Codex browser panel opening of http://127.0.0.1:5173/. Panel rendering not independently inspected in this restart; no model calls, dependency changes or commit. Services intentionally left running.
+
+
+## Longer release glide · November 12, 2026
+
+Request: [prompt 59](../prompts/59-longer-chart-momentum.md). Inspected Git status/current handoff, handoff procedure, gesture controller and history checks; preserved all existing classroom API, style and chart work. CHECK reused Omarchy 4.5.0, `/usr/bin/python` 3.14.8 prefix `/usr`, Uvicorn 0.54.0 in backend/.packages, Node 26.13.0/npm 11.20.0 and existing frontend dependencies/package-lock.json. No installation/manifest changes.
+
+Changed only release tuning in chart-gestures.js: initial momentum multiplier 0.25→0.35, zoom decay 180→420ms, horizontal-pan decay 220→500ms and safety duration 1200→2800ms. Integrated release travel is about 3.2× previous behavior; direct input sensitivity and cancellation remain unchanged. Native mouse/touch drag settings retain their prior behavior. README/design pipeline updated. Expanded browser assertions require noticeable continuing movement during the later 500–800ms segment as well as eventual stop.
+
+- `npm --prefix frontend run build`: PASS, 31 modules with the existing classroom changes.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-longer-momentum`: FAIL at exact date-boundary synchronization after stronger zoom; chart rendered the selected date but floating boundary inclusion made the exact timestamp wait brittle. Changed this cancellation check to wait two render frames, assert the selected date, then compare the viewport for drift. Earlier explicit Previous day boundary assertions remain.
+- Same command with `--output /tmp/arbitrade-longer-momentum-2`: PASS. About 100ms samples: zoom visible candle intervals `[93,109,125,142,156,165,175,181,187]`; horizontal scrolling start indices `[135,144,156,164,172,177,182,186,189]`. Both show continuing late movement with diminishing increments, then passed settled comparisons after more than three seconds. Reverse pinch, date cancellation, mouse drag coast, history/latest navigation, streamed rollover preservation and mobile layout passed with no page errors. Disposable services on 18152/15252 and Chromium stopped; test databases removed. Evidence in the temporary output directory.
+- `git diff --check`: PASS.
+
+AutoLoop: one test-boundary correction, successful rerun. Hardware feel still awaits student review. Existing review services were left running; no live model/order calls, dependency edits or commits. No broader backend/workstation suite rerun for this tuning-only change.
+
+
+## Taller chart · November 12, 2026
+
+Request: [prompt 60](../prompts/60-taller-chart.md). Inspected Git status, AGENTS.md, current handoff/procedure and chart CSS/component before editing; preserved existing work. CHECK: Omarchy 4.5.0, `/usr/bin/python` 3.14.8 (`/usr` prefix), Node26.13.0/npm11.20.0, existing frontend node_modules/package.json/package-lock.json and backend requirements. No installs or dependency edits.
+
+Scaled each active main-chart clamp term by1.2: desktop305px/46vh/490px →366px/55.2vh/588px; phone255px/39vh/355px →306px/46.8vh/426px. README/design pipeline aligned.
+
+- `npm --prefix frontend run build`: expected successful production build; PASS,31 modules.
+- Focused temporary browser SmokeTest: `PYTHONPATH=.:backend/.packages /usr/bin/python /tmp/arbitrade-height-check.py --output /tmp/arbitrade-chart-height`. First attempt blocked by sandbox socket permissions; authorized host retry encountered occupied usual ports. Reran using18162/15262: PASS. Isolated local services and Chromium started, Previous day/Latest candles operations passed at six desktop/phone viewport sizes. Rendered chart heights matched previous computed height×1.2 within1px, covering min/fluid/max: desktop588/441.594/366px; phone394.984/306/426px. Services/browser cleaned up; report in temporary output directory. No stored-data changes required for CSS sizing.
+- `git diff --check`: PASS.
+
+Repeatable existing chart/history SmokeTest: `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke` (not rerun in this turn; focused browser check above executed). Full regression suite not run for CSS sizing. No commits; student review pending.
+
+
+## Balanced glide and sensitive vertical price scale · November 12, 2026
+
+Request: [prompt 61](../prompts/61-balanced-glide-sensitive-price-scale.md). Interpreted right column as the chart's right-hand price axis. Inspected Git status/current handoff/procedure, existing gestures and installed Lightweight Charts public price-range/pane APIs and native price-drag implementation. Preserved all previous and concurrent classroom, chart height and style work. CHECK reused Omarchy4.5.0, `/usr/bin/python`3.14.8 prefix `/usr`, Uvicorn0.54.0, Node26.13.0/npm11.20.0, existing frontend package manifest/lockfile and installed libraries. No installation or dependency-file edits.
+
+In chart-gestures.js reduced release multiplier0.35→0.30, zoom/pan decay420/500→300/360ms, cap2800→2200ms. This reduces integrated release travel about39% from the previous setting while retaining gradual slowdown. Direct zoom sensitivity unchanged. Added price-axis pointer dragging with capture and exponential sensitivity0.012/pixel plus vertical wheel scaling over the price labels. Uses the public priceScale get/set range APIs, retains the range center and the horizontal time viewport. Double-click restores auto scaling. Pointer release/cancellation, blur and teardown release the drag and listeners. README/design pipeline/prompt records updated.
+
+Observed checks:
+
+- `npm --prefix frontend run build`: PASS, 31 modules (rerun after explicit reset handler also PASS).
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-balanced-glide-price-scale`: PASS, including new rendered-candle pixel-height measurements: 238px before drag, 166px after30px down, 303px after20px up. Wheel vertical scaling, unchanged time viewport and double-click reset passed. No failures/correction loop.
+- Added explicit public-API auto-scale reset handling so double-click remains available with pointer capture. Final same command using `--output /tmp/arbitrade-balanced-glide-price-scale-final`: PASS. Concurrent taller-chart CSS produced heights289→202px for30px down, and367px for20px up (about30% contraction/27% expansion). Horizontal time range unchanged; wheel input and reset passed. Zoom release sample intervals `[93,106,119,128,135,140,144,146,148]`; pan start indices `[135,143,152,158,163,166,169,171,172]`. Deceleration, eventual stopping, cancellation, reverse pinch, mouse drag momentum, history/latest controls, live rollover preservation and mobile layout passed. No browser page errors. Test services18152/15252 and Chromium stopped; disposable databases removed.
+- `git diff --check`: PASS.
+
+Browser evidence is temporary under the output directories. Physical trackpad feel and touch-only price-axis dragging await student review; automated price-axis verification used actual Chromium mouse drag/wheel and rendered candle pixels. No live model calls/orders or review-service changes, no commit. Broader backend/workstation suite not rerun for this input-only adjustment.
+
+
+## Logo home navigation · November 12, 2026
+
+Request: [prompt 62](../prompts/62-logo-home-navigation.md). Inspected AGENTS.md, Git status, handoff/procedure, navigation component, main navigation and CSS; preserved existing edits. CHECK: Omarchy4.5.0, `/usr/bin/python`3.14.8 prefix `/usr`, Uvicorn0.54.0 in existing backend/.packages, Node26.13.0/npm11.20.0, frontend manifest/lockfile and existing Playwright/Chromium. No installations or dependency changes.
+
+Wrapped the header wordmark in an accessible `Arbitrade home` link with href `/`. Ordinary click/Enter emits existing chart navigation, restoring workspace focus without reloading; modified clicks retain native link behavior. README and design pipeline aligned.
+
+- `npm --prefix frontend run build`: expected production build; PASS,31 modules.
+- `PYTHONPATH=.:backend/.packages /usr/bin/python /tmp/arbitrade-logo-smoke.py --output /tmp/arbitrade-logo-check`: first attempt FAIL because sandbox prohibited sockets. Authorized host execution of the same command PASS. Temporary runner reuses scripts/history_smoke.py service lifecycle with a focused temporary browser script. Isolated fixtures/services and Chromium verified desktop1400px and phone390px: click and Enter from Paper trading show chart home, park paper panel, focus desk and preserve candle selection and document identity; clicking while home also passes. No page errors; processes stopped and disposable databases removed. Evidence: `/tmp/arbitrade-logo-check/report.json` and browser.log. No stored-data mutation involved.
+- `git diff --check`: PASS.
+
+Existing repeatable application SmokeTest: `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke` (not rerun in this turn; focused navigation check executed above). Modified-click/new-tab behavior was retained by code inspection, not browser-tested. No broader regression run, live model calls or commit; changes await student review. Review services untouched.
+
+
+## Volume unknown diagnosis · November 12, 2026
+
+Read-only diagnosis; application source unchanged. Git status showed existing modified/untracked work, all preserved. Read AGENTS.md, handoff procedure/current state, README, Yahoo receiver, candle builder, timeframe aggregation and UI null rendering. Environment checks: Linux; `/usr/bin/python --version` → 3.14.8; Node v26.13.0, npm 11.20.0; existing frontend manifest/lockfile and Yahoo requirements inspected. No dependency changes/installations.
+
+Executed `/usr/bin/python` inline script opening `backend/data/observations.sqlite3` with `mode=ro`, calling `backend.candles.form_candles(connection, 'AAPL')`, counting `minute_status.volume_reason`, and checking only presence/non-nullness of day_volume on the newest 100 observations. Expected: identify reasons without changing stored observations. Observed: all 100 recent quotes contain non-null day_volume. Latest minute at inspection was 2026-11-12T20:45:00Z; volume reason: different cumulative totals at the same source time. All 889 derived minutes had unknown volume: missing initial baseline 1, gap in preceding baseline 56, missing/invalid cumulative value 319, conflicting totals at same source time 247, ambiguous preceding baseline 265, cross-date baseline 1. This covers stored minutes before session filtering; it does not identify the student's exact selected candle.
+
+Inspected installed yfinance/utils.py: history quote parser reads provider volume into Volume. Verified upstream source https://raw.githubusercontent.com/ranaroussi/yfinance/main/yfinance/utils.py likewise. Current app builds candles from recorded streaming quotes and has no provider history backfill. No historical API request or availability/accuracy check for this account/date was executed. No application source edit, browser SmokeTest, model call or commit. One exploratory read of nonexistent frontend/src/api.js failed; actual relevant files were located using rg. No correction to application code was necessary.
+
+
+## Hide unknown volume labels · November 12, 2026
+
+Prompt65 requests removal of unknown-volume text. Inspected Git status, current handoff, relevant Vue components and smoke runners first; preserved existing work, including concurrent prompt64/ClassroomDecision edits. Existing Linux/Python3.14.8 (`/usr/bin/python`), Node26.13.0/npm11.20.0, Chromium and installed frontend/backend packages reused; manifests/lockfiles inspected, no installs/dependency edits.
+
+CandleChart omits unavailable Volume rows from details/hover cards and uses a neutral Volume · shares key. ClassroomDecision omits unavailable volume from its short result context; diagnostic JSON/API metadata stays accurate. DecisionPanel drops the unknown-volume explanation. Actual numbers including zero still render, and histogram gaps/data remain unchanged. README/design pipeline updated; existing UI/replay smoke expectations now accept an omitted row for unknown volume.
+
+Checks: `npm --prefix frontend run build` expected successful bundle, observed PASS31 modules. `ARBITRADE_BACKEND_PORT=18173 ARBITRADE_FRONTEND_PORT=15273 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-hide-volume` initially failed in sandbox on socket creation (EPERM), then identical command with host execution PASS. Browser performed candle selection/inspection and compared visible facts to backend, tested known-volume revisions/rollover, all intervals, outage and desktop/mobile; no JS errors. Runner stopped its services/browser and removed disposable SQLite. Evidence `/tmp/arbitrade-hide-volume/report.json`. No model calls or production data edits. Replay runner expectation changed but replay/browser decision flows and separate physical hover operation were not rerun. `git diff --check` PASS. No commit; ready for student review. Repeat SmokeTest with the command above.
+
+
+## Gentler main-chart input · November 12, 2026
+
+Request: [prompt 66](../prompts/66-gentler-main-chart-zoom-scroll.md). Inspected Git status/current handoff, handoff procedure, existing chart gestures and browser check; preserved all prior/concurrent changes. CHECK reused Omarchy4.5.0, `/usr/bin/python`3.14.8 prefix `/usr`, Uvicorn0.54.0, Node26.13.0/npm11.20.0 and existing frontend dependencies/lockfile. No installs or dependency edits.
+
+Reduced main-chart wheel/pinch zoom coefficient0.011→0.0088 and its event cap0.6→0.48; horizontal wheel panning now multiplies input by0.8. Both responses (and the momentum they seed) are20% lower. Release decay timings, native mouse drag and right-hand vertical price-scale sensitivity retained. Design pipeline updated.
+
+- `npm --prefix frontend run build`: PASS,31 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-gentler-chart-input`: PASS first run. Zoom release interval samples `[89,99,107,115,119,123,126,128,129]`; pan start indices `[130,136,142,146,150,152,154,155,157]`. Continued motion, deceleration, eventual stop, reversal/cancellation and history/mobile checks passed. Price-axis drag/wheel/reset also passed; rendered heights289→201px down30px and366px up20px. No page errors. Isolated services18152/15252, browser and temporary databases cleaned up; production review services untouched.
+- `git diff --check`: PASS.
+
+No failures/correction cycle, model/order calls, dependencies or commits. Physical trackpad feel remains for student review; no broader suite rerun for two input coefficients. Repeat SmokeTest command above without source edits. Evidence temporary in the output directory.
+
+
+## Decision API content trim · November 12, 2026
+
+Request: [prompt 64](../prompts/64-decision-api-trim.md). Inspected AGENTS.md, Git status, handoff/procedure, actual ClassroomDecision/ChartSummary/main components, styles, README/design pipeline, classroom contract and existing browser runner before editing. Existing modified/untracked work was preserved; Git is a repository. No commit or dependency changes.
+
+CHECK: Linux; `/usr/bin/python`3.14.8, executable `/usr/bin/python`, prefix `/usr`; existing backend/.packages imports FastAPI0.156.8/Uvicorn0.54.0. Node26.13.0/npm11.20.0, system Chromium and existing Playwright; reviewed frontend package.json/package-lock.json and backend calendar/Yahoo requirement pins. No installation, environment recreation, manifest or lockfile edits.
+
+Ranked content: (1) choice or explicit failure/status, (2) ticker/interval/freshness/volume, (3) expandable audit metadata, (4) optional four-stage explanation. Removed inline PNG, image link, verbose capture timestamps/counts and repeated no-order/rationale paragraphs. Kept exact context/timestamps/question/answer, provider/model and ID in Decision details; retained one upfront no-trade statement. Captures and payload/storage contract remain unchanged. README, design pipeline and classroom contract aligned. Updated existing repeatable browser check for collapsed metadata, data quality, no image/link, four explanation stages, phone overflow and audit expansion.
+
+Observed verification:
+
+- Baseline and final `npm --prefix frontend run build`: PASS,31 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.classroom_smoke --output /tmp/arbitrade-decision-trim-64`: initial sandbox execution FAIL (socket PermissionError before launching services). Same command with approved host execution PASS. Checked all three choices, malformed/timeout/provider failures, exact outgoing capture fields, retrieved PNG byte equality, saved context/question/answer, unchanged paper ledger, expandable audit and desktop/390px phone layout. Services/browser cleaned up.
+- Before/after copy measurement used temporary files `/tmp/decision-copy-measure.py`, `/tmp/arbitrade-copy-measure.mjs`, `/tmp/arbitrade-copy-runner.py`. The latter reuses the classroom service lifecycle on disposable ports and all six existing browser/storage checks, plus an isolated page serving the pre-edit component with an intercepted controlled response. First measurement attempt FAIL because recently used test ports were unavailable; moved only temporary runner to free ports. First counting assertion FAIL (128→56) because textContent joined adjacent paragraphs; corrected measurement to join paragraph/heading/summary/list/link text with spaces, excluding raw JSON. Corrected count144→67 (46.5%) still fell below desired50–70%; retained useful capture/indicator and explicit failure-handling explanations. Final `PYTHONPATH=.:backend/.packages /usr/bin/python /tmp/arbitrade-copy-runner.py` with approved host execution PASS on18166/15266: **144→81 words,56.25% retained**, counting all panel prose including closed disclosures, excluding raw JSON. All six browser/storage checks PASS again. Evidence `/tmp/arbitrade-decision-trim-64-measured/report.json`, `browser.log`, desktop/mobile/success PNGs. Visually inspected success desktop and final expanded mobile screenshots. Services/browser cleaned up; disposable databases removed. Temporary output is not committed.
+- `git diff --check`: PASS before final record update; rerun after record update below.
+
+No live provider request, real paper order, full backend/workstation regression or physical phone check executed; controlled browser tests cover this presentation change. Existing review services untouched. Student review remains required before any commit. Repeatable SmokeTest remains the classroom command above.
+
+Final review detected and preserved a concurrent context-label edit that hides the volume label unless volume is visible. Final `npm --prefix frontend run build` PASS31 modules, and canonical classroom SmokeTest rerun at `/tmp/arbitrade-decision-trim-64-final` PASS with all six choices/failures and storage checks; services/browser cleaned up. Copy measurement used the visible-volume fixture and remains81/144 words. Final `git diff --check` PASS after records.
+
+## Remove instrument header prices · November 12, 2026
+
+Prompt67 removes the price value, Last price/Replay price label and change from
+preceding close beneath Apple Inc. AAPL in `frontend/src/CandleChart.js`.
+The accessible chart heading and timeframe controls remain. Existing changes
+were inspected and preserved; no commit, installation or dependency edits.
+README and design pipeline now describe the header.
+
+CHECK: Omarchy4.5.0; `/usr/bin/python`3.14.8, prefix `/usr`;
+Node v26.13.0/npm11.20.0. Existing frontend/node_modules, package-lock.json,
+Python requirement files and backend/.packages inspected; FastAPI/Uvicorn imports
+passed with `PYTHONPATH=backend/.packages`. No new packages required.
+
+- `npm --prefix frontend run build`: expected successful build; PASS31 modules.
+- `ARBITRADE_BACKEND_PORT=18177 ARBITRADE_FRONTEND_PORT=15277 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-remove-header-price`:
+  initial sandbox run failed creating a socket (EPERM). Same command outside
+  sandbox PASS: connection button, seeded candle inspection/updates, all
+  timeframes, outage state, desktop/mobile rendering, no uncaught JS errors.
+  Test services/browser and disposable SQLite cleaned up. Report and screenshots
+  in `/tmp/arbitrade-remove-header-price`; initial screenshot inspected.
+- Source review confirms removal of the quote row and its unused delta calculation.
+  Existing smoke does not explicitly assert absence of these header labels.
+
+Outstanding: student visual review before commit; full backend/workstation and
+replay-specific suites not rerun for this presentation change.
+## Daily and weekly history diagnosis · November 12, 2026
+
+Prompt68 asks why D/W show very little history. Git status inspected; extensive
+existing changes preserved. No application changes, installations, dependency
+edits or commit. Linux, /usr/bin/python3.14.8, Node26.13.0/npm11.20.0;
+existing backend/.packages, frontend/node_modules, manifests and lockfile checked.
+
+- Source inspection: D maps to1d, W to1w. LiveFeed.snapshot calls
+  history_response with source=observations; derive_timeframe aggregates saved
+  minute candles. No historical provider backfill in this path. Frontend fits
+  small datasets to the viewport rather than limiting them to two bars.
+- Read-only local HTTP requests using /usr/bin/python urllib for D/W failed:
+  sandbox socket restriction, Operation not permitted. Running service payload
+  was therefore not verified.
+- `PYTHONPATH=backend/.packages /usr/bin/python` calling history_response for
+  1d/1w with source=observations: expected counts/coverage from stored data;
+  PASS. Observed3 daily bars (November10–12) and1 weekly bar (week of November9).
+  Available minutes1/377/149 of390 per day;527 of1950 for the week. All partial.
+  Existing calendar/history imports succeeded. No secret values inspected.
+
+Outstanding: historical OHLCV backfill would be needed for longer history;
+not implemented. No UI change or browser SmokeTest performed for this diagnosis.
+
+## Historical daily and weekly downloads · November 12, 2026
+
+Prompt69 requests about three months of daily candles and six months of weekly
+candles. Inspected AGENTS.md, handoff procedure/current state, Git status and
+relevant chart/feed/history/tests before edits. Existing changes preserved.
+No installations, dependency/lockfile changes, virtualenv or commit.
+
+CHECK: Omarchy4.5.0/Linux; /usr/bin/python3.14.8, prefix /usr;
+Node26.13.0/npm11.20.0. Existing requirements, frontend package/lockfile,
+node_modules and backend/.packages checked. yfinance1.8.0 and FastAPI0.156.8
+imports passed. Inspected installed yfinance PriceHistory.history signature and
+[official history API](https://ranaroussi.github.io/yfinance/reference/api/yfinance.Ticker.history.html).
+The existing yfinance supports period=6mo, interval=1d and auto_adjust=False;
+no missing dependency or installation approval needed.
+
+Implemented backend/provider_history.py: validated daily Yahoo OHLCV, atomic
+local cache, shared lock, five-minute refresh/one-minute failure retry and
+preservation of good cached data. LiveFeed D/W snapshots merge downloaded daily
+prices with recorded current-day data; D filters three calendar months and W
+aggregates six months against full NASDAQ sessions. Provider open/extremes are
+retained on newer live revisions; revised volume remains unavailable until
+provider refresh. Truncated first weeks, missing days and forming periods stay
+incomplete. Daily bars do not assert minute receipt coverage. Replay/paper and
+numeric decision history remain receipt-derived. Main startup enables downloads
+with the live feed; fixture/feed-off runs do not fetch implicitly. Frontend D/W
+initially fit the entire range and show history/cache/failure status. Cache is
+ignored by Git. README/design pipeline and repeatable SmokeTest updated.
+
+Commands and observed results:
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_provider_history backend.test_live backend.test_timeframes`:
+  expected range/OHLCV/cache/failure/live regression correctness; PASS24 tests.
+  Existing exchange-calendar pandas deprecation warnings remain nonfatal.
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_provider_history backend.test_live backend.test_timeframes backend.test_replay backend.test_indicators backend.test_indicator_instances`:
+  expected focused history/live/replay/indicator compatibility; PASS36 tests.
+- `npm --prefix frontend run build`: expected successful production build;
+  PASS31 modules.
+- Direct download_daily()/validate() with existing /usr/bin/python: initial
+  sandbox DNS failure. Same command outside sandbox PASS:128 actual Yahoo daily
+  rows, May13–November12,2026. No prices or credentials printed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.provider_history_smoke`:
+  initial sandbox socket EPERM; same command outside sandbox PASS. Constructed
+  data:66 daily bars,27 weekly bars,129 persisted daily cache rows. Browser
+  clicked D/W, verified earliest visible date/full initial range, selected old
+  dates, tested phone layout/no overflow, switched back to recorded-only1m,
+  simulated provider outage and checked unchanged persistent cache and visible
+  retry notice. No browser page errors; services/browser/temp storage cleaned.
+  Report/screenshots: `/tmp/arbitrade-provider-history/`.
+- Identified backend PID644335 by command and cwd, gracefully restarted to load
+  code; updated backend runs on8000, exec session35643, log
+  `/tmp/arbitrade-provider-history-backend.log`. Existing Vite5173 retained.
+- `node /tmp/arbitrade-live-history-check.mjs` outside sandbox: actual running
+  browser/Yahoo integration PASS. D has66 bars, August12–November12; W has27
+  bars, period starts May11–November9. Both initially display their earliest
+  bar. Download status ready, no JS page errors. Screenshots
+  `/tmp/arbitrade-live-history-1d.png` and `-1w.png`; weekly visually inspected.
+  Browser closed; review services intentionally retained. No model call/trade.
+- Documentation patch initially failed to match a sentence embedded in a long
+  paragraph; reapplied with exact substring replacement. No application impact.
+
+Outstanding: student review before commit. Full workstation, model/voice and
+paper execution browser suites were not rerun; no claim of historical strategy
+backtesting support. Public Yahoo availability can vary; fallback/retry tested.
+
+Final regression: `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-history-regression-69`
+PASS outside sandbox: recorded-day navigation, preserved earlier viewport on live
+rollover, trackpad zoom/pinch/pan momentum and cancellation, mouse drag, latest
+navigation and sensitive price-axis scaling/reset.360 initial candles/361 after
+rollover. Test services/browser cleaned. Final `git diff --check` PASS.
+
+## AI sidebar and Trade panel · November 12, 2026
+
+Prompt 70. Checked existing Omarchy environment, Python 3.14.8 at /usr/bin/python, Node 26.13.0, npm 11.20.0, frontend manifest, lockfile and installed Vite, Playwright and Chromium. No installation or dependency changes. Git showed existing uncommitted work.
+
+- Resume check `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_provider_history` expected and passed all four tests.
+- `npm --prefix frontend run build` expected a production bundle and passed with 31 modules. `git diff --check` passed.
+- Repeatable UI SmokeTest: `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke`. Expected and observed that keyboard selection opens AI in the green rail, Trade opens beside the chart, closing restores its width, paper orders fill and persist across restart, and replay uses a separate ledger. Final disposable account had three fills, $1,025 cash and zero shares.
+- Ran the same Python module command with scripts.classroom_smoke, scripts.workstation_smoke, scripts.pnl_smoke and scripts.voice_smoke. Expected and observed controlled AI decisions, retained chart selection, paper automation, SQLite P&L history and local WebRTC voice session behavior. All passed. The workstation run initially timed out twice editing the long SMA window. Chromium showed a zero-size control after switching tabs. Restoring the study subtree key fixed it, and the integrated rerun passed. Test services, browsers and temporary databases cleaned by runners. Reports in /tmp/arb70-classroom and /tmp/arb70-final-{workstation,paper,pnl,voice}.
+- Captured the running app on port 5173 with Trade open and closed in docs/screenshots/chart-trade/. The screenshot shows live historical prices. Model and voice tests used controlled providers. Real microphone/provider interaction remains unverified for this layout.
+
+## Local app restart after panel review
+
+The sandbox blocked listener inspection. Host-side `ss -ltnp` found both ports free. Started Uvicorn with the README command and Vite with the existing npm dev script on port 5173. GET / and GET /api/health through Vite both returned the expected HTTP 200. Both services were left running.
+
+## Inset Trade card · November 12, 2026
+
+Prompt 71. Production builds before and after the stylesheet edit passed with 31 modules using `npm --prefix frontend run build`. The live Chromium screenshot at 1440×940 shows cream above and below the parchment card and the maroon top border aligned with the instrument heading. Refreshed both chart-trade screenshots. `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arb71-paper` passed opening and closing Trade, chart width restoration, desktop/mobile rendering, orders and SQLite persistence. The runner stopped its disposable services. No new dependencies. Automation-specific checks were not repeated for this styling change.
+
+## Panel transitions · November 12, 2026
+
+Prompt 72. On Linux, reused /usr/bin/python 3.14.8, Node 26.13.0, npm 11.20.0 and existing frontend dependencies. Before and after the UI edits, `npm --prefix frontend run build` produced the expected production bundle (31 modules). `git diff --check` passed.
+
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arb72-paper` initially hit a sandbox socket restriction. With loopback access the run passed, then the expanded phone checks passed on rerun. Chromium found the Indicators and Signals headings, switched to AI by keyboard, and observed the chart recover its width after both sidebar and Trade toggles. At phone width it observed both Trade transform transitions, the collapsed rail’s zero content height, a tab slide and zero workspace transition duration under reduced motion. The paper ledger retained three fills and $1,025 cash after restart. The runner cleaned up its test services and database. Student visual review of timing remains pending.
+
+## Slide past Signals · November 12, 2026
+
+Prompt 73. On Linux using the existing system Python, Node and npm, the resume and updated production builds (`npm --prefix frontend run build`) each bundled 31 modules. `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arb73-paper` passed. The Chromium check observed the inert Signals pane cross the visible rail during both Indicators → AI and AI → Indicators. Phone drawer, sidebar, reduced-motion and paper SQLite checks also passed. The runner cleaned up its disposable services and data. `git diff --check` passed. Timing awaits student review.
+
+## Stable Signals slide · November 12, 2026
+
+Prompt 74. The initial and updated `npm --prefix frontend run build` each bundled 31 modules. `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arb74-paper` passed. With both Signals disclosures expanded, Chromium sampled the outgoing slide toward Indicators and toward AI. Both disclosure bottoms remained within the rail's vertical clip and the pane's top stayed within one pixel of its starting position as it moved horizontally. The pass-through, phone sidebar, reduced-motion and paper persistence checks also passed. The runner cleaned up its disposable services and data. `git diff --check` passed. Student visual review pending.
+
+## Chart footer text removal · November 12, 2026
+
+Prompt 75 removed the volume and UTC footer labels and the loaded-history instructions. The production build passed with `npm --prefix frontend run build`. The Chromium history check passed with `/usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-footer-smoke`. Date navigation, dragging and zooming behaved as expected and both fixture services stopped.
+
+## Three-month live chart backfill · November 12, 2026
+
+Prompt 76 revised the window to three calendar months for all eight frames.
+Checked existing Git changes, Omarchy, /usr/bin/python 3.14.8, Node 26.13.0,
+npm 11.20.0 and the existing backend packages and frontend lockfile. Used the
+installed environment. Initial sandbox downloads returned unavailable and the
+browser test could not bind sockets. Host retries succeeded. Direct three-month
+Yahoo requests returned YFPricesMissingError for 1m, 5m, 15m and 30m. Short
+date batches extended the 1m cache back to October 14.
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.backfill_history`
+  verified eight real chart caches. 1m had 8,580 bars from Oct 14. 5m/15m/30m
+  had 4,680/1,560/780 from Aug 20. 1h and D had 462 and 66 from Aug 12.
+  W and M had 14 and 4 periods, starting with partial August periods. Underlying
+  prices run through Nov 12. Earlier intraday gaps require an additional source.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_provider_history -q`
+  passed all four tests. `npm --prefix frontend run build` passed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.provider_history_smoke`
+  passed in Chromium. All eight frame controls exposed their fixture history.
+  Cache persistence, outage fallback and mobile date navigation passed. The test
+  stopped both temporary services.
+- After restarting the identified Arbitrade backend on 8000 with its existing
+  launch settings, connected to /api/live at each interval and verified the
+  counts and dates above. Chromium on the actual app at port 5173 successfully
+  selected Oct 14 on 1m, Aug 20 on 5m, and Aug 12 on 1h.
+
+## Open app, November 15, 2026
+
+The proxied health check at http://127.0.0.1:5173/api/health returned the expected HTTP 200 with curl. The in-app browser was unavailable. Running `xdg-open http://127.0.0.1:5173/` exited successfully. Visible rendering remains unverified.
+## Server access check, November 15, 2026
+
+User reported an unreachable site. Sandbox curl returned connection failure for
+ports 5173 and 8000. Host curl returned expected HTTP 200 for the dashboard and
+backend health endpoint. Proxied `/api/health` returned `{"status":"ok"}`.
+Host process inspection confirmed Vite on 5173 and Uvicorn on 8000.
+Existing Python backend imports and Vite executable checks passed. Python is
+3.14.8, Node is 26.13.0 and npm is 11.20.0. No installation was needed.
+The Mac browser tunnel remains unverified because this session runs on Omarchy.
+The documented tunnel socket is absent on Omarchy, which does not establish its
+state on the Mac. Browser rendering and UI SmokeTest were not run in this check.
+Existing services were left running. Student should establish the README's
+Mac SSH tunnel and retry the dashboard URL.
+
+
+## Interval moving averages · November 15, 2026
+
+Using Linux, /usr/bin/python 3.14.8, existing backend/.packages, Node 26.13.0, npm 11.20.0 and system Chromium. No dependency changes.
+
+- `npm --prefix frontend run build` produced the Vite bundle. `git diff --check` reported no whitespace errors.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_indicators backend.test_indicator_instances backend.test_replay` passed all 12 tests.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke` passed the twelve rows of six controls, solid/dashed overlay selection, reload persistence, named studies, replay and stored-data checks.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.provider_history_smoke` passed before and after the change. The extended browser check enabled daily SMA 10 on a minute chart, verified the displayed legend, checked the plotted value against the last ten completed daily closes, and removed the line. Both suites closed their isolated services and browsers.
+- Initial sandbox port inspection was denied and the frontend was offline. Host inspection found the existing backend on 8000. Started Vite on 5173, opened the URL with xdg-open, and restarted the verified backend with its existing environment. The proxied matrix settings request succeeded. Review services are running.
+- The three-month archive cannot warm up all long daily and weekly windows. Student visual review is pending.
+
+The final whitespace check flagged a trailing blank line in the handoff. Removed it and reran the check successfully.
+## Data loading latency, November 15, 2026
+
+Inspected the live WebSocket, history refresh, indicator matrix and frontend
+connection paths. No application source changes. Timed first WebSocket message
+through `ws://127.0.0.1:5173/api/live?symbol=AAPL&timeframe=1m` using the existing
+`websockets.asyncio.client` under `/usr/bin/python` with backend/.packages.
+Expected a snapshot within the 45-second read limit. Observed snapshots for both
+sequential requests. matrix=false took 11.504 seconds, 6,571,410 message
+characters, 8,970 candles and 3 presets. matrix=true took 14.953 seconds,
+6,571,485 message characters, 8,970 candles and 3 presets. These single samples
+include connection and snapshot work and do not isolate provider, computation,
+serialization or browser rendering. Mac tunnel latency was not measured.
+Code refreshes provider history synchronously when its five-minute cache expires,
+with ten-second provider request timeout. Snapshot construction recomputes local
+candles and requested indicator timeframes before sending. Frontend clears the
+chart on connect. Potential improvements are immediate cached snapshots with
+background refresh, shared computation, smaller initial payloads and retaining
+displayed data during interval/reconnection transitions. UI SmokeTest was not run.
+
+
+## Cream indicator buttons · November 15, 2026
+
+`npm --prefix frontend run build` produced the frontend bundle. `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke` passed. Chromium checked all 72 lookback buttons for black text on the cream #faf8f2 background, toggled an EMA, and verified its saved selection. The test closed its browser and stopped its fixture services. Student visual review is pending.
+Final diff inspection flagged a trailing blank line in the handoff. Removed it and reran git diff --check successfully.
+
+## Emerald indicator text · November 15, 2026
+
+`npm --prefix frontend run build` passed. `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke` passed. Chromium verified all 72 lookback buttons rendered emerald (#084c3d) on cream (#faf8f2), exercised the EMA toggle and reload, and closed the fixture services.
+
+## Drawing Tools · November 15, 2026
+
+- Environment check: Omarchy, system Python 3.14.8 at /usr/bin/python, Node v26.13.0 and npm 11.20.0. The installed Vue, Lightweight Charts, Vite, Playwright and Chromium supported this change. No installation or dependency edits.
+- Health check on resumption: the sandbox could not reach localhost:5173. A host-side GET of /api/health through that port returned status ok.
+- Build: `npm --prefix frontend run build` completed successfully (32 modules).
+- Repeatable UI SmokeTest: `scripts/smoke-test --output /tmp/arbitrade-drawing-review`. Expected two distinct stroke types and three correctly proportioned boxes after placement and resize. Chromium drew both strokes, dragged each preset to the price pane and measured its rendered SVG geometry before and after resizing the stop, target and width. All three retained their ratios and both fills measured 0.5 opacity. Dragging each filled box translated it without changing its dimensions. The runner also passed its existing workstation/SQLite checks and stopped its services.
+- Drawings are in-memory annotations scoped to mode, symbol and timeframe. The drawing test used the desktop mouse path with deterministic replay data. Physical touchscreen use was not exercised.
+
+## Live chart latency implementation, November 15, 2026
+
+1. Ran the four backend.test_provider_history tests using /usr/bin/python with
+   PYTHONPATH=backend/.packages. All passed. A controlled blocked downloader
+   verified that a populated stale cache returned candles before refresh finished.
+2. An asyncio probe requested five identical snapshots concurrently, then a
+   different key and an expired key. The host run passed with three calculations
+   total. Initial sandbox asyncio checks stalled.
+3. A 900-row page probe checked 256 initial candles, successive page alignment,
+   complete coverage and preset rows. Passed. Frontend production build passed.
+4. Chromium verified 256 initial rows, 360 after navigating to the earliest
+   loaded day, and 360 during disconnection and after reconnect. The first test
+   waited for hidden details text and timed out. The rerun used the visible
+   Connection lost label and passed. The history navigation/gesture regression
+   also passed. Both fixture runs stopped their services.
+
+Repeat the focused UI SmokeTest with
+`PYTHONPATH=backend/.packages /usr/bin/python -c "from scripts.history_smoke import verify; from pathlib import Path; verify(Path('/tmp/arbitrade-latency-check'), driver='scripts/chart_latency_smoke.mjs')"`.
+
+After restarting the backend, a timed WebSocket read through port 5173 returned
+256 bars and 215,770 JSON characters in 0.010 and 0.009 seconds for matching
+settings. A different short window took 1.601 seconds. Earlier samples returned
+8,970 bars and roughly 6.57 million characters. Timings exclude browser rendering
+and the Mac tunnel. No dependency changes.
+
+## Chart history caption removal · November 15, 2026
+
+Ran `/usr/bin/python -m scripts.provider_history_smoke --output /tmp/arbitrade-caption-smoke`. The initial sandbox run could not create a local socket. The approved rerun passed in Chromium. As expected, the caption was absent on minute, daily and weekly charts, date navigation worked, and the cached-history retry notice appeared during a simulated outage. Both fixture services stopped and no browser errors were reported.
+
+## Voice chat fetch failure · November 15, 2026
+
+Host curl checks of /api/voice/decisions on ports 5173 and 8000 both returned connection refused. Restarted the normal loopback services with `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --log-level warning` and `npm --prefix frontend run dev`. Left both running. Python urllib checks through port 5173 expected HTTP 200 and returned 200 for the dashboard, health, voice decision list (four choices), and first decision detail (matching ID).
+
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.voice_smoke --output /tmp/arbitrade-voice-fetch-check` passed on the host. Chromium exchanged synthetic audio tracks with a mocked provider, displayed two exchanges, released the microphone and preserved all fixture SQLite records. The fixture services were cleaned up. `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_voice -q` stalled in the sandbox and passed all four tests on the host. The user's SSH tunnel, physical audio and a current live provider call remain unverified.
+
+## Drag-sized boxes, eraser and undo · November 15, 2026
+
+Reused Omarchy's system Python 3.14.8 and the existing Vue, Lightweight Charts, Vite and Playwright dependencies with Node 26.13.0 and npm 11.20.0. `npm --prefix frontend run build` passed with 32 modules. `git diff --check` passed.
+
+The initial workstation SmokeTest stopped at the immediate preview group bounding-box assertion. The browser screenshot showed the drag preview. Updated the assertion to wait for the rendered profit and stop rectangles and measure their combined height and width during the drag. On the rerun, Chromium confirmed click-only placement creates nothing, all three presets preview at the dragged dimensions, and resizing keeps the chosen ratio. It erased boxes and strokes on contact and used Meta-Z and Ctrl-Z to undo edits and restore erased objects. The new checks use desktop pointer input and emulated key combinations.
+
+Full repeatable command: `scripts/smoke-test --output /tmp/arbitrade-drag-erase-2`. Expected and observed PASS for the workstation UI and SQLite audit. The runner stopped the temporary services and browser.
+
+## Voice API 502 · November 15, 2026
+
+Host curl checks of /api/health returned 502 on Vite port 5173 and connection failure on backend port 8000. ss showed only the dashboard listener. Started the existing FastAPI command with systemd-run --user as the transient arbitrade-api service in the project root using /usr/bin/python, backend/.packages, loopback port 8000, and Restart=on-failure. This runs independently of the chat for the current user service manager lifetime.
+
+Expected and observed after startup: systemctl --user show arbitrade-api reported active with zero restarts. Python urllib through port 5173 returned 200 for the dashboard, health, voice decisions and matching first decision detail. An empty JSON POST to /api/voice/sessions returned the expected 422 input validation response. No provider session was created. The client-side localhost:62929 preview could not be inspected from the host or through browser control. Live audio in the user's tab remains to be checked.
+
+## Drawing tool icon rows · November 15, 2026
+
+The existing frontend toolchain on Omarchy built the app with `npm --prefix frontend run build` (32 modules). `git diff --check` passed. The desktop Chromium run measured the three labeled buttons in order, checked a visible SVG in each, and confirmed that their bounding boxes occupy separate rows. Visual review of /tmp/arbitrade-icon-rows/drawing-tools.png confirmed left-aligned icons and text above the ratio presets.
+
+`scripts/smoke-test --output /tmp/arbitrade-icon-rows` returned the expected PASS, including drawing interactions and the existing SQLite checks. Temporary services stopped.
+
+## Green menu scrolling · November 15, 2026
+
+`npm --prefix frontend run build` produced the expected production bundle. The first sandboxed SmokeTest attempt stopped at socket creation with PermissionError. Reran `/usr/bin/python -m scripts.indicator_smoke --output /tmp/arbitrade-rail-scroll-86` with loopback access. Chromium at 1280 × 640 scrolled the expanded Indicators menu with the pointer over its heading. The heading retained its screen position and a further wheel at the bottom left the page scroll position unchanged, as expected. Indicator persistence, replay, mobile layout and SQLite checks also passed. The runner closed Chromium and stopped both temporary services. Physical trackpad input was not tested.
+
+## Light emerald menu buttons · November 15, 2026
+
+`npm --prefix frontend run build` produced the production bundle. The first indicator SmokeTest stopped at socket creation due to sandbox permissions. With loopback access, `/usr/bin/python -m scripts.indicator_smoke --output /tmp/arbitrade-menu-87` passed. Chromium confirmed the expected dark emerald text (#084c3d) on light emerald (#dcf7eb) across all 72 indicator buttons. The runner closed the browser and stopped its temporary services.
+## Commit and push preparation · November 15, 2026
+
+Prompt 88 requests committing and pushing the current changes. Git reports main
+ahead of origin/main by one commit (d2f46b7), plus tracked and untracked project
+changes. AGENTS.md requires showing changes for student review before committing;
+the handoff repeatedly marks the work as awaiting review. Prepared
+[the proposed scope](commit-review.md). No commit or push has run; student review
+is outstanding.
+
+Environment checked: Omarchy 4.5.0, /usr/bin/python 3.14.8, Node 26.13.0,
+npm 11.20.0, Git 2.56.0, existing frontend/package.json and package-lock.json,
+and backend requirement files. Reused installed dependencies; no installation,
+manifest or lockfile changes.
+
+- `npm --prefix frontend run build`: expected successful production bundle;
+  observed success, 32 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_provider_history backend.test_classroom_decisions -q`:
+  initial sandbox run stalled. Host rerun with a 45-second timeout passed all
+  nine tests in 1.283 seconds, with pandas deprecation warnings.
+- `git diff --check`: expected no whitespace errors; observed pass.
+- Local filename-only scan of candidate text files for common OpenAI/GitHub key
+  and private-key patterns: no matches. No credential values were printed.
+- UI SmokeTest was not rerun in this preparation; earlier browser results remain
+  recorded below. Commit, push and remote synchronization remain outstanding.
+## Part 4.1 readiness review · November 15, 2026
+
+Reviewed prompt 88, supplied assignment text, AGENTS.md, handoff procedure/current
+handoff, README, design pipeline, recorder/live/replay implementation and tests,
+and existing actual Yahoo browser/SQLite evidence. Git is a repository; many
+pre-existing tracked modifications and untracked files were preserved. HEAD was
+`d2f46b7` (Redesign Arbitrade workspace with indicators and signals); origin is
+https://github.com/jclee2044/arbitrade.git. Remote contents/access were not checked.
+
+Environment CHECK: Omarchy 4.5.0, /usr/bin/python 3.14.8 (no virtual environment),
+Node v26.13.0, npm 11.20.0, /usr/bin/chromium, existing frontend package manifest/
+lockfile and backend requirement files. Reused backend/.packages and existing
+frontend modules. No packages installed or dependency files changed.
+
+Commands and results:
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_observations backend.test_yahoo_stream backend.test_candles backend.test_timeframes backend.test_live backend.test_replay -q`:
+  expected recorder/stream/candle/timeframe/live/replay contracts pass; observed
+  **45 tests PASS**. Existing pandas timezone deprecation warnings appeared.
+- `npm --prefix frontend run build`: expected production bundle; **PASS**, 32 modules.
+- `ARBITRADE_BACKEND_PORT=18241 ARBITRADE_FRONTEND_PORT=15441 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-part41-audit`:
+  first attempt failed at socket creation with sandbox EPERM. Same command with
+  approved socket access **PASS**: real Chromium on labeled constructed input,
+  exact OHLCV, same-minute update, rollover/completion, all timeframe selectors,
+  advancing source age, upstream disconnect with browser WebSocket open,
+  desktop/mobile rendering, no uncaught JS errors. Test services/browser and
+  temporary SQLite were cleaned up. Report/screenshots are local /tmp artifacts.
+
+Existing actual Yahoo evidence in screenshots/live-check-2026-11-11/report.json
+records a changing chart close matching SQLite observation 197 and live feed age.
+It has null volume; it is historical evidence, not a fresh live run today.
+Known-volume/revision/outage constructed checks do not establish actual provider
+volume or provider correction semantics. Live Yahoo does not infer correction
+links from equal source timestamps. Completion is derived from saved observations
+and evaluation time, not stored as a candle table in the observation database.
+
+Remaining submission work: no root report.md or accessible Part 4.1 demonstration
+video link found; review/commit/push the intended submission and identify its
+commit in the report; verify instructor access. Capture convincing actual Yahoo
+price/volume evidence and distinguish historical provider OHLCV from recorded
+quote-derived volume. Refresh replay/provider-history browser checks for the
+final reviewed version. Reconcile older README/design/candle prose with provider
+history and document SQLite schema/initialization and clean-checkout setup
+concisely; AGENTS.md currently has generic process rules rather than a market
+data contract. No application code changed, commit made, or Canvas upload done.
+
+
+## Volume zero anchor · November 16, 2026
+
+Prompt 89 fixes volume-axis wheel/drag scaling around the midpoint. The gesture
+controller now identifies the pane containing the volume series and scales its
+upper bound with a fixed lower bound of zero. Volume's bottom margin is zero,
+including after double-click automatic reset. Price/study axes keep their
+center-based transform. Updated README/design pipeline and the existing history
+browser check. Existing dirty Git work preserved; no commit or dependency edits.
+
+CHECK: Omarchy 4.5.0; active and intended Python /usr/bin/python 3.14.8; no active
+virtual environment; Node v26.13.0, npm 11.20.0. Inspected frontend/package.json,
+package-lock.json and backend requirement files. Existing node_modules and
+backend/.packages reused. FastAPI/uvicorn import check with
+`PYTHONPATH=backend/.packages /usr/bin/python -c 'import fastapi, uvicorn; print("FastAPI and uvicorn imports OK")'`
+expected successful imports; observed PASS. No installation needed.
+
+- `npm --prefix frontend run build`: expected production bundle; PASS, 32 modules.
+- Repeatable SmokeTest: `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-volume-anchor`.
+  Initial sandbox attempt (`--output /tmp/arbitrade-volume-anchor-before`) failed
+  before service startup: socket creation EPERM. Reran with approved socket
+  access; PASS. Started isolated FastAPI/Vite services, opened Chromium and used
+  real wheel, drag and double-click operations on the volume shares axis.
+  Expected bars change height while zero stays at pane bottom. Observed rendered
+  heights 109 -> 88 -> 109 px for wheel compression/expansion, 79 px after drag,
+  and 109 px after reset; bottom gap exactly 0 px throughout. Horizontal range
+  unchanged. Existing price scaling, history navigation/live rollover,
+  zoom/pinch/pan momentum and mobile layout checks also PASS; no page errors.
+  Browser/services/disposable storage cleaned up (processes_stopped=true).
+  Evidence: /tmp/arbitrade-volume-anchor/report.json and history-desktop.png.
+- `git diff --check`: expected no whitespace errors; PASS.
+
+No stored-data behavior changed. Physical trackpad feel and student visual
+review remain outstanding; full backend/workstation suites were not rerun.
+A documentation patch initially failed to match the design-pipeline heading;
+no files were changed by that failed patch; corrected heading and reapplied.
+
+
+## Restart and open after volume fix · November 16, 2026
+
+Reused prompts/58-restart-server-and-open.md for the repeated request. Inspected
+Git status (existing changes retained), README run commands, Vite config and
+handoff. Existing /usr/bin/python 3.14.8, Node v26.13.0 and npm 11.20.0 reused;
+no installs or manifest edits. Host port check found the project backend
+PID 1548020 on 8000 and no frontend listener on 5173. Confirmed its cwd was
+/home/jlrj/Documents/arbitrade, then stopped it with SIGTERM.
+
+Started `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --log-level warning`
+and `npm --prefix frontend run dev` with approved host socket access, in exec
+sessions 19810 and 66122. Vite ready in 122ms. urllib GET checks expected HTTP
+200: backend /api/health returned {"status":"ok"}, frontend / served Arbitrade,
+and proxied /api/health returned {"status":"ok"}; all PASS.
+`xdg-open http://127.0.0.1:5173/` exited 0, opening the default browser.
+Services intentionally remain running for review. No new feature SmokeTest or
+physical browser interaction performed during this restart; volume browser
+SmokeTest results are recorded above. No commit.
+
+
+## Stable volume scroll position · November 16, 2026
+
+Prompt 90 reports horizontal jumping while scrolling the zero-anchored volume
+axis. Inspected existing Git status, handoff, gesture/render code and installed
+Lightweight Charts 5.3.0 source/types. The library derives a shared plot width
+from every pane's current tick labels, so volume label width changes resized
+all panes. Preserved all earlier work. Added rightPriceScale.minimumWidth=96 in
+useMarketChart.js, reserving label space. Zero-anchor logic retained. Updated
+README/design pipeline, prompt, history SmokeTest and handoff. No commit.
+
+CHECK: Omarchy 4.5.0, /usr/bin/python 3.14.8, Node v26.13.0, npm 11.20.0.
+Inspected package.json, existing package-lock.json and backend requirement files;
+reused installed frontend/node_modules and backend/.packages; no installation
+or dependency changes. `PYTHONPATH=backend/.packages /usr/bin/python -c 'import sys, fastapi, uvicorn; print(sys.executable); print("FastAPI/uvicorn imports OK")'`
+expected system interpreter and successful imports; PASS.
+
+- Regression before fix:
+  `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-volume-x-before`
+  ran with approved local socket access. FAIL as expected: 48 wheel events
+  crossing numeric/K/M tick formats produced plot widths 1026, 1024 and 1018px.
+  This reproduces up to 8px sideways movement even when the time range matches.
+  Browser/services/temp databases cleaned up (processes_stopped=true).
+- `npm --prefix frontend run build`: expected production bundle; PASS, 32 modules.
+- After the one in-scope correction:
+  `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-volume-x-fixed`
+  PASS. Real Chromium wheel input in both directions kept plot width exactly
+  988px across all 49 measurements and time range unchanged. Volume baseline
+  remained at bottom (0px gap); drag, wheel, double-click reset and earlier
+  price/history/live-update/momentum/mobile checks also PASS. No page errors.
+  Browser/services/temp databases cleaned (processes_stopped=true). Evidence:
+  /tmp/arbitrade-volume-x-fixed/report.json and history-desktop.png.
+- `git diff --check`: expected clean whitespace; PASS.
+
+Existing review services retained; Vite serves the changed frontend. No data
+behavior changed. Physical trackpad review remains for the student; full backend
+and workstation suites were not rerun. The 96px reserved label area slightly
+reduces plot width and still passes the existing phone no-overflow check.
+
+
+## Moving-average type colors · November 16, 2026
+
+Prompt 91 requests orange EMA, blue SMA and ideas for indicating lookback length
+without numbers. Inspected AGENTS.md, handoff instructions/current state, Git
+status, relevant frontend chart/legend/preset/frozen-renderer code and existing
+indicator SmokeTest. Many prior tracked and untracked changes retained. No commit.
+Centralized type colors in chart-studies.js; applied blue to both Signals SMAs
+and frozen pair lines, and type colors to preset selection keys. Presets, custom
+averages, legends and frozen configured lines share studyColor. EMA remains
+dashed; all weights remain 2px. Lookback weights/patterns are proposals only.
+README/design pipeline, prompt and current handoff aligned with this scope.
+
+CHECK: Omarchy 4.5.0; active/system Python /usr/bin/python 3.14.8, no virtualenv;
+Node v26.13.0, npm 11.20.0, Chromium 155.0.8059.84. Read frontend/package.json,
+package-lock presence and backend requirements; `npm --prefix frontend ls --depth=0`
+PASS with existing Vue 3.5.45, Lightweight Charts 5.3.0, Vite 8.3.7 and Playwright
+1.65.0. `PYTHONPATH=backend/.packages /usr/bin/python -c 'import fastapi, uvicorn; print("FastAPI/uvicorn imports OK")'`
+PASS. No dependencies installed, environment created or manifests/lockfiles edited.
+
+- Resume check and post-change `npm --prefix frontend run build`: expected
+  production bundle, both PASS (32 modules).
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke --output /tmp/arbitrade-ma-colors`:
+  first attempt blocked by sandbox socket EPERM before services started. Reran
+  unchanged with approved local socket access: PASS. Real Chromium opened
+  isolated FastAPI/Vue services, added custom SMA/EMA, toggled an EMA preset,
+  verified orange/blue pixels in chart canvases, legend swatches and all preset
+  period/interval color keys; existing persistence, replay, invalid-window and
+  desktop/mobile checks PASS without page errors. SQLite configuration verified;
+  recorded fixture unchanged. Browser/services stopped and temporary databases
+  removed. Evidence: /tmp/arbitrade-ma-colors/report.json and range-lines.png.
+- `git diff --check`: expected clean whitespace, PASS before recording handoff;
+  rerun after documentation updates below.
+
+No application correction cycles needed. Existing review services retained.
+Signals/frozen-image colors inspected in source and compiled, but separate
+Signals/frozen browser checks and full backend/workstation suites were not run.
+Student visual review and choice of lookback styling remain; no styling choice
+implemented and no commit made.
+
+## Part 4.1 report draft · November 16, 2026
+
+Prompt 92 requests a conversational report with the student's design account,
+repository first, final-commit/video placeholders, and DB Browser screenshot
+evidence. Inspected Git status, AGENTS.md, handoff instructions/current handoff,
+actual source, existing live/constructed reports and screenshots. Preserved all
+existing changes. Created report.md (929 words) and docs/part-41-evidence.md.
+The report includes future replay/trading UI work and requested indicators as
+plans rather than completed Part 4.1 features. No application edits or commit.
+
+Reused /usr/bin/python 3.14.8 with standard-library SQLite 3.54.0. The preceding
+readiness check recorded OS/Node/npm/dependency versions; no new dependency was
+needed for this documentation task. `command -v sqlitebrowser` and
+`command -v db-browser-for-sqlite` found neither executable. Computer-use
+`cua.getState()` returned apps=[] and browsers=[]; native computer APIs were
+disabled by the available tool entry point. Closed the CUA portion with its
+completion summary. No software installed, native DB Browser opened, or new
+DB Browser/backend/chart screenshots captured. Report explicitly marks that
+requested trace incomplete; evidence guide provides the exact read-only query.
+
+Read-only SQLite query for observation197 confirmed Yahoo/AAPL source time
+2026-11-11T14:45:07+00:00, price353.3325, receipt201 at
+2026-11-11T14:45:08.304419+00:00. Programmatic comparison with the prior real-live
+report's backend close and visible inspector close PASS. Visually inspected
+the existing live-page.png: those values, source time/status and forming state
+are visible. The old UI screenshot is identified as historical, not current.
+Only selected market-data fields were queried; no credentials exposed.
+
+`/usr/bin/python` local validation of all eight report GitHub file-link targets,
+required final-commit/video placeholders and first-section order PASS. GitHub
+links resolve to local files, but remote publication and instructor access have
+not been verified. The 45-test/build/browser results cited in the report are
+the November15 checks, not reruns today. No application test rerun was needed
+for prose edits. Outstanding: student review, DB Browser/new full trace capture,
+actual live-volume evidence, final commit/video, documentation reconciliation,
+push/access checks. No Canvas upload performed.
+
+
+## DB Browser access retry and report wording · November 16, 2026
+
+Prompt93 requests actual DB Browser computer-use inspection and screenshots,
+plus replacing the selected negative volume sentence with verified findings.
+Read current Git status, AGENTS.md, handoff procedure/current state and report.
+Computer-use cua.getState() again returned apps=[] and browsers=[]; the tool
+entry point disables native computer APIs. Closed CUA portion with completion
+summary. Cannot open the student desktop app or capture screenshots through
+this connection. This does not establish whether DB Browser is installed on
+the student's own computer. No new live data or GUI verification performed.
+
+Reused /usr/bin/python to assert existing constructed replay report result PASS,
+input CONSTRUCTED test_data=true and visible volume 11 shares: PASS. Replaced
+only the selected report sentence with that positive verified result, keeping
+the surrounding text and outstanding screenshot/live-volume work intact. No
+claim that constructed volume establishes actual live-provider volume. No
+application/dependency changes or commit. Desktop access is still required for
+the explicitly requested DB Browser/database/backend/chart screenshot trace.
+
+
+## Server restart for review · November 16, 2026
+
+Reused prompts/58-restart-server-and-open.md for “restart the server so i can see”.
+Inspected Git status (existing modified/untracked work preserved), AGENTS.md,
+handoff instructions/current state, README run commands, frontend manifest and
+lockfile presence. Linux; /usr/bin/python 3.14.8; Node 26.13.0; npm 11.20.0.
+Existing backend/.packages imports: uvicorn 0.54.0, FastAPI 0.156.8.
+No packages installed or dependency files changed.
+
+Initial sandbox socket inspection was denied; approved host inspection with
+`ss -ltnp '( sport = :8000 or sport = :5173 )'` showed neither server listening.
+Started `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`
+(session 14433) and `npm --prefix frontend run dev` (session 35329). Both ready.
+`curl --silent --output /dev/null --write-out 'HTTP %{http_code}\n'` against
+http://127.0.0.1:8000/api/health, http://127.0.0.1:5173/, and
+http://127.0.0.1:5173/api/health expected 200; all observed 200.
+`xdg-open http://127.0.0.1:5173/` exited 0. Servers intentionally remain running
+for student review. Browser rendering/operations and feature SmokeTests were
+not rerun for this service-only request. No source edits or commit.
+
+
+## Omarchy read-only database inspection · November 16, 2026
+
+Prompt94 asks for another way to view saved data or DB Browser installation on
+Omarchy. Inspected Git status/instructions/handoff, OS, Python/Node/npm, package
+manager, frontend manifest/lockfile and backend requirements. Used the Omarchy
+skill. Omarchy4.5.0, /usr/bin/python3.14.8, Node26.13.0, npm11.20.0; sqlite3 and
+pacman present, sqlitebrowser absent. Existing interpreter/packages reused.
+
+`pacman -Si sqlitebrowser` found official extra package3.13.1-3 for x86_64.
+`pacman -Sp --print-format '%n %v %s %l' sqlitebrowser` resolved it plus eight
+missing dependencies against configured Omarchy repositories. `omarchy pkg add
+--help` and installed omarchy-pkg-add source confirm install command
+`omarchy pkg add sqlitebrowser`, which manages sudo/pacman itself. Proposed
+purpose: native SQLite GUI for the student to inspect their database on Omarchy.
+System installation affects /usr, /var/lib/pacman, /var/cache/pacman and required
+Qt5/SQLCipher dependencies; no project manifest/lockfile changes. Installation
+not performed; AGENTS.md requires approval after the dependency proposal.
+Installing a GUI alone does not provide this chat native desktop control.
+
+An initial sqlite3 SELECT used double quotes for JSON paths and failed under
+SQLite strict quoting. Corrected to single-quoted paths and reran: PASS. Counts
+62,498 observations /62,906 receipts; latest saved source2026-11-16T15:18:41Z,
+AAPL354.145, cumulative day volume8,624,076. Actual saved data, not injected.
+
+Generated docs/evidence/market-data-2026-11-16.html and .json with standard-library
+Python sqlite3 mode=ro and a single read transaction. Selected only public
+market-data fields, no credentials. Exports include latest25 observations,
+source/first receipt times/IDs, row197 matching earlier screenshot/backend
+price353.3325, counts and reproducible SELECT. Assertions of counts, selected
+rows and known evidence PASS. Static export is explicitly not a screenshot,
+not a new Yahoo request and not a fresh browser observation. No native UI
+interaction or services started.
+
+Ran existing backend.candles.form_candles against the saved DB read-only:
+2,770 minute buckets, zero with computable minute volume. Actual cumulative
+volume fields do not establish minute-volume correctness. Investigate rule
+rejections/provider timestamps before marking that verification complete.
+Current chart includes separate provider historical OHLCV; this check covers
+quote-derived saved buckets only. No application fix or report claim changed.
+
+Outstanding: student reviews data export; optional DB Browser installation
+approval; GUI screenshot access and actual chart/DB comparison; live minute
+volume investigation. Existing modifications preserved; no dependency edits,
+installation, commit or Canvas upload.
+
+
+## Minute-volume correction and DB Browser install attempt · November 16, 2026
+
+Prompt95 explicitly approves the previously proposed sqlitebrowser package and
+asks to diagnose/verify minute volume. Read Git status, AGENTS.md, handoff and
+Omarchy skill; preserved existing edits and dependency manifests. Reused
+/usr/bin/python3.14.8, SQLite3.54, existing backend/.packages, Node26.13.0,
+npm11.20.0, package/lock/requirements from the preceding CHECK.
+
+Installation: `omarchy pkg add sqlitebrowser` was approved and attempted with
+host access. It reached sudo password entry. Cancelled rather than requesting
+or recording a credential in chat. Skill-permitted fallback
+`pkexec /usr/bin/pacman -S --needed --noconfirm sqlitebrowser` failed because no
+controlling terminal/authentication agent was available. `pacman -Q sqlitebrowser`
+confirms not installed. No packages or project dependency files changed. The
+student must execute the approved command in a terminal on Omarchy and enter
+sudo credentials there; installation is not recorded as successful.
+
+Diagnosis read the production database with mode=ro. Original2,770 minute
+buckets: 0 computable volume. Reasons:1 missing baseline,370 gaps,1469 missing/
+invalid values,466 different totals at one source time,463 ambiguous preceding
+baseline,1 cross-date baseline.57,011 observations had valid string counters;
+5,487 lacked a counter. Example source15:16:01 had totals8,441,656 and8,442,342
+with distinct receipt IDs. The original rule rejected all such increases.
+
+Checked installed yfinance/pricing.proto and live.py and official upstream
+schema https://github.com/ranaroussi/yfinance/blob/main/yfinance/pricing.proto
+and https://ranaroussi.github.io/yfinance/reference/yfinance.websocket.html.
+These define streaming and fields, not a guarantee of tie/correction ordering.
+The application explicitly assumes nondecreasing counters at identical source
+times may advance in receipt order; it does not infer correction relationships.
+Raw observations/receipts and their identities/times remain intact.
+
+Changed backend/candles.py to allow nondecreasing tied counters; decreases,
+resets/missing values, gaps and invalid/decreasing tied baselines remain null.
+History/replay identify volume_provenance=yahoo_quote_counter and observed-delta
+scope. Provider intraday live overlays retain the observed delta without adding
+cached provider volume. Candle details disclose its basis. Updated tests for
+rising/decreasing ties, baseline ordering, receipt-by-receipt replay, and provider
+volume substitution/null preservation. Only own edits applied to pre-modified
+files. Added actual captured-data fixture/browser runner and updated existing
+UI fixture to exercise a same-source-time increase.
+
+A provisional relaxed-rules probe yielded867 valid minutes. Final guards retain
+864 out of2,770;3 tied baselines remain ambiguous. Downloaded minute bars differ
+from observed deltas (e.g.15:13:44,296 vs44,397), so no claim of exchange-minute
+volume equality or full trade-tape coverage is made. Price ambiguity is separate.
+
+Verification commands and observed outcomes:
+- Focused unittest modules candles/observations/yahoo_stream/timeframes/live/
+  replay/provider_history:53 tests PASS. Existing pandas warnings only.
+- `npm --prefix frontend run build`: PASS32 modules.
+- Full `unittest discover -s backend -p 'test_*.py' -q` stalled in sandboxed async
+  checks; interrupted. Same suite with host socket access and timeout60s:
+  115 tests PASS in7.707s, recorded /tmp/arbitrade-volume-unit-host-95.log.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke
+  --output /tmp/arbitrade-recorded-volume-final-95`: PASS. Initial socket EPERM
+  resolved with host access. First browser attempt failed parsing Vite HTML from
+  an unproxied fixture URL; moved isolated endpoint under /api/verification and
+  reran successfully. Final fixture loads177 actual observations/177 receipts
+  with original IDs from committed evidence into disposable SQLite; no source
+  writes, Yahoo calls, or constructed quote injection. It works without the
+  ignored production database and has a frozen clock.
+- Independently queried baseline observation62387/receipt62795 day_volume
+  8,535,291 and observation62453/receipt62861 day_volume8,602,961. Difference
+  67,670 equals HTTP and WebSocket candle and visible Volume67,670shares,
+  close354.04 for15:17UTC. Chart screenshot visually inspected: candlesticks,
+  histogram and inspector agree, Ended/Complete and observed basis visible.
+- Existing UI SmokeTest at18241/15441: PASS same-source-time close/volume update,
+  rollover/completion, all intervals, data age, upstream outage, desktop/mobile.
+- Constructed replay SmokeTest: PASS known volume11, corrections, repeat,
+  identical replay values and unchanged counts4 observations/5 receipts.
+- Provider-history browser SmokeTest: PASS all frames/navigation/cache outage.
+All browser runners shut down test services/browser and discard temporary DBs.
+No review services were listening on8000/5173 when checked.
+
+Evidence in docs/evidence/volume-2026-11-16 includes source-observations.json,
+volume-trace.json, recorded-volume-chart.png, database-query-response.png and
+report.json. The database response screenshot is a real HTTP JSON rendering,
+not DB Browser. Source-data/HTML exports from the earlier review remain frozen
+and correctly show their earlier results. Updated README, candle rules, replay,
+design pipeline, AGENTS.md, report and evidence guide; report links validated.
+No fabricated DB Browser screenshot or false installation success claimed.
+
+Fresh live check also PASS: added --require-volume to the existing UI runner
+(only valid with --live), waiting up to90s for a computable observed delta.
+Command: ARBITRADE_BACKEND_PORT=18241 ARBITRADE_FRONTEND_PORT=15441
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --live
+--require-volume --output /tmp/arbitrade-live-volume-95. Actual Yahoo WebSocket
+received44 observations, no test input. Source15:41:00UTC, price354.385; prior
+15:40:59 counter9,852,459 and current9,853,489 independently differ by1,030.
+That exact value and price matched stored records, WebSocket and visible chart.
+Original receipt times15:41:00.618083 and15:41:01.764874UTC. Upstream was
+stopped after the capture for stable comparisons and outage verification, so
+the screenshots deliberately show disconnected while FastAPI remained connected.
+Browser checked all intervals, age, outage and desktop/mobile with no page
+errors; services/browser/temp DB cleaned. IDs43/44 belong to the disposable
+test database. Full report and screenshots preserved under
+docs/evidence/live-volume-2026-11-16; screenshot visually inspected. A fresh
+source-to-SQLite-to-screen observed-volume check is now complete. No DB Browser
+screenshot or exact exchange-volume equivalence implied.
+
+Updated report with the fresh live1030 and repeatable saved67670 evidence.
+Final local link/trace checks and git diff --check passed. Backend changes
+await student review; no commit. DB Browser installation remains blocked only
+on local authentication, not approval. Existing startup instructions apply;
+no production services were running/restarted.
+
+
+## DB Browser installed; verification snapshot preview · November 16, 2026
+
+Student completed the approved Omarchy installation locally and supplied the
+package output. Independent `pacman -Q sqlitebrowser` returned
+`sqlitebrowser 3.13.1-3`: installation VERIFY PASS. This supersedes earlier
+authentication-blocked installation entries. No additional installation needed.
+Student now accepts a few representative snapshots rather than exhaustive
+GUI matching. Inspected existing saved and fresh-live volume trace JSON, image
+paths and the database-query response screenshot. Present saved chart and fresh
+live/outage browser captures as actual verification examples, accurately labeled.
+No new GUI capture, database write, source edit or commit. Existing screenshots
+and trace findings remain as recorded above; not DB Browser screenshots.
+
+
+## DB Browser SSH display failure · November 16, 2026
+
+Prompt97 reports the DB Browser startup abort. Applied diagnose-crash and
+Omarchy skills; inspected current Git status before recording.
+`coredumpctl --no-pager list sqlitebrowser` found PID1782542, SIGABRT,
+2026-11-16 10:56:33Eastern. `coredumpctl --no-pager info 1782542` confirmed
+the requested database path and Qt5 createPlatformIntegration -> fatal ->
+abort during QApplication initialization. Secondary thread was QtDBus/GLib
+event processing. This agrees with the student's missing-display error and
+SSH launch context. No core extracted or private process memory inspected.
+Sandbox bus-acquisition warning did not prevent reading the core metadata.
+
+Agent environment DISPLAY/WAYLAND_DISPLAY/XDG_SESSION_TYPE/XDG_RUNTIME_DIR
+were unset; this describes the agent shell, not an independent dump of the
+student's SSH environment. Source transcript establishes their SSH context.
+free -h showed25GiB available and no swap used. Filtered sqlitebrowser journal
+around the crash had no entries. This is display initialization, not an
+observed database-operation or memory-pressure failure.
+
+`pacman -Q sqlitebrowser qt5-base` confirms3.13.1-3 and5.15.19+kde+r96-1.
+XWayland24.1.14-1 is installed; qt5-wayland is absent. No additional package
+needed/proposed: a normal SSH shell has no desktop display even if a Wayland
+plugin is installed. Run the GUI from a terminal on the Omarchy desktop, or
+view a copied SQLite backup with DB Browser on the Mac. No display guessed,
+no xhost/security/config changes and no remote GUI launch attempted.
+
+`sqlite3 -readonly backend/data/observations.sqlite3 'PRAGMA quick_check;'`
+returned ok: PASS. No evidence of database corruption from this startup abort.
+QT_QPA_PLATFORM=offscreen sqlitebrowser --help exited0 without output; this
+is only a command check, not evidence of a visible GUI. Package has no local
+manpage at the probed path; that read failed without any system change.
+No installation, app/source/database edits or commit. GUI visibility remains
+unverified until launched in a real desktop session.
+
+
+## Server restart requested again · November 16, 2026
+
+Reused prompts/58-restart-server-and-open.md for “restart the server”. Read
+updated AGENTS.md, handoff instructions/current state, README and frontend
+manifest; inspected Git status and dependency/lockfile presence. Existing work
+preserved. Linux, /usr/bin/python 3.14.8, Node 26.13.0, npm 11.20.0; existing
+backend/.packages imports uvicorn 0.54.0 and FastAPI 0.156.8 passed.
+Approved `ss -ltnp '( sport = :8000 or sport = :5173 )'` showed no listeners,
+superseding the earlier handoff's running-server state.
+Started README commands:
+- `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000`: ready, session 69698.
+- `npm --prefix frontend run dev`: ready, session 5951.
+
+`curl --silent --output /dev/null --write-out 'HTTP %{http_code}\n'` against
+backend /api/health, frontend /, and frontend /api/health expected HTTP 200;
+all three observed HTTP 200. Services intentionally remain running for use.
+No browser interaction, feature SmokeTest, or new live-data verification run.
+No installation, dependency/source changes or commit.
+
+
+## Loading-state investigation · November 16, 2026
+
+Prompt98. Inspected Git status, current handoff, README, frontend config, chart
+WebSocket flow and backend snapshot flow. Existing work preserved; reused
+system Python, installed websockets, project Playwright and system Chromium.
+No dependency installation or manifest edits.
+Host listeners confirmed backend PID1821729 on8000 and frontend PID1821754
+on5173. Frontend and proxied health HTTP200. Direct chart WebSocket probe
+through Vite received snapshot with256 candles in1.11s (expected initial data).
+`npm --prefix frontend run build`: PASS32 modules.
+
+CUA binding to ambient client preview http://localhost:49837/ failed with
+Browser is not available: iab. Closed CUA with completion summary. Host has
+no listener on49837; this does not establish whether the client's forwarding
+is broken. `open_in_codex` for http://127.0.0.1:5173/ returned queued, not proof
+that the client browser loaded. Asked user whether spinner is browser-only
+or inside Arbitrade.
+
+Reused previously approved project Chromium testing alternative. Temporary
+`node /tmp/arbitrade-loading-check.mjs` opened actual running app, waited for
+candle options and captured /tmp/arbitrade-loading-check.png. PASS256 candle
+options, market-status live, no page errors. Visually inspected screenshot:
+chart candles, moving averages and sidebar rendered. Browser cleaned up;
+user services retained. This page-load diagnostic did not run full feature
+SmokeTest operations or saved-volume verification; no volume correctness claim.
+No app source correction justified by observed results. Client preview
+loading remains unverified pending user feedback/access. No commit.
+
+Loading investigation follow-up: user confirmed only browser spinner, before
+Arbitrade UI appears. This points toward client navigation/forwarding, but
+root cause remains unconfirmed. Fresh `open_in_codex` request for
+http://localhost:5173/ returned queued again. No confirmation that preview
+opened; user must close stalled preview and reopen forwarded frontend5173.
+Server-side page-load result above still stands; no source/server changes.
+
+
+## Chrome blank copied preview · November 16, 2026
+
+Prompt99. User clarified HTML title appears in Chrome, but body remains blank
+and favicon/spinner persists; integrated preview sometimes works. Earlier
+assertion that this was definitely forwarding is too strong: root cause is
+still unconfirmed. Inspected Git status, handoff, Vite config and index HTML.
+HTML supplies title and an empty app container; Vue entry module mounts UI.
+This supports investigating module/asset loading before market-data loading.
+CUA inventory apps=[]/browsers=[]; closed CUA with completion summary. Cannot
+inspect user's Chrome network/console directly.
+
+Reused /usr/bin/python urllib against running Vite5173: /, /@vite/client,
+/src/main.js, /src/style.css, /brand/arbitrade-diamond.svg and /api/health all
+HTTP200 with nonempty bodies. HTML/JS/SVG content types appropriate (Vite
+serves CSS imports as JS modules). Assets completed in0.000–0.010s, health
+0.260s. This verifies origin responses only, not client-forwarded requests.
+Asked for exact Chrome URL and first failed/pending Network request or
+Console error. No application/dependency changes, installs or commit; existing
+services retained. Client failure remains unresolved pending that evidence.
+
+
+## Independent browser loading checks · November 16, 2026
+
+Prompt100. User requested computer use and independent testing while away.
+Retried CUA getState: apps=[] and browsers=[]; no user Chrome/desktop exposed.
+Closed CUA with completion summary. This is the concrete blocker to testing
+the client's forwarded URL/profile; no claim of access to the user's Chrome.
+Inspected Git/current handoff, existing frontend manifest, system Chromium,
+Node26.13.0 and /usr/bin/python3.14.8. Host listeners still frontend5173 and
+backend8000. Existing dependencies reused; no install/manifest changes.
+
+Ran `node /tmp/arbitrade-browser-loading-check.mjs` using existing project
+Playwright/system Chromium. Two rounds of three concurrent fresh browser
+contexts, including localhost and127.0.0.1, all completed document load and
+rendered256 candles/live status. Clicked Latest candles in each page.
+All six PASS:1.824–2.463seconds, no page errors, failed or pending requests.
+Screenshot /tmp/arbitrade-browser-loading-final.png visually inspected: chart,
+averages and sidebar visible. Results /tmp/arbitrade-browser-loading-results.json.
+All diagnostic browser contexts/process closed; user services retained.
+These used existing live services, not a new disposable full SmokeTest. No
+stored-data mutations by test, no saved-volume verification or volume claims.
+No reproduced application failure to correct; no source edits or commit.
+Client Chrome/forwarded connection remains unverified because CUA exposes no
+connected browser. Did not require the user to troubleshoot during meeting.
+
+
+## Restart after Chrome investigation · November 16, 2026
+
+Reused prompt58 for user's restart request. Git/current handoff and run setup
+inspected; Linux, /usr/bin/python3.14.8, Node26.13.0, npm11.20.0, existing
+uvicorn0.54.0/FastAPI0.156.8 imports pass. No installation/dependency changes.
+Verified old listening processes by /proc cwd and expected command before
+SIGTERM: uvicorn1821729 and Vite1821754. Restarted README backend command
+(session57298, PID1848699) and npm --prefix frontend run dev (session30158).
+Both ready on8000/5173, intentionally retained. Startup included nonfatal Vue
+feature-flags warning. Backend health, frontend HTML, proxied health HTTP200.
+`node /tmp/arbitrade-loading-check.mjs` PASS256 candles/live, no page errors;
+diagnostic Chromium closed. This is page-load verification, not full SmokeTest
+or client Chrome/forwarding verification. Requested fresh Codex browser preview;
+client-side blank-screen issue remains unconfirmed. No source edits or commit.
+
+
+## Timeframe switch connection loss · November 16, 2026
+
+Prompt101. Inspected Git, AGENTS/current handoff, frontend connect/reset and
+backend live/snapshot flow, existing timeframe tests and runtime environment.
+Linux, /usr/bin/python3.14.8, Node26.13.0, npm11.20.0; existing packages reused.
+Prior backend session57298 had exited143. Its output shows Shutting down,
+application shutdown complete and finished PID1848699. Host listener check:
+frontend5173/PID1848729 still listening, backend8000 absent. This is direct
+evidence of stopped backend; what sent termination is not established. It
+does not establish a five-minute aggregation crash.
+
+Restored README backend command using subprocess.Popen with start_new_session,
+stdin DEVNULL and stdout/stderr redirected to /tmp/arbitrade-review-backend.log.
+Detached backend PID1849544 listens8000 and remains running after commands
+finish. Frontend retained. No source/dependency changes or installs.
+
+`node /tmp/arbitrade-timeframe-check.mjs`: actual Chromium diagnostic switches
+1m,5m,1m,5m,15m,5m,1m; every selection waits for matching market timeframe,
+nonempty candles and Connected to FastAPI. PASS256 candle options/live in
+each step; durations4847,1491,1779,4681,7868,211,99ms; no page errors. Screenshot
+/tmp/arbitrade-timeframe-check.png. Browser closed; review services retained.
+Backend still listening after test, health HTTP200 (0.684s); inspected log
+has no ERROR/Traceback matches. No full isolated SmokeTest/storage/volume
+verification run for runtime-only restoration, no saved-volume claim.
+No source correction/commit. Sender/cause of earlier termination remains
+unknown; client-forwarded Chrome behavior has not been directly inspected.
+
+
+## Voice and replay saved-list recovery · November 16, 2026
+
+Prompt102. Inspected Git, handoff, relevant Vue voice/replay code, API handlers
+and test runners before edits. Preserved prior working changes. Linux,
+/usr/bin/python3.14.8, Node26.13.0/npm11.20.0 and existing project packages,
+manifest and lockfile reused. No installs or manifest/lockfile changes.
+Backend PID1849544 and Vite PID1848729 still listening8000/5173.
+Proxied voice decisions HTTP200 (0.812s), four saved decisions; replay selections
+HTTP200 (0.090s), AAPL saved range available. A fresh real-service Chromium
+check enabled Start voice, loaded replay0/70802 and advanced to1/70802 with
+no page errors. Diagnostic created only an independent replay paper account,
+not a live order or voice session. Browser closed. Original outage cannot be
+proven retrospectively, but initial fetches had no recovery when they failed.
+
+Added regression in scripts/ui_smoke.mjs forcing initial503 responses for both
+voice decisions and replay selections. Baseline command:
+`ARBITRADE_BACKEND_PORT=18020 ARBITRADE_FRONTEND_PORT=15193 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-recovery-before`
+FAIL: Timed out saved lists automatically retry. Isolated services/browser and
+disposable databases cleaned up on failure.
+
+One correction cycle: VoicePanel.js retries failed list/record loads after3s,
+clears stale errors on successful list load and enables Start once selected
+record loads. useMarketChart.js retries failed saved-range requests after3s,
+preserves entered ranges and connects pending Replay when range becomes
+available. Requests have10s deadlines and unmount clears retry timers.
+Updated README/design pipeline and added voice regression coverage. No
+backend/database source change; original Yahoo observations remain untouched.
+
+Same UI command with --output /tmp/arbitrade-recovery-after: PASS. Constructed
+input test verifies both automatic retries, voice error cleared, saved replay
+range loaded, Next advanced receipt, stored observation/receipt snapshot, all
+timeframes, same-minute updates, disconnection and mobile/desktop rendering.
+All isolated services/browser/storage cleaned. This is constructed input,
+not a new live-feed or saved-Yahoo-volume verification.
+
+`npm --prefix frontend run build`: PASS32 modules. `git diff --check`: PASS.
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.voice_smoke --output /tmp/arbitrade-recovery-voice`: PASS existing mocked-provider WebRTC/cleanup
+checks. Extended voice regression to force initial503 and wait for automatic
+retry, selected record and enabled Start voice without manual reload. Reran
+with --output /tmp/arbitrade-recovery-voice-final: PASS all3 checks. Mocked
+provider/fake microphone, real browser WebRTC pair; all SQLite records unchanged;
+services/browser/disposable databases cleaned. Real microphone/speaker/provider
+session was not exercised. User review services retained. No commit; changes
+ready for student review. User may refresh once to replace stale client code.
+
+
+## Restart to try recovery fix · November 16, 2026
+
+Reused prompt58 for restart request. Inspected Git/current handoff, README run
+commands, manifest/lockfile and environment. Linux; /usr/bin/python3.14.8,
+Node26.13.0, npm11.20.0; existing uvicorn0.54.0/FastAPI0.156.8 imports PASS.
+Host showed backend1849544 listening8000 and no frontend5173 listener.
+Verified backend /proc cwd/command before SIGTERM and waited for port release.
+Restarted README commands as detached subprocesses with stdin DEVNULL and
+logs /tmp/arbitrade-review-backend.log and /tmp/arbitrade-review-frontend.log.
+Backend PID1854463; frontend npm parent PID1854464. Both intentionally remain
+running. No packages installed, manifests/source changed or commit.
+
+Backend health, frontend HTML, proxied voice decisions and replay selections
+all HTTP200. `node /tmp/arbitrade-loading-check.mjs`: PASS256 candles/live/no
+page errors; diagnostic Chromium closed. This is startup/page verification,
+not a rerun of full feature SmokeTests or actual microphone/provider audio.
+Earlier recovery regression passes remain documented above. Client forwarded
+Chrome not inspected; user should refresh existing preview to try updated UI.
+
+
+## Demo and modular commit preparation · November 16, 2026
+
+Prompt103 records the commit request and follow-up. Inspected AGENTS.md, Git
+status, existing README/report/design pipeline, commit review and handoff before
+edits. Existing tracked/untracked work preserved; no new commit, staging or
+push. `report.md` was untracked and is now excluded by root `/report.md` rule.
+Copied supplied video unchanged to `demos/Assignment 4.1 Demo.mov` (75,921,890
+bytes); linked it in local report, README and design pipeline. README removes
+stale process/log assertions and clarifies the distinction between missing
+stream observations and downloaded chart history. Updated modular review scope.
+
+Environment CHECK: `uname -s` Linux; `/usr/bin/python --version`3.14.8;
+`command -v python node npm git` found existing tools; Node26.13.0/npm11.20.0.
+Inspected frontend/package.json and dependency/lockfile inventory (frontend
+package-lock.json, backend requirements-calendar.txt/requirements-yahoo.txt).
+No installation, environment creation or dependency-file changes needed.
+
+VERIFY: `/usr/bin/python` inline pathlib/hashlib script compared streaming
+SHA-256 hashes of attachment and copy: expected equality, PASS. Same script
+resolved Markdown local targets with urllib.parse.unquote: expected all exist,
+PASS README28, report1, design pipeline12, each including the video.
+`git ls-files -- report.md`: expected empty, PASS;
+`git check-ignore -v report.md`: expected `/report.md`, PASS line28.
+`git check-ignore -q 'demos/Assignment 4.1 Demo.mov'`: expected exit1
+(eligible for Git), PASS. `git diff --check`: expected no errors, PASS.
+
+No application code changed in this task; application SmokeTests/build were
+not rerun. Prior results remain above. Video playback/duration and published
+GitHub access are not verified by checksum/link checks. Final report commit
+placeholder remains pending the reviewed commits. Next: student reviews the
+modular scope and diff, then authorize committing under AGENTS.md.
+
+
+## Approved modular commit execution · November 16, 2026
+
+Prompt104 gives explicit student review approval for the four groups and push
+to origin/main; supersedes earlier pending-review notes. Resumed via current
+handoff and Git status; approved files unchanged, report still ignored and
+untracked. Environment CHECK reused Linux, /usr/bin/python3.14.8, Node26.13.0,
+npm11.20.0 and existing manifest/requirements/lockfile. No installations.
+
+Fresh checks before committing:
+- `npm --prefix frontend run build`: expected success, PASS32 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest discover -s backend -p 'test_*.py'`: initial sandbox async run stalled after two tests; stopped
+  that exact test process and reran with local socket access. PASS115 tests
+  in7.823s; existing pandas deprecation warnings.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke --output /tmp/arbitrade-commit-recorded-volume`: initial sandbox socket
+  creation EPERM; rerun with local socket access PASS independent SQL counter
+  delta/HTTP/WebSocket/visible price and volume/disclosure/no page errors;
+  processes stopped. Actual frozen saved Yahoo, disposable DB, no new live
+  Yahoo observation or DB Browser capture.
+- Limited credential-pattern scan of commit candidates: PASS no matches
+  (only result printed). Report absent from candidate list. Only large file
+  is the supplied75,921,890-byte demo. `git diff --check`: PASS.
+
+Execution sequence after this record: commit four approved groups in order,
+`git push origin main`, verify remote main equals local HEAD, replace ignored
+report final-commit placeholder with that full SHA, and verify report is absent
+from index/HEAD and tracked working tree is clean. Commit IDs and final push
+receipt are available from Git history/remote and the local report; this record
+is written before the final commit to avoid a self-referencing commit hash.
+Full workstation/microphone/browser-video playback checks not rerun.
+
+
+### Push approval-review blocker
+
+Created the four approved commits successfully. `git push origin main` was
+rejected twice by automatic approval review before process execution; no push
+ran. Read-only checks confirmed origin is
+`https://github.com/jclee2044/arbitrade.git`, main tracks origin/main, and the
+report/approved scope name that repository. Review still required explicit
+user authorization for contents to this exact destination, treating local
+report/review text as insufficient trust evidence. Asked the user to approve
+upload of demo, screenshots, market-data evidence and prompt records to that
+repository, excluding report.md. No workaround attempted.
+
+Amend this final documentation commit with this observed outcome, retaining
+four modular commits; then write the resulting full local HEAD to the ignored
+report. This SHA is local until push succeeds. Outstanding: destination-specific
+approval, push and remote SHA equality.
+
+Student then explicitly approved uploading the four commits, including demo,
+screenshots, market-data evidence and prompt records, to
+https://github.com/jclee2044/arbitrade.git on main, excluding report.md. This
+resolves the destination-authorization blocker above. Next execution: push
+and independently compare remote main to HEAD before updating local report.

@@ -9,6 +9,8 @@ frontend/dist/
 backend/.packages/
 backend/data/*.sqlite3
 backend/data/*.sqlite3-*
+backend/data/*.history.json
+backend/data/*.history.tmp
 
 # Local credentials and agent configuration
 .aws/
@@ -21,3 +23,6 @@ backend/data/*.sqlite3-*
 id_rsa
 id_ed25519
 credentials
+
+# Local assignment report
+/report.md

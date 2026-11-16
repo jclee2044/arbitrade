@@ -1,14 +1,66 @@
 # Design pipeline
 
+## Submission artifacts · November 16, 2026
+
+The supplied [Assignment 4.1 demonstration](../demos/Assignment%204.1%20Demo.mov)
+is preserved unchanged in `demos/` and linked from the README. The local
+`report.md` links to the same video and is excluded from Git. The recording
+is a supplied artifact; adding it does not constitute a fresh application check.
+
+## Observed volume correction · November 16, 2026
+
+Yahoo updates in the saved capture share source timestamps while cumulative day
+volume increases. Minute formation now accepts nondecreasing totals in source
+time/first-receipt order; price-order ambiguity remains independent. Missing
+values, gaps, resets, decreases and invalid/decreasing tied baselines retain
+null volume. No raw observation is replaced or assigned a guessed subsecond time.
+History and replay label the result `volume_provenance=yahoo_quote_counter`;
+Candle details explain that it is observed cumulative change. This does not claim
+the stream is a complete trade tape or matches downloaded provider bar volume.
+Intraday live overlays use this observed delta rather than dropping it or adding
+it to cached provider volume. The recorded-volume SmokeTest independently queries
+endpoint counters, compares HTTP and browser WebSocket candles, inspects the
+visible chart, saves screenshots and cleans up. See [evidence](part-41-evidence.md).
+
 ## Current trading desk
 
-The default workspace pairs the live chart with a summary of the selected candle. The summary compares its close (or latest price) with its own open, displays its UTC time, and distinguishes a forming interval and partial coverage. Hover inspects OHLC and available share volume without changing the selection. Clicking a candle, selecting its timestamp, or choosing a confirmed crossover pins the candle for review. The desktop panel sits to the right, and on a phone it follows the chart.
+Moving-average color identifies type: EMA orange (`#c87519`), SMA blue (`#307492`),
+across all periods, intervals, custom averages, Signals, legends, selection borders
+and frozen chart images. Existing EMA dashes and two-pixel line weights remain;
+lookback-dependent styling is a proposal pending student choice.
 
-The emerald sidebar has two keyboard-accessible tabs and a collapse button. Indicators toggles 10/20/30/50/100/200-period SMA and EMA overlays and exposes named SMA, EMA and rolling-range settings. Signals focuses the chart on the selected strategy's two SMAs. Its newest-first list, chart marker and evidence card share the pinned candle timestamp. Switching tabs preserves the replay position and restores the chosen overlays.
+The volume shares axis scales from zero for wheel input and pointer dragging.
+Its bottom scale margin is zero, keeping the histogram baseline at the pane's
+bottom during manual scaling and automatic reset. Price and other study axes
+retain center-based scaling. `scripts.history_smoke` verifies rendered volume
+bar heights and the fixed baseline alongside existing chart gestures.
+The shared right axis reserves a 96px minimum width so changing volume tick
+formats does not resize the plot and shift bars sideways. The history browser
+check scrolls across numeric/K/M ranges in both directions and checks plot width.
+
+Live chart snapshots use a three-calendar-month window anchored to the New York market date.
+ProviderHistory serves native Yahoo 1m, 5m, 15m, 30m and 1h candles and aggregates daily
+prices into exchange-aligned weekly and monthly periods. Shorter Yahoo archives accumulate
+across refreshes in per-interval caches beside the observations database. The date picker includes the
+earliest loaded period. D/W/M initially fit the full window. Replay and paper trading read recorded
+observations. The repeatable backfill and browser checks are documented in the README.
+
+The instrument heading leads straight into timeframe controls. Prompt67 removes
+the separate latest-price label, value and candle-to-candle change row.
+
+The header wordmark links home to the chart using existing in-app navigation, with keyboard activation and preserved chart state.
+
+The main chart height is 20% taller: desktop `clamp(366px, 55.2vh, 588px)` and phone `clamp(306px, 46.8vh, 426px)`.
+
+The default workspace pairs the chart with the Indicators menu. The AI diamond opens a summary of the selected candle. The summary compares its close (or latest price) with its own open, displays its UTC time, and distinguishes a forming interval and partial coverage. Hover inspects OHLC and available share volume without changing the selection. Clicking a candle, selecting its timestamp, or choosing a confirmed crossover pins the candle for review. AI summary and voice chat share the emerald rail on desktop and the expandable tool area above the chart on phones.
+
+Chart history supports dragging, Previous day, a loaded-date picker in UTC, and Latest candles. Dates come from the current subscription's candles, preserving replay visibility. Weekly/monthly choices are period start dates. Live revisions and rollover retain the visible logical range when the reader is away from the tail. Live charts use the provider history described above. Trackpad vertical wheel and ctrl-wheel pinch use an amplified exponential change to the logical horizontal range, anchored under the pointer. Horizontal wheel swipes use the same range controller for panning. Main-chart zoom uses a 0.0088-per-pixel logarithmic coefficient and horizontal wheel pan uses a 0.8 multiplier, both 20% below prompt61; right-axis scaling retains its separate sensitivity. `chart-gestures.js` adds frame-driven exponential decay after wheel/pinch release, using zoom/pan decay times of 300/360ms and a 2.2-second safety limit; each new input replaces the previous release tail, including small OS momentum events. Mouse and touch drags use the library kinetic scrolling. Per-event limits and an eight-interval minimum bound zoom. New input, date jumps, pinned selections, Latest candles, reconnects, blur and unmount cancel custom momentum; animation frames and listeners are cleaned up. The right-hand price axis uses a more sensitive center-preserving vertical transform for pointer dragging and wheel input, through the public price-range API. Pointer capture keeps dragging responsive outside the axis; release/blur cancels the drag, and double-click restores auto scaling. Horizontal time range is preserved during price scaling.
+
+The emerald sidebar has four keyboard-accessible icon tabs and a collapse button. Indicators toggles 10/20/30/50/100/200-period SMA and EMA overlays and exposes named SMA, EMA and rolling-range settings. Signals focuses the chart on the selected strategy's two SMAs. Its newest-first list, chart marker and evidence card share the pinned candle timestamp. Switching tabs preserves the replay position and restores the chosen overlays.
 
 The chart uses eight exchange-session intervals. Python calculates EMA from an initial SMA and weights each subsequent completed close by `2 / (window + 1)`. Weekly and monthly bars aggregate scheduled sessions up to the first or last trading day of their period. The same calendar and receipt cutoff govern live/history, replay and frozen decisions. The existing chart configuration database stores explicit preset choices by symbol, timeframe, type and period.
 
-The parchment header contains the wordmark, mode and Paper trading. Trade holds orders and P&L, and Automation holds the controls and audit. The header provides a stop control throughout an active run. The parchment AI summary uses the favicon diamond. It presents observed prices and indicators immediately. Analyze candle calls the existing decision workflow for a completed candle and shows the reviewed outcome for that selection. Voice chat can discuss that decision by ID or open another saved record.
+The parchment header contains the wordmark, mode and an emerald Trade toggle. It opens an inset parchment paper account card with cream space above and below and a maroon top rule beside the chart, or as a drawer on smaller screens. Closing it restores the full desktop chart width. Orders holds orders and P&L, and Automation holds the controls and audit. The header provides a stop control throughout an active run. Indicators and Signals have panel headings, with smaller SMA and EMA subheadings under Indicators. Moving between Indicators and AI slides past Signals and Drawing Tools in either direction. The green sidebar scrolls independently with a pinned tab bar. The panes share a fixed top edge, and the outgoing pane retains its height until the slide ends. The green sidebar, tab changes, and Trade card use slide transitions that respect reduced motion. The AI tab uses the blue brand diamond. It presents observed prices and indicators immediately. Decision API captures the actual visible chart and requests long/short/wait using pixels and identifying context only. The summary prioritizes the choice/status and compact freshness/volume context; model metadata and saved context/question/answer are under Decision details. A short expandable flow explains the process. Images remain saved without a screenshot preview or image link. Review paper proposal opens the separate frozen-data, position-aware analyst/reviewer workflow; paper automation retains that workflow. Voice chat discusses saved paper decisions by ID. See [classroom contract](classroom-decisions.md).
 
 `main.js` keeps the chart and tool components mounted as navigation changes. Inactive panels leave the tab order, and a mounted chart canvas can still produce the native PNG used by automation. Draft SMA inputs become active strategy windows when the user applies them. The source, upstream feed state and age stay visible under the plot. Detailed source timestamps, FastAPI transport and the health check are available in Feed details.
 
@@ -336,3 +388,25 @@ its hosted provisioning/run is still unverified and requires installation review
 before first activation. No Git repository exists here. Separate prior actual
 Yahoo/image-model observations and deferred physical voice check remain as
 recorded. See workstation-smoke-test.md and verification.md.
+
+
+Unknown-volume labels are hidden in the chart inspector, hover card, chart key
+and decision summary. Available volume still appears; missing volume remains null
+and leaves a histogram gap. The volume pane and decision context are retained.
+
+Moving Averages groups each SMA and EMA window by its source interval. FastAPI calculates selected lines from the matching live history or the current replay receipt prefix. At each chart candle it samples the latest value available by that candle’s close or the snapshot time, whichever comes first. Each series uses the display candle timestamps so overlays keep the price and volume panes aligned.
+
+Drawing Tools presents Trend Line, Freehand and Eraser in individual labeled icon rows above the ratio presets. It uses price-pane coordinates for trend lines, freehand strokes, and entry boxes. Dragging opposite corners sets the box bounds and previews the selected ratio before release. The contact eraser removes whole drawings, and undo tracks edits per mode, symbol and timeframe. Each box stores entry and risk per share and derives its target from the fixed reward multiple. The emerald and maroon fills use 50% opacity. The visible-chart Decision API capture includes the drawing overlay.
+
+Live chart delivery shares each in-flight calculation and briefly reuses its
+result across identical chart settings. Indicators use the full history before
+the server limits the displayed range. The client requests older bars near the
+left edge and sends its earliest loaded timestamp on automatic reconnect.
+
+
+Saved-list recovery: voice decisions and replay ranges use ten-second request
+deadlines and retry failed loads after three seconds. A successful list load
+clears its outage message; voice loads the selected record before enabling
+Start voice. If Replay was selected before its range arrived, range recovery
+connects that replay automatically. Unmount clears retry timers. Explicitly
+entered replay ranges are preserved when a delayed list arrives.

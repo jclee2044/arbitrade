@@ -1,0 +1,1 @@
+perfect. one more thing. when switching between the indicators tab and the AI tab, you should be able to see the signals tab in the middle. almost like a slot machine where you see the numbers going past

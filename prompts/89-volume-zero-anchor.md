@@ -1,0 +1,1 @@
+When scrolling on the volume shares part of the chart to expand it vertically, the zero position should remain fixed at the bottom of the chart. Currently it zooms in and out at the middle of the Y axis.

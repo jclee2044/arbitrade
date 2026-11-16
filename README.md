@@ -2,15 +2,27 @@
 
 A local trading workstation with a Vue frontend, a Python/FastAPI backend, and SQLite market and simulation records. The chart, indicators, AI analysis, and simulated account share the same candle context. [Assignment 4 description](docs/assignment-4.md).
 
+## Demonstration
+
+[Watch or download the Assignment 4.1 demo](demos/Assignment%204.1%20Demo.mov)
+(QuickTime `.mov`, about 72.4 MiB). The submission report is maintained locally
+as `report.md` and excluded from Git.
+
 ## Around the desk
 
-- **Chart** opens with AAPL candlesticks and volume. Hover for OHLC and reported volume, or pin a candle by clicking it or choosing **Inspect candle**. **Follow latest** returns to the most recent candle. Source, age and feed status sit beneath the plot. **Feed details** contains the connection check and source timestamps.
-- **Indicators** in the emerald sidebar has independent SMA and EMA buttons for 10, 20, 30, 50, 100 and 200 candles. Solid and dashed lines match the button colors. Expand **Rolling price range & custom indicators** to add a named indicator or edit its window. Each chart remembers its choices.
-- **Signals**, the second sidebar tab, shows confirmed SMA crossovers newest first. Choose one to bring its candle into view and inspect both averages. **Crossover windows** sets the strategy pair, initially 20 and 50.
-- **AI summary** beside the chart shows evidence for the selected candle. **Analyze candle** freezes a completed candle and requests a reviewed model proposal when its evidence is sufficient. **Review decision proposal** opens the saved facts, chart-image questions and analyst/reviewer details. **Voice chat** below can discuss that decision or another saved record you choose.
-- **Paper trading** at the top right opens the simulated account. **Trade** contains manual orders, fills, and profit and loss. **Automation** contains the bot controls and its decision history. While automation runs, **Stop automation** is also available in the header.
+Click the Arbitrade logo to return to the chart home view.
 
-Use the chevron to collapse or expand the sidebar. On phones the sidebar starts collapsed and the summary follows the chart. [Indicators](docs/screenshots/indicators-signals/desktop.png) · [Signals](docs/screenshots/indicators-signals/signals.png) · [Phone](docs/screenshots/indicators-signals/mobile.png).
+- **Chart** opens with AAPL candlesticks and volume. Hover for OHLC and reported volume, or pin a candle by clicking it or choosing **Inspect candle**. **Follow latest** returns to the most recent candle. Source, age and feed status sit beneath the plot. **Feed details** contains the connection check and source timestamps.
+- **Indicators** in the emerald sidebar has a **Moving Averages** grid for SMA and EMA. Toggle 10, 20, 30, 50, 100 or 200 candles independently for 1m, 5m, 15m, 1hr, 1D and 1W. All EMA lines are orange and all SMA lines are blue, including custom averages, Signals and saved chart images. Selections stay on the chart when its timeframe changes. Lines start once the source interval has enough completed candles. Selected buttons have a checkmark and a border matching the chart line. Expand **Rolling price range & custom indicators** to add a named indicator or edit its window. Selections are saved per symbol.
+- **Signals**, the second sidebar tab, shows confirmed SMA crossovers newest first. Choose one to bring its candle into view and inspect both averages. **Crossover windows** sets the strategy pair, initially 20 and 50.
+- **Drawing Tools**, the pencil between Signals and AI, has separate icon rows for Trend Line, Freehand and Eraser. Select a drawing tool and drag on the price chart. Select 1:2, 1:3, or 1:4, then drag between opposite corners on the price chart to size the box. Drag the filled box to move it. The upper and lower handles resize both zones at the selected ratio, and the side handle changes width. Select Eraser and sweep across a drawing to remove it. Command-Z on Mac or Ctrl-Z on Windows and Linux undoes the latest drawing, move, resize, or erasure. Drawings stay with their symbol, timeframe, and mode until page reload.
+- **AI**, the blue diamond in the sidebar, opens the AI summary and voice chat. The summary shows observed candle evidence. **Decision API** captures the visible chart and asks for **long**, **short**, or **wait** using only the PNG and identifying context. The choice and data quality appear first; audit metadata stays under Decision details. Captures are saved without an on-page screenshot. **Review paper proposal** opens the separate position-aware workflow used by paper automation. **Voice chat** discusses those saved paper decisions.
+- **Trade**, the emerald button at the top right, toggles an inset parchment paper account card with a maroon top rule. Closing it expands the desktop chart. **Orders** contains manual orders, fills, and profit and loss. **Automation** contains the bot controls and its decision history. While automation runs, **Stop automation** is also available in the header.
+
+The main chart is 20% taller across desktop and phone layouts. Timeframe controls
+sit directly below the instrument heading; the separate last-price/change row is removed.
+
+Scroll over the green sidebar to move through its controls while the tab bar stays in place. Use the chevron to collapse or expand the sidebar. Moving between Indicators and AI slides past Signals and Drawing Tools in either direction. The sidebar, its tabs, and Trade slide into place and honor the device’s reduced-motion setting. On phones the sidebar starts collapsed and Trade opens a drawer beneath the header. [AI and paper trading](docs/screenshots/chart-trade/ai-and-paper.png) · [Expanded chart](docs/screenshots/chart-trade/expanded-chart.png).
 
 ## Run
 
@@ -37,13 +49,72 @@ The live subscription is AAPL. The chart defaults to one minute and supports
 opens a new WebSocket with matching stored history, followed by backend-derived
 updates. The page displays the source, latest source timestamp and age,
 upstream feed status separately from the browser connection, and forming/ended
-and coverage labels for the inspected candle. Unknown volume is shown as
-Unknown with a gap in the histogram; it is never replaced by zero.
+and coverage labels for the inspected candle. Unavailable volume is omitted from candle details and hover cards, with a gap
+in the histogram; it is never replaced by zero.
+
+Volume from saved streaming quotes is the observed change in Yahoo's cumulative
+day counter. Increasing updates sharing a source timestamp are accepted in
+receipt order; resets, decreases and missing baselines remain unavailable.
+Candle details identify this basis. Downloaded Yahoo bar volume is a separate
+measurement; when fresh quotes revise a cached intraday bar, the observed delta
+replaces its volume without adding the two. See [volume evidence](docs/part-41-evidence.md).
+
+Reproduce the saved real-Yahoo SQL → HTTP/WebSocket → chart volume check:
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke
+```
+
+It loads the included 177-observation capture into a disposable database,
+starts isolated services and Chromium, checks the visible 67,670-share delta,
+saves evidence, and cleans up. It makes no new Yahoo request and does not write
+the saved observation database.
+
+For a new Yahoo check during a regular AAPL session, use
+`ARBITRADE_BACKEND_PORT=18241 ARBITRADE_FRONTEND_PORT=15441 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --live --require-volume`.
+It waits up to 90 seconds for a computable observed volume and freezes reception
+for exact database/chart comparisons, then checks upstream disconnection and
+cleans up. The November 16 run verified price354.385 and observed volume1,030.
+
+Drag the chart right to look back, or use **Previous day** and **Go to date · UTC**
+above the plot. Vertical trackpad scrolling and trackpad pinch zoom the horizontal
+candle spacing with an amplified, pointer-centered response; horizontal swipes pan.
+Quick zooms and swipes continue after release with a moderate, gradual slowdown,
+and mouse/touch dragging has momentum too. A new gesture or date/latest navigation
+interrupts the release motion. Drag the right-hand price labels up or down
+to expand or compress candles vertically; scrolling over those labels also scales
+vertically. Double-click the labels to restore automatic price scaling.
+The volume shares axis expands and compresses from zero at the bottom of its
+pane when scrolling or dragging; double-click restores automatic volume scaling.
+The shared right axis reserves label space so volume scaling keeps bars in the
+same horizontal position as the labels change.
+**Latest candles** returns to the live end. Live updates preserve
+an earlier viewport. The date picker lists loaded candle dates (period start
+dates for weekly/monthly bars); replay exposes only dates revealed so far.
+Live AAPL charts use a rolling three-calendar-month window. Hourly bars come
+from Yahoo. Daily bars also supply the weekly and monthly charts, whose first
+and last periods can be partial. The five intraday charts use unadjusted Yahoo
+bars at their native resolution. Yahoo supplies a shorter initial archive for
+1m and 5m–30m. Refreshes retain
+older intraday bars within the window. Use **Go to date** to inspect older
+intraday candles. Replay and paper execution use recorded observations.
+
+Refresh all local chart caches with
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.backfill_history`.
+The command prints actual counts and first/last timestamps for every frame.
+The live chart refreshes its active cache every five minutes and retries a failed
+download after one minute. Repeat the isolated all-timeframe browser check with
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.provider_history_smoke`.
+It uses constructed provider data, starts local services, verifies chart/date
+selection and outage behavior in Chromium, checks the cache, and cleans up.
+Repeat the isolated history UI check with
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke`.
 
 Only regular NASDAQ-session candles are charted. Extended-session quotes remain
 stored but are excluded by the existing calendar aggregation. A connected feed
 can be stale; no matching quote in 30 source-time seconds marks it stale.
-There is no backfill: gaps stay gaps. Daily volume can remain unknown if an
+Recorded streaming observations are not backfilled; gaps in those records stay gaps.
+Downloaded chart history uses the separate provider cache described above. Daily volume can remain unknown if an
 available minute lacks a valid cumulative-volume baseline.
 
 Default database: `backend/data/observations.sqlite3`. Set
@@ -57,6 +128,9 @@ trades. Prior observations are retained.
 Choose **Replay**, select the saved symbol and inclusive receipt-time range,
 then **Load / restart replay** and **Next observation** or **Play replay**.
 The chart shows Replay, progress, original source time and receipt time.
+Saved replay ranges and voice decisions retry automatically after temporary
+connection failures. Voice becomes available when a saved decision has loaded;
+replay begins empty until **Next observation** or **Play replay** advances it.
 Selections preserve arrival order and corrections without writing saved data.
 Start the backend with `ARBITRADE_LIVE_FEED=off` to disconnect Yahoo.
 
@@ -116,7 +190,7 @@ PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke --output
 
 ## Paper trading
 
-Open **Paper trading** in the upper right and choose **Trade** for cash, shares and order
+Open **Trade** in the upper right and choose **Orders** for cash, shares and order
 history. Buy whole shares, sell part, or close the position. Hold/wait create no
 orders. Starting cash is **$1,000**; fees are zero. A valid order remains pending
 until the next eligible new regular-session observed price arrives. Cash/shares
@@ -217,7 +291,7 @@ received an actual after-hours AAPL quote, displayed the connected chart,
 source timestamp/age and waiting message, and reported **PENDING** because
 regular-session rules excluded that quote. On November 11 the actual in-session
 candle-to-screen comparison **passed** after re-enabling Yahoo: saved quotes,
-backend frames and changing visible OHLC agreed. The feed is currently enabled.
+backend frames and changing visible OHLC agreed. That check used an enabled Yahoo feed.
 [Actual live report](docs/screenshots/live-check-2026-11-11/report.json). Read report.json's result field: a completed live attempt may report
 PENDING rather than PASS. Its page is captured in
 [the live pending screenshot](docs/screenshots/ui-live-2026-11-10/pending-live.png).
@@ -260,14 +334,45 @@ PYTHONPATH=backend/.packages /usr/bin/python -m backend.yahoo_stream --ticker AA
 The standalone Yahoo command remains bounded to one observation; the server
 uses the continuous receiver. Recorder verification uses constructed data.
 
-## Review a decision proposal
+## Decision API: assignment chart reading
 
-Select a completed candle and open **Review decision proposal** in the summary. Choose **Freeze selected candle**, inspect its saved
+Click **Decision API** beside the chart. Vue captures the actual visible chart,
+including its volume pane and displayed indicators. FastAPI sends only that PNG
+and ticker, interval, capture/candle timestamps, visible-candle count, receipt/source
+times, freshness and volume status to OpenAI. No candle arrays, numeric indicator
+values, account balances, positions or calculated signals are sent as JSON.
+The model chooses **long**, **short**, or **wait**. A forming candle or incomplete
+indicator warm-up does not block this chart-reading exercise. Stale or unclear
+context instructs the model to choose wait; an API error never becomes wait.
+
+The image, context, question and answer are saved; optional probabilities are
+available under **Decision details**. The panel shows the choice/status and a compact
+freshness/volume line without a screenshot preview or image link. **How the Decision API
+works** opens the educational flowchart. No paper order, analyst/reviewer cycle,
+or automation attempt is created by this control.
+
+Put `OPENAI_API_KEY=your_actual_key` in the project-root `.env` (beside `frontend/`
+and `backend/`), using `.env.example` as a template, and restart FastAPI. Process
+settings take precedence, then root `.env`, then legacy `backend/.env` fallback.
+Both private locations are ignored by Git. Never put credentials in frontend code.
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.classroom_smoke --output /tmp/arbitrade-classroom-results
+```
+
+This command starts disposable services, exercises Chromium, checks the actual
+provider payload and stored capture/result, verifies unchanged paper records and
+cleans up. It uses controlled responses and makes no live model request.
+See [assignment implementation](docs/classroom-decisions.md).
+
+## Review a paper decision proposal
+
+Select a completed candle and open **Review paper proposal** in the summary. Choose **Freeze selected candle**, inspect its saved
 chart/facts, then **Request model proposal**. Python calls OpenAI Decisions;
 SQLite retains the snapshot and result. This operation does not submit a paper
-order. Set `OPENAI_API_KEY=your_actual_key` in `backend/.env` and restart the
+order. Set `OPENAI_API_KEY=your_actual_key` in the project-root `.env` and restart the
 backend; process environment takes precedence. Keep the key backend-only.
-`backend/.env.example` contains placeholders. See [docs/decisions.md](docs/decisions.md)
+`.env.example` contains placeholders; legacy `backend/.env` remains a fallback. See [docs/decisions.md](docs/decisions.md)
 for API, cutoff rules, statuses and configured whole-share order size.
 
 ```bash
@@ -279,7 +384,7 @@ compares saved decisions and unchanged paper tables, and cleans up its services.
 
 ## Ask about a chart image
 
-In **Review decision proposal**, select a completed candle, click **Ask about chart**, and inspect the frozen PNG,
+In **Review paper proposal**, select a completed candle, click **Ask about chart**, and inspect the frozen PNG,
 cutoff and questions. **Analyze captured chart** asks the model for action,
 visual crossover and evidence sufficiency. Python compares its visual answer with
 the calculated crossover; disagreements and unreadable evidence are ineligible
@@ -309,7 +414,7 @@ PYTHONPATH=backend/.packages /usr/bin/python -m scripts.review_smoke --output /t
 
 ## Apply reviewed paper decisions
 
-In **Paper trading → Automation**, **Start paper automation** analyzes each newly completed live-chart candle with
+In **Trade → Automation**, **Start paper automation** analyzes each newly completed live-chart candle with
 its own frozen PNG, analyst and reviewer. Approved decisions use the simulator's
 next eligible quote and current-resource checks. **Stop paper automation** revokes
 late replies and cancels pending automation orders. It starts disabled and stays
@@ -381,7 +486,12 @@ Open http://127.0.0.1:5173 in the Mac browser. Source stays on Omarchy.
 Stop the tunnel with `ssh -S /tmp/arbitrade-mac-tunnel.sock -O exit omarchy`.
 November 10: Mac Browser connection and all five timeframes passed using stored
 observations. November 11: fresh live quote-to-screen passed in project Chromium
-on Omarchy; the Mac tunnel was not reverified. Current backend PID/log files
-are in `/tmp/arbitrade-replay-review`; Yahoo is enabled.
+on Omarchy; the Mac tunnel was not reverified. Use the Run commands above to start services; process IDs and log paths are
+session-specific. Yahoo is enabled by default unless `ARBITRADE_LIVE_FEED=off`.
 Noninteractive SSH needs the existing Node runtime on PATH:
 `export PATH=/home/jlrj/.local/share/mise/installs/node/26.13.0/bin:$PATH`.
+
+The live chart initially requests up to 256 recent candles. Scroll toward the
+left edge to load earlier candles. Matching browser connections share candle and
+indicator calculations. Existing historical prices remain available during a
+provider refresh, and the chart retains its loaded range during a reconnect.

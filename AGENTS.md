@@ -62,6 +62,17 @@ On a failed check, inspect the failure, make the smallest in-scope correction,
 and rerun the check. Stop on success, after five correction cycles, or when
 further permission is needed. Record the outcome and any remaining failure.
 
+## Market-data verification
+
+- Keep original Yahoo observations and receipts immutable. Source-time ties
+  do not identify corrections. For volume, nondecreasing cumulative counters
+  may advance in first-receipt order at one timestamp; decreasing or invalid
+  baselines and missing data must remain unavailable.
+- Identify observed counter deltas separately from downloaded Yahoo bar volume.
+  Never add the two. Use `scripts.recorded_volume_smoke` for the saved-Yahoo
+  SQL/HTTP/WebSocket/chart check; it uses disposable storage and a frozen capture.
+  A saved-data pass is not a new live-feed observation or a DB Browser screenshot.
+
 ## Handoff
 
 Follow `handoffs/create-handoff.md` to update `handoffs/current.md` at session

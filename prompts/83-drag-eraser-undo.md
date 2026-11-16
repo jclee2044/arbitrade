@@ -1,0 +1,2 @@
+For the risk reward ratio you should have to click and drag to create it like when you add a shape into PowerPoint. Remove the comment that says "Drag a ratio onto the price chart, or select one and tap to place. Drag the handles to resize."
+Add an eraser tool as well, which when it goes into contact with something that was drawn on the chart, it automatically erases it. You should also be able to use command Z or a Windows equivalent to undo anything that you've just added into the chart.
