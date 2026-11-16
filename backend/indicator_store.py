@@ -67,6 +67,22 @@ class IndicatorStore:
                 for kind in ('sma', 'ema') for period in PRESET_PERIODS
                 if overrides.get((kind, period), (kind, period) in DEFAULT_PRESETS)]
 
+    def matrix_presets(self, symbol):
+        symbol, _ = chart_selection(symbol, '1m')
+        frames = {'1m': '1m', '5m': '5m', '15m': '15m', '1h': '1hr', '1d': '1D', '1w': '1W'}
+        selected = {('1m', kind, period) for kind, period in DEFAULT_PRESETS}
+        with closing(sqlite3.connect(self.path)) as connection:
+            for frame, kind, period, enabled in connection.execute(
+                    'SELECT timeframe,kind,period,enabled FROM indicator_presets WHERE symbol=?', (symbol,)):
+                key = (frame, kind, period)
+                if enabled and frame in frames:
+                    selected.add(key)
+                else:
+                    selected.discard(key)
+        return [dict(id=f'{frame}-{kind}-{period}', name=f'{kind.upper()} {period} · {frames[frame]}',
+                     timeframe=frame, type=kind, settings={'window': period}, preset=True, pane='price')
+                for frame, kind, period in sorted(selected)]
+
     def set_preset(self, symbol, timeframe, kind, period, enabled):
         symbol, timeframe = chart_selection(symbol, timeframe)
         if kind not in ('sma', 'ema') or period not in PRESET_PERIODS:

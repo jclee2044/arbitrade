@@ -1,0 +1,32 @@
+{
+  "input": "ACTUAL saved Yahoo; copied database; not a new live capture",
+  "timestamp": "2026-11-16T15:17:00Z",
+  "as_of": "2026-11-16T15:18:43+00:00",
+  "baseline": {
+    "observation_id": 62387,
+    "source_time_utc": "2026-11-16T15:16:59+00:00",
+    "price": 354.075,
+    "day_volume": 8535291,
+    "first_receipt_id": 62795,
+    "received_at_utc": "2026-11-16T15:17:00.421249+00:00"
+  },
+  "last": {
+    "observation_id": 62453,
+    "source_time_utc": "2026-11-16T15:17:59+00:00",
+    "price": 354.04,
+    "day_volume": 8602961,
+    "first_receipt_id": 62861,
+    "received_at_utc": "2026-11-16T15:18:00.553945+00:00"
+  },
+  "expected_volume": 67670,
+  "sql": "SELECT o.id AS observation_id, o.source_time_utc,\n        json_extract(o.payload_json, '$.price') AS price,\n        CAST(json_extract(o.payload_json, '$.day_volume') AS INTEGER) AS day_volume,\n        min(r.id) AS first_receipt_id, min(r.received_at_utc) AS received_at_utc\n        FROM observations o JOIN receipts r ON r.observation_id=o.id\n        WHERE o.ticker='AAPL' AND o.provider='yahoo' AND o.source_time_utc >= ?\n        AND o.source_time_utc < ? AND r.received_at_utc <= ?\n        GROUP BY o.id ORDER BY o.source_time_utc DESC, first_receipt_id DESC LIMIT 1",
+  "websocket_candle": {
+    "timestamp": "2026-11-16T15:17:00Z",
+    "open": 354.065,
+    "high": 354.15,
+    "low": 353.86,
+    "close": 354.04,
+    "volume": 67670
+  },
+  "result": "PASS"
+}

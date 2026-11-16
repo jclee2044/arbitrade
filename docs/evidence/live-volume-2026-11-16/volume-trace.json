@@ -1,0 +1,40 @@
+{
+  "input": "ACTUAL Yahoo",
+  "result": "PASS",
+  "candle": {
+    "timestamp": "2026-11-16T15:41:00Z",
+    "open": 354.385,
+    "high": 354.385,
+    "low": 354.385,
+    "close": 354.385,
+    "volume": 1030
+  },
+  "baseline": {
+    "observation_id": 43,
+    "source_time_utc": "2026-11-16T15:40:59+00:00",
+    "day_volume": 9852459,
+    "receipt": {
+      "id": 43,
+      "observation_id": 43,
+      "received_at_utc": "2026-11-16T15:41:00.618083+00:00"
+    }
+  },
+  "last": {
+    "observation_id": 44,
+    "source_time_utc": "2026-11-16T15:41:00+00:00",
+    "day_volume": 9853489,
+    "receipt": {
+      "id": 44,
+      "observation_id": 44,
+      "received_at_utc": "2026-11-16T15:41:01.764874+00:00"
+    }
+  },
+  "independent_counter_delta": 1030,
+  "checks": [
+    "Clicked Check connection; visible backend-connected result; default 1m",
+    "Actual Yahoo stored quote/time/OHLCV equals visible inspector",
+    "All timeframe selectors load matching backend history; daily included",
+    "Source age advances; disconnected upstream displayed while chart WebSocket remains open",
+    "Desktop/mobile chart renders; screenshots saved; no uncaught JavaScript errors"
+  ]
+}

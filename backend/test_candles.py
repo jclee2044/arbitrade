@@ -106,12 +106,24 @@ class CandleTests(unittest.TestCase):
         self.add('15:00:50', 102, 1012)
         candle, status = self.target()
         self.assertEqual(candle['close'], 102)  # deterministic receipt-order tie break
-        self.assertIsNone(candle['volume'])
+        self.assertEqual(candle['volume'], 12)
         self.assertTrue(status['price_order_ambiguous'])
 
-    def test_ambiguous_preceding_baseline_is_unknown(self):
+    def test_increasing_preceding_baseline_uses_last_received_total(self):
         self.seed()
         self.add('14:59:59', 99, 1001)
+        self.assertEqual(self.target()[0]['volume'], 10)
+
+    def test_decreasing_same_time_counter_is_unknown(self):
+        self.seed()
+        self.add('15:00:50', 102, 1010)
+        candle, status = self.target()
+        self.assertIsNone(candle['volume'])
+        self.assertIn('decreased', status['volume_reason'])
+
+    def test_decreasing_preceding_baseline_is_unknown(self):
+        self.seed()
+        self.add('14:59:59', 99, 999)
         self.assertIsNone(self.target()[0]['volume'])
 
     def test_other_ticker_is_excluded(self):

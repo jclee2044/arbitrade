@@ -8,6 +8,31 @@ from backend.replay import Replay, selections
 
 
 class ReplayTests(unittest.TestCase):
+    def test_same_source_time_counter_increases_only_at_its_receipt_step(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'test.sqlite3'
+            with ObservationStore(path) as store:
+                for source, received, volume in [
+                    ('14:59:59', '14:59:59', 1000),
+                    ('15:00:10', '15:00:11', 1004),
+                    ('15:00:10', '15:00:12', 1009),
+                ]:
+                    store.record(dict(id='AAPL', time=source, price=100,
+                                      day_volume=volume, test_data=True),
+                                 datetime.fromisoformat('2026-11-10T' + received + '+00:00'),
+                                 source_time_utc='2026-11-10T' + source + '+00:00')
+                before = store.snapshot()
+            bounds = selections(path)[0]
+            replay = Replay(path, 'AAPL', bounds['start'], bounds['end'])
+            try:
+                replay.step()
+                self.assertEqual(replay.step()['candles'][-1]['volume'], 4)
+                self.assertEqual(replay.step()['candles'][-1]['volume'], 9)
+            finally:
+                replay.close()
+            with ObservationStore(path) as store:
+                self.assertEqual(store.snapshot(), before)
+
     def test_arrival_order_revision_repeat_and_readonly(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'test.sqlite3'

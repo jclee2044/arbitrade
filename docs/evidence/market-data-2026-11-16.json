@@ -1,0 +1,275 @@
+{
+  "captured_at_utc": "2026-11-16T15:23:00.238854+00:00",
+  "input": "Saved Yahoo observations; read-only SQLite snapshot; not a new GUI or live-source capture",
+  "counts": {
+    "observations": 62498,
+    "receipts": 62906
+  },
+  "latest_observations": [
+    {
+      "observation_id": 62498,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:41+00:00",
+      "price": 354.145,
+      "cumulative_day_volume": "8624076",
+      "first_receipt_id": 62906,
+      "first_received_at_utc": "2026-11-16T15:18:42.913267+00:00"
+    },
+    {
+      "observation_id": 62497,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:40+00:00",
+      "price": 354.17,
+      "cumulative_day_volume": "8623476",
+      "first_receipt_id": 62905,
+      "first_received_at_utc": "2026-11-16T15:18:41.438006+00:00"
+    },
+    {
+      "observation_id": 62496,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:39+00:00",
+      "price": 354.19,
+      "cumulative_day_volume": "8622812",
+      "first_receipt_id": 62904,
+      "first_received_at_utc": "2026-11-16T15:18:40.384458+00:00"
+    },
+    {
+      "observation_id": 62495,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:36+00:00",
+      "price": 354.12,
+      "cumulative_day_volume": "8620769",
+      "first_receipt_id": 62903,
+      "first_received_at_utc": "2026-11-16T15:18:39.695165+00:00"
+    },
+    {
+      "observation_id": 62494,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:36+00:00",
+      "price": 354.12,
+      "cumulative_day_volume": "8620672",
+      "first_receipt_id": 62902,
+      "first_received_at_utc": "2026-11-16T15:18:38.684252+00:00"
+    },
+    {
+      "observation_id": 62493,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:36+00:00",
+      "price": 354.12,
+      "cumulative_day_volume": "8620380",
+      "first_receipt_id": 62901,
+      "first_received_at_utc": "2026-11-16T15:18:37.863045+00:00"
+    },
+    {
+      "observation_id": 62492,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:34+00:00",
+      "price": 354.13,
+      "cumulative_day_volume": "8620049",
+      "first_receipt_id": 62900,
+      "first_received_at_utc": "2026-11-16T15:18:37.448121+00:00"
+    },
+    {
+      "observation_id": 62491,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:34+00:00",
+      "price": 354.13,
+      "cumulative_day_volume": "8620003",
+      "first_receipt_id": 62899,
+      "first_received_at_utc": "2026-11-16T15:18:36.522855+00:00"
+    },
+    {
+      "observation_id": 62490,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:33+00:00",
+      "price": 354.15,
+      "cumulative_day_volume": "8619389",
+      "first_receipt_id": 62898,
+      "first_received_at_utc": "2026-11-16T15:18:35.461546+00:00"
+    },
+    {
+      "observation_id": 62489,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:33+00:00",
+      "price": 354.15,
+      "cumulative_day_volume": "8619349",
+      "first_receipt_id": 62897,
+      "first_received_at_utc": "2026-11-16T15:18:34.922723+00:00"
+    },
+    {
+      "observation_id": 62488,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:33+00:00",
+      "price": 354.15,
+      "cumulative_day_volume": "8619320",
+      "first_receipt_id": 62896,
+      "first_received_at_utc": "2026-11-16T15:18:34.582873+00:00"
+    },
+    {
+      "observation_id": 62487,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:31+00:00",
+      "price": 354.14,
+      "cumulative_day_volume": "8618390",
+      "first_receipt_id": 62895,
+      "first_received_at_utc": "2026-11-16T15:18:33.409389+00:00"
+    },
+    {
+      "observation_id": 62486,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:31+00:00",
+      "price": 354.14,
+      "cumulative_day_volume": "8618348",
+      "first_receipt_id": 62894,
+      "first_received_at_utc": "2026-11-16T15:18:32.523409+00:00"
+    },
+    {
+      "observation_id": 62485,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:30+00:00",
+      "price": 354.1752,
+      "cumulative_day_volume": "8618053",
+      "first_receipt_id": 62893,
+      "first_received_at_utc": "2026-11-16T15:18:31.461666+00:00"
+    },
+    {
+      "observation_id": 62484,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:28+00:00",
+      "price": 354.16,
+      "cumulative_day_volume": "8617953",
+      "first_receipt_id": 62892,
+      "first_received_at_utc": "2026-11-16T15:18:30.389316+00:00"
+    },
+    {
+      "observation_id": 62483,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:28+00:00",
+      "price": 354.16,
+      "cumulative_day_volume": "8617762",
+      "first_receipt_id": 62891,
+      "first_received_at_utc": "2026-11-16T15:18:29.742544+00:00"
+    },
+    {
+      "observation_id": 62482,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:27+00:00",
+      "price": 354.155,
+      "cumulative_day_volume": "8617659",
+      "first_receipt_id": 62890,
+      "first_received_at_utc": "2026-11-16T15:18:28.355249+00:00"
+    },
+    {
+      "observation_id": 62481,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:26+00:00",
+      "price": 354.155,
+      "cumulative_day_volume": "8617568",
+      "first_receipt_id": 62889,
+      "first_received_at_utc": "2026-11-16T15:18:27.467210+00:00"
+    },
+    {
+      "observation_id": 62480,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:25+00:00",
+      "price": 354.1842,
+      "cumulative_day_volume": "8616842",
+      "first_receipt_id": 62888,
+      "first_received_at_utc": "2026-11-16T15:18:26.798811+00:00"
+    },
+    {
+      "observation_id": 62479,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:24+00:00",
+      "price": 354.19,
+      "cumulative_day_volume": "8616577",
+      "first_receipt_id": 62887,
+      "first_received_at_utc": "2026-11-16T15:18:25.429094+00:00"
+    },
+    {
+      "observation_id": 62478,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:23+00:00",
+      "price": 354.165,
+      "cumulative_day_volume": "8616201",
+      "first_receipt_id": 62886,
+      "first_received_at_utc": "2026-11-16T15:18:24.674616+00:00"
+    },
+    {
+      "observation_id": 62477,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:22+00:00",
+      "price": 354.18,
+      "cumulative_day_volume": "8615486",
+      "first_receipt_id": 62885,
+      "first_received_at_utc": "2026-11-16T15:18:23.495662+00:00"
+    },
+    {
+      "observation_id": 62476,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:20+00:00",
+      "price": 354.175,
+      "cumulative_day_volume": "8615003",
+      "first_receipt_id": 62884,
+      "first_received_at_utc": "2026-11-16T15:18:22.613940+00:00"
+    },
+    {
+      "observation_id": 62475,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:20+00:00",
+      "price": 354.175,
+      "cumulative_day_volume": "8614933",
+      "first_receipt_id": 62883,
+      "first_received_at_utc": "2026-11-16T15:18:22.000349+00:00"
+    },
+    {
+      "observation_id": 62474,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_utc": "2026-11-16T15:18:19+00:00",
+      "price": 354.15,
+      "cumulative_day_volume": "8614259",
+      "first_receipt_id": 62882,
+      "first_received_at_utc": "2026-11-16T15:18:20.990470+00:00"
+    }
+  ],
+  "prior_chart_matching_observation": {
+    "observation_id": 197,
+    "provider": "yahoo",
+    "ticker": "AAPL",
+    "source_time_utc": "2026-11-11T14:45:07+00:00",
+    "price": 353.3325,
+    "cumulative_day_volume": "3681045",
+    "first_receipt_id": 201,
+    "first_received_at_utc": "2026-11-11T14:45:08.304419+00:00"
+  },
+  "derived_volume_summary": {
+    "minute_buckets": 2770,
+    "buckets_with_computable_volume": 0
+  },
+  "sql": "SELECT o.id AS observation_id, o.provider, o.ticker, o.source_time_utc,\njson_extract(o.payload_json, '$.price') AS price,\njson_extract(o.payload_json, '$.day_volume') AS cumulative_day_volume,\n(SELECT min(r.id) FROM receipts r WHERE r.observation_id=o.id) AS first_receipt_id,\n(SELECT r.received_at_utc FROM receipts r WHERE r.observation_id=o.id ORDER BY r.id LIMIT 1) AS first_received_at_utc\nFROM observations o ORDER BY o.id DESC LIMIT 25"
+}

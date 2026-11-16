@@ -73,5 +73,9 @@ def history_response(symbol='AAPL', timeframe='1m', *, as_of=None, source='sampl
     else:
         raise ValueError('Unsupported history source')
     result = derive_timeframe(versions, timeframe, as_of=now, calendar=calendar, sessions=sessions)
+    if source == 'observations':
+        for status in result['coverage']:
+            status.update(volume_provenance='yahoo_quote_counter',
+                          volume_scope='Observed cumulative-volume change; not Yahoo reported bar volume')
     result.update(symbol=symbol, source=source, unbucketed_observation_ids=unbucketed)
     return with_averages(result, short_window, long_window)

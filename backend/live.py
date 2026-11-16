@@ -6,6 +6,7 @@ from contextlib import suppress
 from datetime import UTC, datetime
 
 from backend.history import history_response
+from backend.indicators import with_averages
 from backend.observations import DEFAULT_DATABASE, ObservationStore
 from backend.yahoo_stream import describe_update, listen_continuously
 
@@ -22,6 +23,7 @@ class LiveFeed:
         self.error = None
         self.on_record = None
         self.source = 'Yahoo Finance · stored observations'
+        self.history = None
 
     def accept(self, message, store):
         if message.get('id') != 'AAPL' or 'price' not in message:
@@ -110,5 +112,11 @@ class LiveFeed:
 
     def snapshot(self, timeframe='1m'):
         result = history_response('AAPL', timeframe, source='observations', database=self.database)
+        if self.history is not None:
+            daily = result if timeframe not in ('1w', '1mo') else history_response('AAPL', '1d', source='observations', database=self.database)
+            source_time = self.latest.get('source_time_utc') if self.latest else None
+            result = with_averages(self.history.merge(result, daily, timeframe, datetime.now(UTC),
+                datetime.fromisoformat(source_time) if source_time else None))
         return {**result, 'type': 'snapshot', 'interval': timeframe,
-                'source': self.source, 'feed': self.feed_state()}
+                'source': result['source'] if self.history is not None else self.source,
+                'feed': dict(self.feed_state(), historical=result.get('historical'))}

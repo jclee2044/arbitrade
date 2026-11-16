@@ -65,10 +65,16 @@ volume = minute's final cumulative total - pre-minute baseline
        = 1011 - 1000 = 11
 ```
 
+Updates at the same source timestamp are ordered by first receipt ID. Increasing
+or unchanged cumulative totals are accepted; the final received total at the
+preceding timestamp is the baseline. This is an observed counter difference,
+not Yahoo's downloaded exchange-minute bar volume. Source-time ties may still
+make price ordering ambiguous, independently of the counter calculation.
+
 Missing baseline, missing/invalid cumulative values, observed decreases/resets,
-session changes, or differing cumulative totals at one source timestamp yield
-`volume: null` and a reason in metadata. A tied ambiguous pre-minute baseline
-also yields unknown volume. Unknown is never coerced to zero. Following a
+or session changes yield `volume: null` and a reason in metadata. A decreasing
+or invalid tied pre-minute baseline also yields unknown volume. Unknown is
+never coerced to zero. Following a
 reset, later minutes may regain known volume when a valid new baseline exists.
 Volume for a minute still in progress covers observations received so far.
 
@@ -84,7 +90,8 @@ if an explicit correction changes source time.
 
 The Yahoo receiver currently cannot identify correction links. A changed
 message at the same source time is retained, not treated as an automatic
-correction. Conflicting same-time volume remains unknown. See README for the
+correction. Increasing counters at that timestamp contribute to the observed
+delta; decreases remain unknown. See README for the
 recorder's exact-payload repeat policy and limitations.
 
 ## Verification
@@ -93,7 +100,7 @@ recorder's exact-payload repeat policy and limitations.
 /usr/bin/python -m unittest backend.test_candles backend.test_observations backend.test_yahoo_stream -v
 ```
 
-All 24 tests pass, using disposable databases and labelled constructed inputs.
+The tests use disposable databases and labelled constructed inputs.
 The target candle matches the prompt both before and after minute end, and
 after the middle price observation arrives late. Other checks cover repeats,
 explicit corrections, baseline changes, resets, missing data, tied timestamps,

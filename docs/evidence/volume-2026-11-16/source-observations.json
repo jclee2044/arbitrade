@@ -1,0 +1,2485 @@
+{
+  "input": "ACTUAL saved Yahoo; source rows and receipt IDs retained; no injected quotes",
+  "observations": [
+    {
+      "id": 62322,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842159000\"",
+      "source_time_utc": "2026-11-16T15:15:59+00:00",
+      "payload_json": "{\"change\":-2.282196,\"change_percent\":-0.6405805,\"day_volume\":\"8439333\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"120\",\"market_hours\":1,\"price\":353.9878,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842159000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62323,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842160000\"",
+      "source_time_utc": "2026-11-16T15:16:00+00:00",
+      "payload_json": "{\"change\":-2.2799988,\"change_percent\":-0.63996375,\"day_volume\":\"8439558\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"90\",\"market_hours\":1,\"price\":353.99,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842160000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62324,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842161000\"",
+      "source_time_utc": "2026-11-16T15:16:01+00:00",
+      "payload_json": "{\"change\":-2.25,\"change_percent\":-0.6315435,\"day_volume\":\"8441656\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"211\",\"market_hours\":1,\"price\":354.02,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842161000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62325,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842161000\"",
+      "source_time_utc": "2026-11-16T15:16:01+00:00",
+      "payload_json": "{\"change\":-2.2299805,\"change_percent\":-0.6259243,\"day_volume\":\"8442342\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"317\",\"market_hours\":1,\"price\":354.04,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842161000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62326,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842163000\"",
+      "source_time_utc": "2026-11-16T15:16:03+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8445081\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842163000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62327,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842164000\"",
+      "source_time_utc": "2026-11-16T15:16:04+00:00",
+      "payload_json": "{\"change\":-2.1549988,\"change_percent\":-0.604878,\"day_volume\":\"8445442\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"74\",\"market_hours\":1,\"price\":354.115,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842164000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62328,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842165000\"",
+      "source_time_utc": "2026-11-16T15:16:05+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8446101\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842165000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62329,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842166000\"",
+      "source_time_utc": "2026-11-16T15:16:06+00:00",
+      "payload_json": "{\"change\":-2.1749878,\"change_percent\":-0.61048865,\"day_volume\":\"8448199\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"148\",\"market_hours\":1,\"price\":354.095,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842166000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62330,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842167000\"",
+      "source_time_utc": "2026-11-16T15:16:07+00:00",
+      "payload_json": "{\"change\":-2.1900024,\"change_percent\":-0.61470306,\"day_volume\":\"8449177\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"175\",\"market_hours\":1,\"price\":354.08,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842167000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62331,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842168000\"",
+      "source_time_utc": "2026-11-16T15:16:08+00:00",
+      "payload_json": "{\"change\":-2.1739807,\"change_percent\":-0.61020595,\"day_volume\":\"8450082\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"429\",\"market_hours\":1,\"price\":354.096,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842168000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62332,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842169000\"",
+      "source_time_utc": "2026-11-16T15:16:09+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8450635\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"92\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842169000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62333,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842169000\"",
+      "source_time_utc": "2026-11-16T15:16:09+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8450832\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842169000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62334,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842171000\"",
+      "source_time_utc": "2026-11-16T15:16:11+00:00",
+      "payload_json": "{\"change\":-2.169983,\"change_percent\":-0.60908383,\"day_volume\":\"8453342\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.1,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842171000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62335,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842172000\"",
+      "source_time_utc": "2026-11-16T15:16:12+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.61191064,\"day_volume\":\"8458093\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"1019\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842172000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62336,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842173000\"",
+      "source_time_utc": "2026-11-16T15:16:13+00:00",
+      "payload_json": "{\"change\":-2.1660767,\"change_percent\":-0.6079874,\"day_volume\":\"8458550\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"161\",\"market_hours\":1,\"price\":354.1039,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842173000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62337,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842174000\"",
+      "source_time_utc": "2026-11-16T15:16:14+00:00",
+      "payload_json": "{\"change\":-2.1299744,\"change_percent\":-0.597854,\"day_volume\":\"8461010\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"72\",\"market_hours\":1,\"price\":354.14,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842174000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62338,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842175000\"",
+      "source_time_utc": "2026-11-16T15:16:15+00:00",
+      "payload_json": "{\"change\":-2.019989,\"change_percent\":-0.5669826,\"day_volume\":\"8485626\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"50\",\"market_hours\":1,\"price\":354.25,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842175000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62339,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842175000\"",
+      "source_time_utc": "2026-11-16T15:16:15+00:00",
+      "payload_json": "{\"change\":-1.9839783,\"change_percent\":-0.55687493,\"day_volume\":\"8487245\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"125\",\"market_hours\":1,\"price\":354.286,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842175000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62340,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842176000\"",
+      "source_time_utc": "2026-11-16T15:16:16+00:00",
+      "payload_json": "{\"change\":-1.9899902,\"change_percent\":-0.5585624,\"day_volume\":\"8487881\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.28,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842176000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62341,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842176000\"",
+      "source_time_utc": "2026-11-16T15:16:16+00:00",
+      "payload_json": "{\"change\":-2.0,\"change_percent\":-0.5614035,\"day_volume\":\"8489409\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"240\",\"market_hours\":1,\"price\":354.27,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842176000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62342,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842177000\"",
+      "source_time_utc": "2026-11-16T15:16:17+00:00",
+      "payload_json": "{\"change\":-2.0340881,\"change_percent\":-0.5709401,\"day_volume\":\"8492336\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"75\",\"market_hours\":1,\"price\":354.2359,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842177000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62343,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842178000\"",
+      "source_time_utc": "2026-11-16T15:16:18+00:00",
+      "payload_json": "{\"change\":-2.0650024,\"change_percent\":-0.57961726,\"day_volume\":\"8493274\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.205,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842178000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62344,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842179000\"",
+      "source_time_utc": "2026-11-16T15:16:19+00:00",
+      "payload_json": "{\"change\":-2.1049805,\"change_percent\":-0.5908137,\"day_volume\":\"8493855\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.165,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842179000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62345,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842179000\"",
+      "source_time_utc": "2026-11-16T15:16:19+00:00",
+      "payload_json": "{\"change\":-2.1049805,\"change_percent\":-0.59083855,\"day_volume\":\"8493910\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.165,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842179000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62346,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842181000\"",
+      "source_time_utc": "2026-11-16T15:16:21+00:00",
+      "payload_json": "{\"change\":-2.0699768,\"change_percent\":-0.5810135,\"day_volume\":\"8494117\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"72\",\"market_hours\":1,\"price\":354.2,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842181000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62347,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842182000\"",
+      "source_time_utc": "2026-11-16T15:16:22+00:00",
+      "payload_json": "{\"change\":-2.0149841,\"change_percent\":-0.56557786,\"day_volume\":\"8500984\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.255,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842182000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62348,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842182000\"",
+      "source_time_utc": "2026-11-16T15:16:22+00:00",
+      "payload_json": "{\"change\":-2.0149841,\"change_percent\":-0.56557786,\"day_volume\":\"8501080\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.255,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842182000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62349,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842183000\"",
+      "source_time_utc": "2026-11-16T15:16:23+00:00",
+      "payload_json": "{\"change\":-2.079895,\"change_percent\":-0.5837974,\"day_volume\":\"8502941\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"200\",\"market_hours\":1,\"price\":354.1901,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842183000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62350,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842184000\"",
+      "source_time_utc": "2026-11-16T15:16:24+00:00",
+      "payload_json": "{\"change\":-2.039978,\"change_percent\":-0.5725933,\"day_volume\":\"8503399\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"150\",\"market_hours\":1,\"price\":354.23,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842184000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62351,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842185000\"",
+      "source_time_utc": "2026-11-16T15:16:25+00:00",
+      "payload_json": "{\"change\":-2.0898743,\"change_percent\":-0.58659846,\"day_volume\":\"8505068\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"680\",\"market_hours\":1,\"price\":354.1801,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842185000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62352,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842186000\"",
+      "source_time_utc": "2026-11-16T15:16:26+00:00",
+      "payload_json": "{\"change\":-2.0799866,\"change_percent\":-0.58382314,\"day_volume\":\"8506238\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"300\",\"market_hours\":1,\"price\":354.19,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842186000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62353,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842187000\"",
+      "source_time_utc": "2026-11-16T15:16:27+00:00",
+      "payload_json": "{\"change\":-2.0899963,\"change_percent\":-0.5866327,\"day_volume\":\"8506538\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.18,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842187000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62354,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842188000\"",
+      "source_time_utc": "2026-11-16T15:16:28+00:00",
+      "payload_json": "{\"change\":-2.0799866,\"change_percent\":-0.58382314,\"day_volume\":\"8507064\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.19,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842188000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62355,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842189000\"",
+      "source_time_utc": "2026-11-16T15:16:29+00:00",
+      "payload_json": "{\"change\":-2.0849915,\"change_percent\":-0.5852279,\"day_volume\":\"8507576\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.185,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842189000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62356,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842190000\"",
+      "source_time_utc": "2026-11-16T15:16:30+00:00",
+      "payload_json": "{\"change\":-2.110077,\"change_percent\":-0.59222734,\"day_volume\":\"8510514\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"70\",\"market_hours\":1,\"price\":354.1599,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842190000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62357,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842190000\"",
+      "source_time_utc": "2026-11-16T15:16:30+00:00",
+      "payload_json": "{\"change\":-2.110077,\"change_percent\":-0.59226906,\"day_volume\":\"8510516\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.1599,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842190000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62358,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842191000\"",
+      "source_time_utc": "2026-11-16T15:16:31+00:00",
+      "payload_json": "{\"change\":-2.0849915,\"change_percent\":-0.5852279,\"day_volume\":\"8510817\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.185,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842191000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62359,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842192000\"",
+      "source_time_utc": "2026-11-16T15:16:32+00:00",
+      "payload_json": "{\"change\":-2.1399841,\"change_percent\":-0.60056245,\"day_volume\":\"8516007\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.13,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842192000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62360,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842193000\"",
+      "source_time_utc": "2026-11-16T15:16:33+00:00",
+      "payload_json": "{\"change\":-2.1994019,\"change_percent\":-0.6172904,\"day_volume\":\"8517544\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.0706,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842193000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62361,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842194000\"",
+      "source_time_utc": "2026-11-16T15:16:34+00:00",
+      "payload_json": "{\"change\":-2.1600037,\"change_percent\":-0.6062828,\"day_volume\":\"8517771\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.11,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842194000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62362,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842195000\"",
+      "source_time_utc": "2026-11-16T15:16:35+00:00",
+      "payload_json": "{\"change\":-2.169983,\"change_percent\":-0.60908383,\"day_volume\":\"8518071\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"200\",\"market_hours\":1,\"price\":354.1,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842195000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62363,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842195000\"",
+      "source_time_utc": "2026-11-16T15:16:35+00:00",
+      "payload_json": "{\"change\":-2.169983,\"change_percent\":-0.60908383,\"day_volume\":\"8518193\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.1,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842195000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62364,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842197000\"",
+      "source_time_utc": "2026-11-16T15:16:37+00:00",
+      "payload_json": "{\"change\":-2.1749878,\"change_percent\":-0.61048865,\"day_volume\":\"8518410\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"83\",\"market_hours\":1,\"price\":354.095,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842197000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62365,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842198000\"",
+      "source_time_utc": "2026-11-16T15:16:38+00:00",
+      "payload_json": "{\"change\":-2.135376,\"change_percent\":-0.59943664,\"day_volume\":\"8519116\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"89\",\"market_hours\":1,\"price\":354.1346,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842198000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62366,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842199000\"",
+      "source_time_utc": "2026-11-16T15:16:39+00:00",
+      "payload_json": "{\"change\":-2.2149963,\"change_percent\":-0.62171847,\"day_volume\":\"8523696\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"207\",\"market_hours\":1,\"price\":354.055,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842199000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62367,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842200000\"",
+      "source_time_utc": "2026-11-16T15:16:40+00:00",
+      "payload_json": "{\"change\":-2.2099915,\"change_percent\":-0.62031364,\"day_volume\":\"8524382\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"60\",\"market_hours\":1,\"price\":354.06,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842200000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62368,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842200000\"",
+      "source_time_utc": "2026-11-16T15:16:40+00:00",
+      "payload_json": "{\"change\":-2.1869812,\"change_percent\":-0.613855,\"day_volume\":\"8524616\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"76\",\"market_hours\":1,\"price\":354.083,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842200000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62369,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842202000\"",
+      "source_time_utc": "2026-11-16T15:16:42+00:00",
+      "payload_json": "{\"change\":-2.2200012,\"change_percent\":-0.6231233,\"day_volume\":\"8525401\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.05,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842202000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62370,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842202000\"",
+      "source_time_utc": "2026-11-16T15:16:42+00:00",
+      "payload_json": "{\"change\":-2.2200012,\"change_percent\":-0.6231233,\"day_volume\":\"8525522\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.05,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842202000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62371,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842204000\"",
+      "source_time_utc": "2026-11-16T15:16:44+00:00",
+      "payload_json": "{\"change\":-2.2299805,\"change_percent\":-0.6259243,\"day_volume\":\"8526736\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"160\",\"market_hours\":1,\"price\":354.04,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842204000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62372,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842205000\"",
+      "source_time_utc": "2026-11-16T15:16:45+00:00",
+      "payload_json": "{\"change\":-2.149994,\"change_percent\":-0.6034732,\"day_volume\":\"8530743\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.12,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842205000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62373,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842205000\"",
+      "source_time_utc": "2026-11-16T15:16:45+00:00",
+      "payload_json": "{\"change\":-2.169983,\"change_percent\":-0.60908383,\"day_volume\":\"8531214\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.1,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842205000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62374,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842206000\"",
+      "source_time_utc": "2026-11-16T15:16:46+00:00",
+      "payload_json": "{\"change\":-2.1900024,\"change_percent\":-0.6146685,\"day_volume\":\"8531351\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"84\",\"market_hours\":1,\"price\":354.08,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842206000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62375,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842207000\"",
+      "source_time_utc": "2026-11-16T15:16:47+00:00",
+      "payload_json": "{\"change\":-2.149994,\"change_percent\":-0.6034732,\"day_volume\":\"8531463\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"110\",\"market_hours\":1,\"price\":354.12,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842207000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62376,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842208000\"",
+      "source_time_utc": "2026-11-16T15:16:48+00:00",
+      "payload_json": "{\"change\":-2.1749878,\"change_percent\":-0.61048865,\"day_volume\":\"8531853\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.095,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842208000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62377,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842209000\"",
+      "source_time_utc": "2026-11-16T15:16:49+00:00",
+      "payload_json": "{\"change\":-2.2200012,\"change_percent\":-0.6231233,\"day_volume\":\"8532170\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.05,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842209000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62378,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842210000\"",
+      "source_time_utc": "2026-11-16T15:16:50+00:00",
+      "payload_json": "{\"change\":-2.25,\"change_percent\":-0.63149035,\"day_volume\":\"8532397\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"200\",\"market_hours\":1,\"price\":354.02,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842210000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62379,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842211000\"",
+      "source_time_utc": "2026-11-16T15:16:51+00:00",
+      "payload_json": "{\"change\":-2.1900024,\"change_percent\":-0.61470306,\"day_volume\":\"8532624\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"45\",\"market_hours\":1,\"price\":354.08,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842211000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62380,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842212000\"",
+      "source_time_utc": "2026-11-16T15:16:52+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8533366\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"186\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842212000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62381,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842213000\"",
+      "source_time_utc": "2026-11-16T15:16:53+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8533744\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842213000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62382,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842213000\"",
+      "source_time_utc": "2026-11-16T15:16:53+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8533788\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842213000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62383,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842213000\"",
+      "source_time_utc": "2026-11-16T15:16:53+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8533847\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842213000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62384,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842213000\"",
+      "source_time_utc": "2026-11-16T15:16:53+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8533863\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842213000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62385,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842217000\"",
+      "source_time_utc": "2026-11-16T15:16:57+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8534781\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842217000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62386,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842218000\"",
+      "source_time_utc": "2026-11-16T15:16:58+00:00",
+      "payload_json": "{\"change\":-2.1900024,\"change_percent\":-0.61470306,\"day_volume\":\"8535226\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.08,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842218000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62387,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842219000\"",
+      "source_time_utc": "2026-11-16T15:16:59+00:00",
+      "payload_json": "{\"change\":-2.1949768,\"change_percent\":-0.6160993,\"day_volume\":\"8535291\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"54\",\"market_hours\":1,\"price\":354.075,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842219000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62388,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842220000\"",
+      "source_time_utc": "2026-11-16T15:17:00+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8535555\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"171\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842220000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62389,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842220000\"",
+      "source_time_utc": "2026-11-16T15:17:00+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8535563\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842220000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62390,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842220000\"",
+      "source_time_utc": "2026-11-16T15:17:00+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8535687\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842220000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62391,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842222000\"",
+      "source_time_utc": "2026-11-16T15:17:02+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8536354\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"500\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842222000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62392,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842223000\"",
+      "source_time_utc": "2026-11-16T15:17:03+00:00",
+      "payload_json": "{\"change\":-2.2399902,\"change_percent\":-0.62873393,\"day_volume\":\"8537916\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"53\",\"market_hours\":1,\"price\":354.03,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842223000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62393,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842223000\"",
+      "source_time_utc": "2026-11-16T15:17:03+00:00",
+      "payload_json": "{\"change\":-2.2599792,\"change_percent\":-0.6343445,\"day_volume\":\"8539079\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"237\",\"market_hours\":1,\"price\":354.01,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842223000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62394,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842224000\"",
+      "source_time_utc": "2026-11-16T15:17:04+00:00",
+      "payload_json": "{\"change\":-2.2399902,\"change_percent\":-0.62873393,\"day_volume\":\"8539299\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"60\",\"market_hours\":1,\"price\":354.03,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842224000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62395,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842224000\"",
+      "source_time_utc": "2026-11-16T15:17:04+00:00",
+      "payload_json": "{\"change\":-2.2200012,\"change_percent\":-0.6231233,\"day_volume\":\"8539904\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.05,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842224000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62396,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842225000\"",
+      "source_time_utc": "2026-11-16T15:17:05+00:00",
+      "payload_json": "{\"change\":-2.1900024,\"change_percent\":-0.61470306,\"day_volume\":\"8540470\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"61\",\"market_hours\":1,\"price\":354.08,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842225000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62397,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842227000\"",
+      "source_time_utc": "2026-11-16T15:17:07+00:00",
+      "payload_json": "{\"change\":-2.1749878,\"change_percent\":-0.61048865,\"day_volume\":\"8540781\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"60\",\"market_hours\":1,\"price\":354.095,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842227000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62398,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842228000\"",
+      "source_time_utc": "2026-11-16T15:17:08+00:00",
+      "payload_json": "{\"change\":-2.1749878,\"change_percent\":-0.61048865,\"day_volume\":\"8540952\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.095,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842228000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62399,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842229000\"",
+      "source_time_utc": "2026-11-16T15:17:09+00:00",
+      "payload_json": "{\"change\":-2.169983,\"change_percent\":-0.60908383,\"day_volume\":\"8542543\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"63\",\"market_hours\":1,\"price\":354.1,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842229000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62400,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842230000\"",
+      "source_time_utc": "2026-11-16T15:17:10+00:00",
+      "payload_json": "{\"change\":-2.119995,\"change_percent\":-0.59505296,\"day_volume\":\"8543109\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.15,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842230000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62401,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842231000\"",
+      "source_time_utc": "2026-11-16T15:17:11+00:00",
+      "payload_json": "{\"change\":-2.125,\"change_percent\":-0.5964578,\"day_volume\":\"8543326\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"137\",\"market_hours\":1,\"price\":354.145,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842231000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62402,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842232000\"",
+      "source_time_utc": "2026-11-16T15:17:12+00:00",
+      "payload_json": "{\"change\":-2.1530762,\"change_percent\":-0.6043545,\"day_volume\":\"8544363\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"553\",\"market_hours\":1,\"price\":354.1169,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842232000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62403,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842233000\"",
+      "source_time_utc": "2026-11-16T15:17:13+00:00",
+      "payload_json": "{\"change\":-2.2198792,\"change_percent\":-0.623089,\"day_volume\":\"8544739\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"75\",\"market_hours\":1,\"price\":354.0501,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842233000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62404,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842233000\"",
+      "source_time_utc": "2026-11-16T15:17:13+00:00",
+      "payload_json": "{\"change\":-2.2198792,\"change_percent\":-0.623089,\"day_volume\":\"8544752\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.0501,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842233000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62405,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842235000\"",
+      "source_time_utc": "2026-11-16T15:17:15+00:00",
+      "payload_json": "{\"change\":-2.1799927,\"change_percent\":-0.6118934,\"day_volume\":\"8544932\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"122\",\"market_hours\":1,\"price\":354.09,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842235000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62406,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842236000\"",
+      "source_time_utc": "2026-11-16T15:17:16+00:00",
+      "payload_json": "{\"change\":-2.3199768,\"change_percent\":-0.65118504,\"day_volume\":\"8554294\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"112\",\"market_hours\":1,\"price\":353.95,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842236000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62407,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842237000\"",
+      "source_time_utc": "2026-11-16T15:17:17+00:00",
+      "payload_json": "{\"change\":-2.274994,\"change_percent\":-0.6385589,\"day_volume\":\"8554748\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"122\",\"market_hours\":1,\"price\":353.995,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842237000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62408,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842238000\"",
+      "source_time_utc": "2026-11-16T15:17:18+00:00",
+      "payload_json": "{\"change\":-2.3099976,\"change_percent\":-0.648384,\"day_volume\":\"8555423\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"300\",\"market_hours\":1,\"price\":353.96,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842238000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62409,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842239000\"",
+      "source_time_utc": "2026-11-16T15:17:19+00:00",
+      "payload_json": "{\"change\":-2.3349915,\"change_percent\":-0.65539944,\"day_volume\":\"8562986\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"61\",\"market_hours\":1,\"price\":353.935,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842239000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62410,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842241000\"",
+      "source_time_utc": "2026-11-16T15:17:21+00:00",
+      "payload_json": "{\"change\":-2.3099976,\"change_percent\":-0.648384,\"day_volume\":\"8565205\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"80\",\"market_hours\":1,\"price\":353.96,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842241000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62411,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842241000\"",
+      "source_time_utc": "2026-11-16T15:17:21+00:00",
+      "payload_json": "{\"change\":-2.3499756,\"change_percent\":-0.65960526,\"day_volume\":\"8567429\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"240\",\"market_hours\":1,\"price\":353.92,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842241000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62412,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842241000\"",
+      "source_time_utc": "2026-11-16T15:17:21+00:00",
+      "payload_json": "{\"change\":-2.3499756,\"change_percent\":-0.65960526,\"day_volume\":\"8567457\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":353.92,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842241000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62413,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842242000\"",
+      "source_time_utc": "2026-11-16T15:17:22+00:00",
+      "payload_json": "{\"change\":-2.3299866,\"change_percent\":-0.6539946,\"day_volume\":\"8567914\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"115\",\"market_hours\":1,\"price\":353.94,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842242000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62414,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842243000\"",
+      "source_time_utc": "2026-11-16T15:17:23+00:00",
+      "payload_json": "{\"change\":-2.338684,\"change_percent\":-0.6564359,\"day_volume\":\"8567993\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"49\",\"market_hours\":1,\"price\":353.9313,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842243000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62415,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842244000\"",
+      "source_time_utc": "2026-11-16T15:17:24+00:00",
+      "payload_json": "{\"change\":-2.3499756,\"change_percent\":-0.65956825,\"day_volume\":\"8568212\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":353.92,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842244000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62416,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842245000\"",
+      "source_time_utc": "2026-11-16T15:17:25+00:00",
+      "payload_json": "{\"change\":-2.4100037,\"change_percent\":-0.6764543,\"day_volume\":\"8572360\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":353.86,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842245000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62417,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842245000\"",
+      "source_time_utc": "2026-11-16T15:17:25+00:00",
+      "payload_json": "{\"change\":-2.3700867,\"change_percent\":-0.6652502,\"day_volume\":\"8573599\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"1000\",\"market_hours\":1,\"price\":353.8999,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842245000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62418,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842246000\"",
+      "source_time_utc": "2026-11-16T15:17:26+00:00",
+      "payload_json": "{\"change\":-2.3599854,\"change_percent\":-0.66241485,\"day_volume\":\"8574006\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"48\",\"market_hours\":1,\"price\":353.91,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842246000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62419,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842247000\"",
+      "source_time_utc": "2026-11-16T15:17:27+00:00",
+      "payload_json": "{\"change\":-2.3049927,\"change_percent\":-0.6469792,\"day_volume\":\"8575415\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"80\",\"market_hours\":1,\"price\":353.965,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842247000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62420,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842247000\"",
+      "source_time_utc": "2026-11-16T15:17:27+00:00",
+      "payload_json": "{\"change\":-2.3049927,\"change_percent\":-0.6469792,\"day_volume\":\"8575500\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":353.965,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842247000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62421,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842249000\"",
+      "source_time_utc": "2026-11-16T15:17:29+00:00",
+      "payload_json": "{\"change\":-2.269989,\"change_percent\":-0.63715416,\"day_volume\":\"8576459\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.0,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842249000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62422,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842250000\"",
+      "source_time_utc": "2026-11-16T15:17:30+00:00",
+      "payload_json": "{\"change\":-2.3099976,\"change_percent\":-0.648384,\"day_volume\":\"8578265\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"43\",\"market_hours\":1,\"price\":353.96,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842250000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62423,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842250000\"",
+      "source_time_utc": "2026-11-16T15:17:30+00:00",
+      "payload_json": "{\"change\":-2.3099976,\"change_percent\":-0.648384,\"day_volume\":\"8578277\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":353.96,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842250000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62424,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842251000\"",
+      "source_time_utc": "2026-11-16T15:17:31+00:00",
+      "payload_json": "{\"change\":-2.2299805,\"change_percent\":-0.6259243,\"day_volume\":\"8579451\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"80\",\"market_hours\":1,\"price\":354.04,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842251000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62425,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842252000\"",
+      "source_time_utc": "2026-11-16T15:17:32+00:00",
+      "payload_json": "{\"change\":-2.1749878,\"change_percent\":-0.61048865,\"day_volume\":\"8580814\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.095,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842252000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62426,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842253000\"",
+      "source_time_utc": "2026-11-16T15:17:33+00:00",
+      "payload_json": "{\"change\":-2.2099915,\"change_percent\":-0.62031364,\"day_volume\":\"8581258\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"177\",\"market_hours\":1,\"price\":354.06,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842253000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62427,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842254000\"",
+      "source_time_utc": "2026-11-16T15:17:34+00:00",
+      "payload_json": "{\"change\":-2.2154846,\"change_percent\":-0.62185556,\"day_volume\":\"8581381\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.0545,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842254000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62428,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842255000\"",
+      "source_time_utc": "2026-11-16T15:17:35+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8581682\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"92\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842255000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62429,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842255000\"",
+      "source_time_utc": "2026-11-16T15:17:35+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8581709\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842255000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62430,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842257000\"",
+      "source_time_utc": "2026-11-16T15:17:37+00:00",
+      "payload_json": "{\"change\":-2.2299805,\"change_percent\":-0.6259243,\"day_volume\":\"8582129\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"47\",\"market_hours\":1,\"price\":354.04,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842257000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62431,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842258000\"",
+      "source_time_utc": "2026-11-16T15:17:38+00:00",
+      "payload_json": "{\"change\":-2.1792908,\"change_percent\":-0.61168045,\"day_volume\":\"8582656\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.0907,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842258000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62432,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842259000\"",
+      "source_time_utc": "2026-11-16T15:17:39+00:00",
+      "payload_json": "{\"change\":-2.1999817,\"change_percent\":-0.61750406,\"day_volume\":\"8583097\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.07,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842259000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62433,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842260000\"",
+      "source_time_utc": "2026-11-16T15:17:40+00:00",
+      "payload_json": "{\"change\":-2.1999817,\"change_percent\":-0.6174781,\"day_volume\":\"8583461\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"92\",\"market_hours\":1,\"price\":354.07,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842260000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62434,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842260000\"",
+      "source_time_utc": "2026-11-16T15:17:40+00:00",
+      "payload_json": "{\"change\":-2.1999817,\"change_percent\":-0.61750406,\"day_volume\":\"8583581\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.07,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842260000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62435,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842262000\"",
+      "source_time_utc": "2026-11-16T15:17:42+00:00",
+      "payload_json": "{\"change\":-2.1999817,\"change_percent\":-0.61750406,\"day_volume\":\"8583639\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.07,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842262000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62436,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842263000\"",
+      "source_time_utc": "2026-11-16T15:17:43+00:00",
+      "payload_json": "{\"change\":-2.2059937,\"change_percent\":-0.6191915,\"day_volume\":\"8583782\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.064,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842263000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62437,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842263000\"",
+      "source_time_utc": "2026-11-16T15:17:43+00:00",
+      "payload_json": "{\"change\":-2.2059937,\"change_percent\":-0.6191915,\"day_volume\":\"8583789\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.064,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842263000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62438,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842263000\"",
+      "source_time_utc": "2026-11-16T15:17:43+00:00",
+      "payload_json": "{\"change\":-2.2059937,\"change_percent\":-0.6191915,\"day_volume\":\"8583825\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.064,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842263000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62439,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842266000\"",
+      "source_time_utc": "2026-11-16T15:17:46+00:00",
+      "payload_json": "{\"change\":-2.1999817,\"change_percent\":-0.6174521,\"day_volume\":\"8584005\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.07,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842266000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62440,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842267000\"",
+      "source_time_utc": "2026-11-16T15:17:47+00:00",
+      "payload_json": "{\"change\":-2.2599792,\"change_percent\":-0.6343624,\"day_volume\":\"8596581\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"50\",\"market_hours\":1,\"price\":354.01,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842267000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62441,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842268000\"",
+      "source_time_utc": "2026-11-16T15:17:48+00:00",
+      "payload_json": "{\"change\":-2.2999878,\"change_percent\":-0.6455744,\"day_volume\":\"8597069\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"120\",\"market_hours\":1,\"price\":353.97,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842268000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62442,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842268000\"",
+      "source_time_utc": "2026-11-16T15:17:48+00:00",
+      "payload_json": "{\"change\":-2.2999878,\"change_percent\":-0.6455744,\"day_volume\":\"8597116\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":353.97,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842268000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62443,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842270000\"",
+      "source_time_utc": "2026-11-16T15:17:50+00:00",
+      "payload_json": "{\"change\":-2.289978,\"change_percent\":-0.6427648,\"day_volume\":\"8598239\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"82\",\"market_hours\":1,\"price\":353.98,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842270000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62444,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842271000\"",
+      "source_time_utc": "2026-11-16T15:17:51+00:00",
+      "payload_json": "{\"change\":-2.2850037,\"change_percent\":-0.6413955,\"day_volume\":\"8598901\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"85\",\"market_hours\":1,\"price\":353.985,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842271000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62445,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842271000\"",
+      "source_time_utc": "2026-11-16T15:17:51+00:00",
+      "payload_json": "{\"change\":-2.2850037,\"change_percent\":-0.64136857,\"day_volume\":\"8598967\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":353.985,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842271000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62446,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842271000\"",
+      "source_time_utc": "2026-11-16T15:17:51+00:00",
+      "payload_json": "{\"change\":-2.2850037,\"change_percent\":-0.64136857,\"day_volume\":\"8599011\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":353.985,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842271000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62447,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842273000\"",
+      "source_time_utc": "2026-11-16T15:17:53+00:00",
+      "payload_json": "{\"change\":-2.2999878,\"change_percent\":-0.6455744,\"day_volume\":\"8599275\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"120\",\"market_hours\":1,\"price\":353.97,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842273000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62448,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842274000\"",
+      "source_time_utc": "2026-11-16T15:17:54+00:00",
+      "payload_json": "{\"change\":-2.2799988,\"change_percent\":-0.63996375,\"day_volume\":\"8600547\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":353.99,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842274000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62449,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842275000\"",
+      "source_time_utc": "2026-11-16T15:17:55+00:00",
+      "payload_json": "{\"change\":-2.25,\"change_percent\":-0.6315435,\"day_volume\":\"8600684\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"50\",\"market_hours\":1,\"price\":354.02,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842275000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62450,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842275000\"",
+      "source_time_utc": "2026-11-16T15:17:55+00:00",
+      "payload_json": "{\"change\":-2.25,\"change_percent\":-0.6315435,\"day_volume\":\"8600795\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.02,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842275000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62451,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842277000\"",
+      "source_time_utc": "2026-11-16T15:17:57+00:00",
+      "payload_json": "{\"change\":-2.2599792,\"change_percent\":-0.6343624,\"day_volume\":\"8601519\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"92\",\"market_hours\":1,\"price\":354.01,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842277000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62452,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842278000\"",
+      "source_time_utc": "2026-11-16T15:17:58+00:00",
+      "payload_json": "{\"change\":-2.2631836,\"change_percent\":-0.63523823,\"day_volume\":\"8601742\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"50\",\"market_hours\":1,\"price\":354.0068,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842278000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62453,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842279000\"",
+      "source_time_utc": "2026-11-16T15:17:59+00:00",
+      "payload_json": "{\"change\":-2.2299805,\"change_percent\":-0.6259243,\"day_volume\":\"8602961\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"48\",\"market_hours\":1,\"price\":354.04,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842279000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62454,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842280000\"",
+      "source_time_utc": "2026-11-16T15:18:00+00:00",
+      "payload_json": "{\"change\":-2.2149963,\"change_percent\":-0.62171847,\"day_volume\":\"8604017\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.055,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842280000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62455,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842280000\"",
+      "source_time_utc": "2026-11-16T15:18:00+00:00",
+      "payload_json": "{\"change\":-2.2149963,\"change_percent\":-0.62171847,\"day_volume\":\"8604058\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.055,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842280000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62456,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842281000\"",
+      "source_time_utc": "2026-11-16T15:18:01+00:00",
+      "payload_json": "{\"change\":-2.1900024,\"change_percent\":-0.61470306,\"day_volume\":\"8604545\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.08,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842281000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62457,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842282000\"",
+      "source_time_utc": "2026-11-16T15:18:02+00:00",
+      "payload_json": "{\"change\":-2.2049866,\"change_percent\":-0.6189089,\"day_volume\":\"8605142\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"80\",\"market_hours\":1,\"price\":354.065,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842282000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62458,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842283000\"",
+      "source_time_utc": "2026-11-16T15:18:03+00:00",
+      "payload_json": "{\"change\":-2.1849976,\"change_percent\":-0.61329824,\"day_volume\":\"8606337\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"84\",\"market_hours\":1,\"price\":354.085,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842283000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62459,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842284000\"",
+      "source_time_utc": "2026-11-16T15:18:04+00:00",
+      "payload_json": "{\"change\":-2.0999756,\"change_percent\":-0.58946687,\"day_volume\":\"8607735\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.17,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842284000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62460,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842284000\"",
+      "source_time_utc": "2026-11-16T15:18:04+00:00",
+      "payload_json": "{\"change\":-2.0999756,\"change_percent\":-0.5894337,\"day_volume\":\"8607757\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.17,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842284000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62461,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842286000\"",
+      "source_time_utc": "2026-11-16T15:18:06+00:00",
+      "payload_json": "{\"change\":-2.0899963,\"change_percent\":-0.5866327,\"day_volume\":\"8608877\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"140\",\"market_hours\":1,\"price\":354.18,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842286000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62462,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842287000\"",
+      "source_time_utc": "2026-11-16T15:18:07+00:00",
+      "payload_json": "{\"change\":-2.0491943,\"change_percent\":-0.5751802,\"day_volume\":\"8609755\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.2208,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842287000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62463,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842288000\"",
+      "source_time_utc": "2026-11-16T15:18:08+00:00",
+      "payload_json": "{\"change\":-2.0650024,\"change_percent\":-0.57961726,\"day_volume\":\"8610943\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"80\",\"market_hours\":1,\"price\":354.205,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842288000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62464,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842289000\"",
+      "source_time_utc": "2026-11-16T15:18:09+00:00",
+      "payload_json": "{\"change\":-2.0599976,\"change_percent\":-0.5782206,\"day_volume\":\"8611037\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"84\",\"market_hours\":1,\"price\":354.21,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842289000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62465,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842290000\"",
+      "source_time_utc": "2026-11-16T15:18:10+00:00",
+      "payload_json": "{\"change\":-2.0749817,\"change_percent\":-0.5824183,\"day_volume\":\"8611387\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.195,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842290000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62466,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842291000\"",
+      "source_time_utc": "2026-11-16T15:18:11+00:00",
+      "payload_json": "{\"change\":-2.0899963,\"change_percent\":-0.5866327,\"day_volume\":\"8611857\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"80\",\"market_hours\":1,\"price\":354.18,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842291000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62467,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842292000\"",
+      "source_time_utc": "2026-11-16T15:18:12+00:00",
+      "payload_json": "{\"change\":-2.0799866,\"change_percent\":-0.58382314,\"day_volume\":\"8612389\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"88\",\"market_hours\":1,\"price\":354.19,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842292000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62468,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842292000\"",
+      "source_time_utc": "2026-11-16T15:18:12+00:00",
+      "payload_json": "{\"change\":-2.0799866,\"change_percent\":-0.58382314,\"day_volume\":\"8612520\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.19,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842292000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62469,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842294000\"",
+      "source_time_utc": "2026-11-16T15:18:14+00:00",
+      "payload_json": "{\"change\":-2.0849915,\"change_percent\":-0.5852279,\"day_volume\":\"8613057\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"91\",\"market_hours\":1,\"price\":354.185,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842294000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62470,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842294000\"",
+      "source_time_utc": "2026-11-16T15:18:14+00:00",
+      "payload_json": "{\"change\":-2.0849915,\"change_percent\":-0.5852279,\"day_volume\":\"8613095\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.185,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842294000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62471,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842294000\"",
+      "source_time_utc": "2026-11-16T15:18:14+00:00",
+      "payload_json": "{\"change\":-2.0849915,\"change_percent\":-0.5852279,\"day_volume\":\"8613135\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.185,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842294000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62472,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842297000\"",
+      "source_time_utc": "2026-11-16T15:18:17+00:00",
+      "payload_json": "{\"change\":-2.0499878,\"change_percent\":-0.5754594,\"day_volume\":\"8613692\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"50\",\"market_hours\":1,\"price\":354.22,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842297000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62473,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842298000\"",
+      "source_time_utc": "2026-11-16T15:18:18+00:00",
+      "payload_json": "{\"change\":-2.119995,\"change_percent\":-0.59505296,\"day_volume\":\"8613769\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.15,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842298000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62474,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842299000\"",
+      "source_time_utc": "2026-11-16T15:18:19+00:00",
+      "payload_json": "{\"change\":-2.119995,\"change_percent\":-0.59501123,\"day_volume\":\"8614259\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"186\",\"market_hours\":1,\"price\":354.15,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842299000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62475,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842300000\"",
+      "source_time_utc": "2026-11-16T15:18:20+00:00",
+      "payload_json": "{\"change\":-2.0950012,\"change_percent\":-0.58803755,\"day_volume\":\"8614933\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.175,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842300000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62476,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842300000\"",
+      "source_time_utc": "2026-11-16T15:18:20+00:00",
+      "payload_json": "{\"change\":-2.0950012,\"change_percent\":-0.58803755,\"day_volume\":\"8615003\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.175,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842300000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62477,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842302000\"",
+      "source_time_utc": "2026-11-16T15:18:22+00:00",
+      "payload_json": "{\"change\":-2.0899963,\"change_percent\":-0.5866327,\"day_volume\":\"8615486\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.18,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842302000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62478,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842303000\"",
+      "source_time_utc": "2026-11-16T15:18:23+00:00",
+      "payload_json": "{\"change\":-2.1049805,\"change_percent\":-0.59083855,\"day_volume\":\"8616201\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"120\",\"market_hours\":1,\"price\":354.165,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842303000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62479,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842304000\"",
+      "source_time_utc": "2026-11-16T15:18:24+00:00",
+      "payload_json": "{\"change\":-2.0799866,\"change_percent\":-0.5838641,\"day_volume\":\"8616577\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.19,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842304000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62480,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842305000\"",
+      "source_time_utc": "2026-11-16T15:18:25+00:00",
+      "payload_json": "{\"change\":-2.085785,\"change_percent\":-0.58545065,\"day_volume\":\"8616842\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"95\",\"market_hours\":1,\"price\":354.1842,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842305000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62481,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842306000\"",
+      "source_time_utc": "2026-11-16T15:18:26+00:00",
+      "payload_json": "{\"change\":-2.1149902,\"change_percent\":-0.59364814,\"day_volume\":\"8617568\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"246\",\"market_hours\":1,\"price\":354.155,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842306000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62482,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842307000\"",
+      "source_time_utc": "2026-11-16T15:18:27+00:00",
+      "payload_json": "{\"change\":-2.1149902,\"change_percent\":-0.59364814,\"day_volume\":\"8617659\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"85\",\"market_hours\":1,\"price\":354.155,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842307000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62483,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842308000\"",
+      "source_time_utc": "2026-11-16T15:18:28+00:00",
+      "payload_json": "{\"change\":-2.1099854,\"change_percent\":-0.59225166,\"day_volume\":\"8617762\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.16,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842308000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62484,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842308000\"",
+      "source_time_utc": "2026-11-16T15:18:28+00:00",
+      "payload_json": "{\"change\":-2.1099854,\"change_percent\":-0.5922434,\"day_volume\":\"8617953\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.16,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842308000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62485,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842310000\"",
+      "source_time_utc": "2026-11-16T15:18:30+00:00",
+      "payload_json": "{\"change\":-2.0947876,\"change_percent\":-0.5880026,\"day_volume\":\"8618053\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.1752,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842310000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62486,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842311000\"",
+      "source_time_utc": "2026-11-16T15:18:31+00:00",
+      "payload_json": "{\"change\":-2.1299744,\"change_percent\":-0.597854,\"day_volume\":\"8618348\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"88\",\"market_hours\":1,\"price\":354.14,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842311000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62487,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842311000\"",
+      "source_time_utc": "2026-11-16T15:18:31+00:00",
+      "payload_json": "{\"change\":-2.1299744,\"change_percent\":-0.597854,\"day_volume\":\"8618390\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.14,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842311000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62488,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842313000\"",
+      "source_time_utc": "2026-11-16T15:18:33+00:00",
+      "payload_json": "{\"change\":-2.119995,\"change_percent\":-0.59513646,\"day_volume\":\"8619320\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"40\",\"market_hours\":1,\"price\":354.15,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842313000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62489,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842313000\"",
+      "source_time_utc": "2026-11-16T15:18:33+00:00",
+      "payload_json": "{\"change\":-2.119995,\"change_percent\":-0.59505296,\"day_volume\":\"8619349\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.15,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842313000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62490,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842313000\"",
+      "source_time_utc": "2026-11-16T15:18:33+00:00",
+      "payload_json": "{\"change\":-2.119995,\"change_percent\":-0.59505296,\"day_volume\":\"8619389\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.15,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842313000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62491,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842314000\"",
+      "source_time_utc": "2026-11-16T15:18:34+00:00",
+      "payload_json": "{\"change\":-2.1399841,\"change_percent\":-0.6006636,\"day_volume\":\"8620003\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"42\",\"market_hours\":1,\"price\":354.13,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842314000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62492,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842314000\"",
+      "source_time_utc": "2026-11-16T15:18:34+00:00",
+      "payload_json": "{\"change\":-2.1399841,\"change_percent\":-0.6006636,\"day_volume\":\"8620049\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.13,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842314000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62493,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842316000\"",
+      "source_time_utc": "2026-11-16T15:18:36+00:00",
+      "payload_json": "{\"change\":-2.149994,\"change_percent\":-0.60345757,\"day_volume\":\"8620380\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"150\",\"market_hours\":1,\"price\":354.12,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842316000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62494,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842316000\"",
+      "source_time_utc": "2026-11-16T15:18:36+00:00",
+      "payload_json": "{\"change\":-2.149994,\"change_percent\":-0.6034732,\"day_volume\":\"8620672\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.12,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842316000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62495,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842316000\"",
+      "source_time_utc": "2026-11-16T15:18:36+00:00",
+      "payload_json": "{\"change\":-2.149994,\"change_percent\":-0.6034732,\"day_volume\":\"8620769\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"market_hours\":1,\"price\":354.12,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842316000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62496,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842319000\"",
+      "source_time_utc": "2026-11-16T15:18:39+00:00",
+      "payload_json": "{\"change\":-2.0799866,\"change_percent\":-0.58382314,\"day_volume\":\"8622812\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"60\",\"market_hours\":1,\"price\":354.19,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842319000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62497,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842320000\"",
+      "source_time_utc": "2026-11-16T15:18:40+00:00",
+      "payload_json": "{\"change\":-2.0999756,\"change_percent\":-0.5894337,\"day_volume\":\"8623476\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"240\",\"market_hours\":1,\"price\":354.17,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842320000\"}",
+      "supersedes_observation_id": null
+    },
+    {
+      "id": 62498,
+      "provider": "yahoo",
+      "ticker": "AAPL",
+      "source_time_json": "\"1794842321000\"",
+      "source_time_utc": "2026-11-16T15:18:41+00:00",
+      "payload_json": "{\"change\":-2.125,\"change_percent\":-0.5964578,\"day_volume\":\"8624076\",\"exchange\":\"NMS\",\"id\":\"AAPL\",\"last_size\":\"100\",\"market_hours\":1,\"price\":354.145,\"price_hint\":\"2\",\"quote_type\":8,\"time\":\"1794842321000\"}",
+      "supersedes_observation_id": null
+    }
+  ],
+  "receipts": [
+    {
+      "id": 62730,
+      "observation_id": 62322,
+      "received_at_utc": "2026-11-16T15:16:00.590969+00:00"
+    },
+    {
+      "id": 62731,
+      "observation_id": 62323,
+      "received_at_utc": "2026-11-16T15:16:01.407016+00:00"
+    },
+    {
+      "id": 62732,
+      "observation_id": 62324,
+      "received_at_utc": "2026-11-16T15:16:02.432996+00:00"
+    },
+    {
+      "id": 62733,
+      "observation_id": 62325,
+      "received_at_utc": "2026-11-16T15:16:03.531848+00:00"
+    },
+    {
+      "id": 62734,
+      "observation_id": 62326,
+      "received_at_utc": "2026-11-16T15:16:04.327546+00:00"
+    },
+    {
+      "id": 62735,
+      "observation_id": 62327,
+      "received_at_utc": "2026-11-16T15:16:05.662696+00:00"
+    },
+    {
+      "id": 62736,
+      "observation_id": 62328,
+      "received_at_utc": "2026-11-16T15:16:06.368075+00:00"
+    },
+    {
+      "id": 62737,
+      "observation_id": 62329,
+      "received_at_utc": "2026-11-16T15:16:07.597275+00:00"
+    },
+    {
+      "id": 62738,
+      "observation_id": 62330,
+      "received_at_utc": "2026-11-16T15:16:08.373299+00:00"
+    },
+    {
+      "id": 62739,
+      "observation_id": 62331,
+      "received_at_utc": "2026-11-16T15:16:09.554949+00:00"
+    },
+    {
+      "id": 62740,
+      "observation_id": 62332,
+      "received_at_utc": "2026-11-16T15:16:10.518824+00:00"
+    },
+    {
+      "id": 62741,
+      "observation_id": 62333,
+      "received_at_utc": "2026-11-16T15:16:11.905584+00:00"
+    },
+    {
+      "id": 62742,
+      "observation_id": 62334,
+      "received_at_utc": "2026-11-16T15:16:12.600550+00:00"
+    },
+    {
+      "id": 62743,
+      "observation_id": 62335,
+      "received_at_utc": "2026-11-16T15:16:13.465116+00:00"
+    },
+    {
+      "id": 62744,
+      "observation_id": 62336,
+      "received_at_utc": "2026-11-16T15:16:14.419339+00:00"
+    },
+    {
+      "id": 62745,
+      "observation_id": 62337,
+      "received_at_utc": "2026-11-16T15:16:15.494299+00:00"
+    },
+    {
+      "id": 62746,
+      "observation_id": 62338,
+      "received_at_utc": "2026-11-16T15:16:16.453451+00:00"
+    },
+    {
+      "id": 62747,
+      "observation_id": 62339,
+      "received_at_utc": "2026-11-16T15:16:16.505897+00:00"
+    },
+    {
+      "id": 62748,
+      "observation_id": 62340,
+      "received_at_utc": "2026-11-16T15:16:17.755243+00:00"
+    },
+    {
+      "id": 62749,
+      "observation_id": 62341,
+      "received_at_utc": "2026-11-16T15:16:18.455717+00:00"
+    },
+    {
+      "id": 62750,
+      "observation_id": 62342,
+      "received_at_utc": "2026-11-16T15:16:18.600918+00:00"
+    },
+    {
+      "id": 62751,
+      "observation_id": 62343,
+      "received_at_utc": "2026-11-16T15:16:19.450735+00:00"
+    },
+    {
+      "id": 62752,
+      "observation_id": 62344,
+      "received_at_utc": "2026-11-16T15:16:20.814361+00:00"
+    },
+    {
+      "id": 62753,
+      "observation_id": 62345,
+      "received_at_utc": "2026-11-16T15:16:21.282965+00:00"
+    },
+    {
+      "id": 62754,
+      "observation_id": 62346,
+      "received_at_utc": "2026-11-16T15:16:22.804778+00:00"
+    },
+    {
+      "id": 62755,
+      "observation_id": 62347,
+      "received_at_utc": "2026-11-16T15:16:23.524580+00:00"
+    },
+    {
+      "id": 62756,
+      "observation_id": 62348,
+      "received_at_utc": "2026-11-16T15:16:23.576778+00:00"
+    },
+    {
+      "id": 62757,
+      "observation_id": 62349,
+      "received_at_utc": "2026-11-16T15:16:24.915895+00:00"
+    },
+    {
+      "id": 62758,
+      "observation_id": 62350,
+      "received_at_utc": "2026-11-16T15:16:25.849190+00:00"
+    },
+    {
+      "id": 62759,
+      "observation_id": 62351,
+      "received_at_utc": "2026-11-16T15:16:26.556958+00:00"
+    },
+    {
+      "id": 62760,
+      "observation_id": 62352,
+      "received_at_utc": "2026-11-16T15:16:27.726337+00:00"
+    },
+    {
+      "id": 62761,
+      "observation_id": 62353,
+      "received_at_utc": "2026-11-16T15:16:28.589521+00:00"
+    },
+    {
+      "id": 62762,
+      "observation_id": 62354,
+      "received_at_utc": "2026-11-16T15:16:29.391980+00:00"
+    },
+    {
+      "id": 62763,
+      "observation_id": 62355,
+      "received_at_utc": "2026-11-16T15:16:30.469792+00:00"
+    },
+    {
+      "id": 62764,
+      "observation_id": 62356,
+      "received_at_utc": "2026-11-16T15:16:31.664331+00:00"
+    },
+    {
+      "id": 62765,
+      "observation_id": 62357,
+      "received_at_utc": "2026-11-16T15:16:31.780815+00:00"
+    },
+    {
+      "id": 62766,
+      "observation_id": 62358,
+      "received_at_utc": "2026-11-16T15:16:32.292931+00:00"
+    },
+    {
+      "id": 62767,
+      "observation_id": 62359,
+      "received_at_utc": "2026-11-16T15:16:33.364361+00:00"
+    },
+    {
+      "id": 62768,
+      "observation_id": 62360,
+      "received_at_utc": "2026-11-16T15:16:34.566012+00:00"
+    },
+    {
+      "id": 62769,
+      "observation_id": 62361,
+      "received_at_utc": "2026-11-16T15:16:35.668320+00:00"
+    },
+    {
+      "id": 62770,
+      "observation_id": 62362,
+      "received_at_utc": "2026-11-16T15:16:36.309893+00:00"
+    },
+    {
+      "id": 62771,
+      "observation_id": 62363,
+      "received_at_utc": "2026-11-16T15:16:37.476815+00:00"
+    },
+    {
+      "id": 62772,
+      "observation_id": 62364,
+      "received_at_utc": "2026-11-16T15:16:38.533879+00:00"
+    },
+    {
+      "id": 62773,
+      "observation_id": 62365,
+      "received_at_utc": "2026-11-16T15:16:39.543588+00:00"
+    },
+    {
+      "id": 62774,
+      "observation_id": 62366,
+      "received_at_utc": "2026-11-16T15:16:40.426189+00:00"
+    },
+    {
+      "id": 62775,
+      "observation_id": 62367,
+      "received_at_utc": "2026-11-16T15:16:41.533764+00:00"
+    },
+    {
+      "id": 62776,
+      "observation_id": 62368,
+      "received_at_utc": "2026-11-16T15:16:42.559033+00:00"
+    },
+    {
+      "id": 62777,
+      "observation_id": 62369,
+      "received_at_utc": "2026-11-16T15:16:43.624407+00:00"
+    },
+    {
+      "id": 62778,
+      "observation_id": 62370,
+      "received_at_utc": "2026-11-16T15:16:44.310160+00:00"
+    },
+    {
+      "id": 62779,
+      "observation_id": 62371,
+      "received_at_utc": "2026-11-16T15:16:45.471561+00:00"
+    },
+    {
+      "id": 62780,
+      "observation_id": 62372,
+      "received_at_utc": "2026-11-16T15:16:46.396646+00:00"
+    },
+    {
+      "id": 62781,
+      "observation_id": 62373,
+      "received_at_utc": "2026-11-16T15:16:46.651958+00:00"
+    },
+    {
+      "id": 62782,
+      "observation_id": 62374,
+      "received_at_utc": "2026-11-16T15:16:47.502067+00:00"
+    },
+    {
+      "id": 62783,
+      "observation_id": 62375,
+      "received_at_utc": "2026-11-16T15:16:48.735668+00:00"
+    },
+    {
+      "id": 62784,
+      "observation_id": 62376,
+      "received_at_utc": "2026-11-16T15:16:49.499269+00:00"
+    },
+    {
+      "id": 62785,
+      "observation_id": 62377,
+      "received_at_utc": "2026-11-16T15:16:50.338820+00:00"
+    },
+    {
+      "id": 62786,
+      "observation_id": 62378,
+      "received_at_utc": "2026-11-16T15:16:51.581482+00:00"
+    },
+    {
+      "id": 62787,
+      "observation_id": 62379,
+      "received_at_utc": "2026-11-16T15:16:52.733880+00:00"
+    },
+    {
+      "id": 62788,
+      "observation_id": 62380,
+      "received_at_utc": "2026-11-16T15:16:53.880534+00:00"
+    },
+    {
+      "id": 62789,
+      "observation_id": 62381,
+      "received_at_utc": "2026-11-16T15:16:54.703708+00:00"
+    },
+    {
+      "id": 62790,
+      "observation_id": 62382,
+      "received_at_utc": "2026-11-16T15:16:55.386416+00:00"
+    },
+    {
+      "id": 62791,
+      "observation_id": 62383,
+      "received_at_utc": "2026-11-16T15:16:56.590582+00:00"
+    },
+    {
+      "id": 62792,
+      "observation_id": 62384,
+      "received_at_utc": "2026-11-16T15:16:57.537126+00:00"
+    },
+    {
+      "id": 62793,
+      "observation_id": 62385,
+      "received_at_utc": "2026-11-16T15:16:58.691419+00:00"
+    },
+    {
+      "id": 62794,
+      "observation_id": 62386,
+      "received_at_utc": "2026-11-16T15:16:59.355096+00:00"
+    },
+    {
+      "id": 62795,
+      "observation_id": 62387,
+      "received_at_utc": "2026-11-16T15:17:00.421249+00:00"
+    },
+    {
+      "id": 62796,
+      "observation_id": 62388,
+      "received_at_utc": "2026-11-16T15:17:01.757719+00:00"
+    },
+    {
+      "id": 62797,
+      "observation_id": 62389,
+      "received_at_utc": "2026-11-16T15:17:01.824498+00:00"
+    },
+    {
+      "id": 62798,
+      "observation_id": 62390,
+      "received_at_utc": "2026-11-16T15:17:02.489899+00:00"
+    },
+    {
+      "id": 62799,
+      "observation_id": 62391,
+      "received_at_utc": "2026-11-16T15:17:03.905827+00:00"
+    },
+    {
+      "id": 62800,
+      "observation_id": 62392,
+      "received_at_utc": "2026-11-16T15:17:04.732560+00:00"
+    },
+    {
+      "id": 62801,
+      "observation_id": 62393,
+      "received_at_utc": "2026-11-16T15:17:04.785446+00:00"
+    },
+    {
+      "id": 62802,
+      "observation_id": 62394,
+      "received_at_utc": "2026-11-16T15:17:05.599870+00:00"
+    },
+    {
+      "id": 62803,
+      "observation_id": 62395,
+      "received_at_utc": "2026-11-16T15:17:06.482509+00:00"
+    },
+    {
+      "id": 62804,
+      "observation_id": 62396,
+      "received_at_utc": "2026-11-16T15:17:07.935758+00:00"
+    },
+    {
+      "id": 62805,
+      "observation_id": 62397,
+      "received_at_utc": "2026-11-16T15:17:08.947693+00:00"
+    },
+    {
+      "id": 62806,
+      "observation_id": 62398,
+      "received_at_utc": "2026-11-16T15:17:09.895081+00:00"
+    },
+    {
+      "id": 62807,
+      "observation_id": 62399,
+      "received_at_utc": "2026-11-16T15:17:10.428008+00:00"
+    },
+    {
+      "id": 62808,
+      "observation_id": 62400,
+      "received_at_utc": "2026-11-16T15:17:11.492703+00:00"
+    },
+    {
+      "id": 62809,
+      "observation_id": 62401,
+      "received_at_utc": "2026-11-16T15:17:12.752900+00:00"
+    },
+    {
+      "id": 62810,
+      "observation_id": 62402,
+      "received_at_utc": "2026-11-16T15:17:13.622441+00:00"
+    },
+    {
+      "id": 62811,
+      "observation_id": 62403,
+      "received_at_utc": "2026-11-16T15:17:14.476137+00:00"
+    },
+    {
+      "id": 62812,
+      "observation_id": 62404,
+      "received_at_utc": "2026-11-16T15:17:15.764087+00:00"
+    },
+    {
+      "id": 62813,
+      "observation_id": 62405,
+      "received_at_utc": "2026-11-16T15:17:16.513315+00:00"
+    },
+    {
+      "id": 62814,
+      "observation_id": 62406,
+      "received_at_utc": "2026-11-16T15:17:17.426938+00:00"
+    },
+    {
+      "id": 62815,
+      "observation_id": 62407,
+      "received_at_utc": "2026-11-16T15:17:18.681759+00:00"
+    },
+    {
+      "id": 62816,
+      "observation_id": 62408,
+      "received_at_utc": "2026-11-16T15:17:19.731513+00:00"
+    },
+    {
+      "id": 62817,
+      "observation_id": 62409,
+      "received_at_utc": "2026-11-16T15:17:21.122897+00:00"
+    },
+    {
+      "id": 62818,
+      "observation_id": 62410,
+      "received_at_utc": "2026-11-16T15:17:21.862300+00:00"
+    },
+    {
+      "id": 62819,
+      "observation_id": 62411,
+      "received_at_utc": "2026-11-16T15:17:22.411540+00:00"
+    },
+    {
+      "id": 62820,
+      "observation_id": 62412,
+      "received_at_utc": "2026-11-16T15:17:22.465953+00:00"
+    },
+    {
+      "id": 62821,
+      "observation_id": 62413,
+      "received_at_utc": "2026-11-16T15:17:23.444433+00:00"
+    },
+    {
+      "id": 62822,
+      "observation_id": 62414,
+      "received_at_utc": "2026-11-16T15:17:24.366944+00:00"
+    },
+    {
+      "id": 62823,
+      "observation_id": 62415,
+      "received_at_utc": "2026-11-16T15:17:25.393008+00:00"
+    },
+    {
+      "id": 62824,
+      "observation_id": 62416,
+      "received_at_utc": "2026-11-16T15:17:26.550756+00:00"
+    },
+    {
+      "id": 62825,
+      "observation_id": 62417,
+      "received_at_utc": "2026-11-16T15:17:26.883716+00:00"
+    },
+    {
+      "id": 62826,
+      "observation_id": 62418,
+      "received_at_utc": "2026-11-16T15:17:27.427935+00:00"
+    },
+    {
+      "id": 62827,
+      "observation_id": 62419,
+      "received_at_utc": "2026-11-16T15:17:28.495367+00:00"
+    },
+    {
+      "id": 62828,
+      "observation_id": 62420,
+      "received_at_utc": "2026-11-16T15:17:29.708564+00:00"
+    },
+    {
+      "id": 62829,
+      "observation_id": 62421,
+      "received_at_utc": "2026-11-16T15:17:30.661196+00:00"
+    },
+    {
+      "id": 62830,
+      "observation_id": 62422,
+      "received_at_utc": "2026-11-16T15:17:31.628295+00:00"
+    },
+    {
+      "id": 62831,
+      "observation_id": 62423,
+      "received_at_utc": "2026-11-16T15:17:31.957978+00:00"
+    },
+    {
+      "id": 62832,
+      "observation_id": 62424,
+      "received_at_utc": "2026-11-16T15:17:32.471952+00:00"
+    },
+    {
+      "id": 62833,
+      "observation_id": 62425,
+      "received_at_utc": "2026-11-16T15:17:33.460967+00:00"
+    },
+    {
+      "id": 62834,
+      "observation_id": 62426,
+      "received_at_utc": "2026-11-16T15:17:34.387506+00:00"
+    },
+    {
+      "id": 62835,
+      "observation_id": 62427,
+      "received_at_utc": "2026-11-16T15:17:35.466931+00:00"
+    },
+    {
+      "id": 62836,
+      "observation_id": 62428,
+      "received_at_utc": "2026-11-16T15:17:36.964094+00:00"
+    },
+    {
+      "id": 62837,
+      "observation_id": 62429,
+      "received_at_utc": "2026-11-16T15:17:37.415999+00:00"
+    },
+    {
+      "id": 62838,
+      "observation_id": 62430,
+      "received_at_utc": "2026-11-16T15:17:38.521419+00:00"
+    },
+    {
+      "id": 62839,
+      "observation_id": 62431,
+      "received_at_utc": "2026-11-16T15:17:39.967658+00:00"
+    },
+    {
+      "id": 62840,
+      "observation_id": 62432,
+      "received_at_utc": "2026-11-16T15:17:40.339966+00:00"
+    },
+    {
+      "id": 62841,
+      "observation_id": 62433,
+      "received_at_utc": "2026-11-16T15:17:41.689634+00:00"
+    },
+    {
+      "id": 62842,
+      "observation_id": 62434,
+      "received_at_utc": "2026-11-16T15:17:42.439789+00:00"
+    },
+    {
+      "id": 62843,
+      "observation_id": 62435,
+      "received_at_utc": "2026-11-16T15:17:43.910823+00:00"
+    },
+    {
+      "id": 62844,
+      "observation_id": 62436,
+      "received_at_utc": "2026-11-16T15:17:44.670076+00:00"
+    },
+    {
+      "id": 62845,
+      "observation_id": 62437,
+      "received_at_utc": "2026-11-16T15:17:45.765918+00:00"
+    },
+    {
+      "id": 62846,
+      "observation_id": 62438,
+      "received_at_utc": "2026-11-16T15:17:46.707160+00:00"
+    },
+    {
+      "id": 62847,
+      "observation_id": 62439,
+      "received_at_utc": "2026-11-16T15:17:47.630050+00:00"
+    },
+    {
+      "id": 62848,
+      "observation_id": 62440,
+      "received_at_utc": "2026-11-16T15:17:48.507951+00:00"
+    },
+    {
+      "id": 62849,
+      "observation_id": 62441,
+      "received_at_utc": "2026-11-16T15:17:49.868128+00:00"
+    },
+    {
+      "id": 62850,
+      "observation_id": 62442,
+      "received_at_utc": "2026-11-16T15:17:50.370401+00:00"
+    },
+    {
+      "id": 62851,
+      "observation_id": 62443,
+      "received_at_utc": "2026-11-16T15:17:51.473910+00:00"
+    },
+    {
+      "id": 62852,
+      "observation_id": 62444,
+      "received_at_utc": "2026-11-16T15:17:52.459280+00:00"
+    },
+    {
+      "id": 62853,
+      "observation_id": 62445,
+      "received_at_utc": "2026-11-16T15:17:53.420959+00:00"
+    },
+    {
+      "id": 62854,
+      "observation_id": 62446,
+      "received_at_utc": "2026-11-16T15:17:54.338577+00:00"
+    },
+    {
+      "id": 62855,
+      "observation_id": 62447,
+      "received_at_utc": "2026-11-16T15:17:54.498588+00:00"
+    },
+    {
+      "id": 62856,
+      "observation_id": 62448,
+      "received_at_utc": "2026-11-16T15:17:56.019465+00:00"
+    },
+    {
+      "id": 62857,
+      "observation_id": 62449,
+      "received_at_utc": "2026-11-16T15:17:57.036946+00:00"
+    },
+    {
+      "id": 62858,
+      "observation_id": 62450,
+      "received_at_utc": "2026-11-16T15:17:57.763000+00:00"
+    },
+    {
+      "id": 62859,
+      "observation_id": 62451,
+      "received_at_utc": "2026-11-16T15:17:58.736238+00:00"
+    },
+    {
+      "id": 62860,
+      "observation_id": 62452,
+      "received_at_utc": "2026-11-16T15:17:59.903189+00:00"
+    },
+    {
+      "id": 62861,
+      "observation_id": 62453,
+      "received_at_utc": "2026-11-16T15:18:00.553945+00:00"
+    },
+    {
+      "id": 62862,
+      "observation_id": 62454,
+      "received_at_utc": "2026-11-16T15:18:01.583543+00:00"
+    },
+    {
+      "id": 62863,
+      "observation_id": 62455,
+      "received_at_utc": "2026-11-16T15:18:02.085733+00:00"
+    },
+    {
+      "id": 62864,
+      "observation_id": 62456,
+      "received_at_utc": "2026-11-16T15:18:02.446156+00:00"
+    },
+    {
+      "id": 62865,
+      "observation_id": 62457,
+      "received_at_utc": "2026-11-16T15:18:03.803578+00:00"
+    },
+    {
+      "id": 62866,
+      "observation_id": 62458,
+      "received_at_utc": "2026-11-16T15:18:04.610712+00:00"
+    },
+    {
+      "id": 62867,
+      "observation_id": 62459,
+      "received_at_utc": "2026-11-16T15:18:05.750620+00:00"
+    },
+    {
+      "id": 62868,
+      "observation_id": 62460,
+      "received_at_utc": "2026-11-16T15:18:06.861599+00:00"
+    },
+    {
+      "id": 62869,
+      "observation_id": 62461,
+      "received_at_utc": "2026-11-16T15:18:07.482519+00:00"
+    },
+    {
+      "id": 62870,
+      "observation_id": 62462,
+      "received_at_utc": "2026-11-16T15:18:08.517153+00:00"
+    },
+    {
+      "id": 62871,
+      "observation_id": 62463,
+      "received_at_utc": "2026-11-16T15:18:09.772284+00:00"
+    },
+    {
+      "id": 62872,
+      "observation_id": 62464,
+      "received_at_utc": "2026-11-16T15:18:10.512882+00:00"
+    },
+    {
+      "id": 62873,
+      "observation_id": 62465,
+      "received_at_utc": "2026-11-16T15:18:11.492589+00:00"
+    },
+    {
+      "id": 62874,
+      "observation_id": 62466,
+      "received_at_utc": "2026-11-16T15:18:12.509305+00:00"
+    },
+    {
+      "id": 62875,
+      "observation_id": 62467,
+      "received_at_utc": "2026-11-16T15:18:13.457427+00:00"
+    },
+    {
+      "id": 62876,
+      "observation_id": 62468,
+      "received_at_utc": "2026-11-16T15:18:14.771619+00:00"
+    },
+    {
+      "id": 62877,
+      "observation_id": 62469,
+      "received_at_utc": "2026-11-16T15:18:15.805277+00:00"
+    },
+    {
+      "id": 62878,
+      "observation_id": 62470,
+      "received_at_utc": "2026-11-16T15:18:16.804177+00:00"
+    },
+    {
+      "id": 62879,
+      "observation_id": 62471,
+      "received_at_utc": "2026-11-16T15:18:17.774279+00:00"
+    },
+    {
+      "id": 62880,
+      "observation_id": 62472,
+      "received_at_utc": "2026-11-16T15:18:18.480048+00:00"
+    },
+    {
+      "id": 62881,
+      "observation_id": 62473,
+      "received_at_utc": "2026-11-16T15:18:19.655606+00:00"
+    },
+    {
+      "id": 62882,
+      "observation_id": 62474,
+      "received_at_utc": "2026-11-16T15:18:20.990470+00:00"
+    },
+    {
+      "id": 62883,
+      "observation_id": 62475,
+      "received_at_utc": "2026-11-16T15:18:22.000349+00:00"
+    },
+    {
+      "id": 62884,
+      "observation_id": 62476,
+      "received_at_utc": "2026-11-16T15:18:22.613940+00:00"
+    },
+    {
+      "id": 62885,
+      "observation_id": 62477,
+      "received_at_utc": "2026-11-16T15:18:23.495662+00:00"
+    },
+    {
+      "id": 62886,
+      "observation_id": 62478,
+      "received_at_utc": "2026-11-16T15:18:24.674616+00:00"
+    },
+    {
+      "id": 62887,
+      "observation_id": 62479,
+      "received_at_utc": "2026-11-16T15:18:25.429094+00:00"
+    },
+    {
+      "id": 62888,
+      "observation_id": 62480,
+      "received_at_utc": "2026-11-16T15:18:26.798811+00:00"
+    },
+    {
+      "id": 62889,
+      "observation_id": 62481,
+      "received_at_utc": "2026-11-16T15:18:27.467210+00:00"
+    },
+    {
+      "id": 62890,
+      "observation_id": 62482,
+      "received_at_utc": "2026-11-16T15:18:28.355249+00:00"
+    },
+    {
+      "id": 62891,
+      "observation_id": 62483,
+      "received_at_utc": "2026-11-16T15:18:29.742544+00:00"
+    },
+    {
+      "id": 62892,
+      "observation_id": 62484,
+      "received_at_utc": "2026-11-16T15:18:30.389316+00:00"
+    },
+    {
+      "id": 62893,
+      "observation_id": 62485,
+      "received_at_utc": "2026-11-16T15:18:31.461666+00:00"
+    },
+    {
+      "id": 62894,
+      "observation_id": 62486,
+      "received_at_utc": "2026-11-16T15:18:32.523409+00:00"
+    },
+    {
+      "id": 62895,
+      "observation_id": 62487,
+      "received_at_utc": "2026-11-16T15:18:33.409389+00:00"
+    },
+    {
+      "id": 62896,
+      "observation_id": 62488,
+      "received_at_utc": "2026-11-16T15:18:34.582873+00:00"
+    },
+    {
+      "id": 62897,
+      "observation_id": 62489,
+      "received_at_utc": "2026-11-16T15:18:34.922723+00:00"
+    },
+    {
+      "id": 62898,
+      "observation_id": 62490,
+      "received_at_utc": "2026-11-16T15:18:35.461546+00:00"
+    },
+    {
+      "id": 62899,
+      "observation_id": 62491,
+      "received_at_utc": "2026-11-16T15:18:36.522855+00:00"
+    },
+    {
+      "id": 62900,
+      "observation_id": 62492,
+      "received_at_utc": "2026-11-16T15:18:37.448121+00:00"
+    },
+    {
+      "id": 62901,
+      "observation_id": 62493,
+      "received_at_utc": "2026-11-16T15:18:37.863045+00:00"
+    },
+    {
+      "id": 62902,
+      "observation_id": 62494,
+      "received_at_utc": "2026-11-16T15:18:38.684252+00:00"
+    },
+    {
+      "id": 62903,
+      "observation_id": 62495,
+      "received_at_utc": "2026-11-16T15:18:39.695165+00:00"
+    },
+    {
+      "id": 62904,
+      "observation_id": 62496,
+      "received_at_utc": "2026-11-16T15:18:40.384458+00:00"
+    },
+    {
+      "id": 62905,
+      "observation_id": 62497,
+      "received_at_utc": "2026-11-16T15:18:41.438006+00:00"
+    },
+    {
+      "id": 62906,
+      "observation_id": 62498,
+      "received_at_utc": "2026-11-16T15:18:42.913267+00:00"
+    }
+  ]
+}

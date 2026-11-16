@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "data": "actual saved Yahoo; frozen clock and disposable database copy",
+  "checks": [
+    "Read-only saved Yahoo database copy",
+    "Independent SQL counter difference equals HTTP and WebSocket volume",
+    "Visible candle volume and price match SQL",
+    "Observed-volume basis disclosed; screenshots saved; no page errors"
+  ],
+  "processes_stopped": true
+}

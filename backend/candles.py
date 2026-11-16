@@ -52,11 +52,9 @@ def minute_volume(baseline, rows):
     totals = [cumulative_volume(row['payload'].get('day_volume')) for row in sequence]
     if any(total is None for total in totals):
         return None, 'missing or invalid cumulative-volume value'
-    by_time = defaultdict(set)
-    for row, total in zip(sequence, totals):
-        by_time[row['time']].add(total)
-    if any(len(values) > 1 for values in by_time.values()):
-        return None, 'different cumulative totals at the same source time'
+    # Several received updates can share the provider's source timestamp.
+    # A nondecreasing counter still has an unambiguous observed delta; no
+    # observation is superseded, and this is not exchange-reported bar volume.
     if any(current < previous for previous, current in zip(totals, totals[1:])):
         return None, 'cumulative total reset or decreased'
     return totals[-1] - totals[0], 'last cumulative total minus pre-minute baseline'
@@ -108,10 +106,10 @@ def form_candles(connection, ticker, *, as_of=None, provider='yahoo', available_
         rows.append(row)
     rows.sort(key=lambda row: (row['time'], row['first_receipt'] or row['id'], row['id']))
     buckets = defaultdict(list)
-    totals_by_time = defaultdict(set)
+    totals_by_time = defaultdict(list)
     for row in rows:
         buckets[row['time'].replace(second=0, microsecond=0)].append(row)
-        totals_by_time[row['time']].add(cumulative_volume(row['payload'].get('day_volume')))
+        totals_by_time[row['time']].append(cumulative_volume(row['payload'].get('day_volume')))
 
     candles = []
     statuses = []
@@ -121,7 +119,9 @@ def form_candles(connection, ticker, *, as_of=None, provider='yahoo', available_
         volume, reason = minute_volume(baseline, bucket)
         # Include all observations tied at the preceding baseline timestamp.
         if baseline is not None:
-            if len(totals_by_time[baseline['time']]) > 1:
+            tied = totals_by_time[baseline['time']]
+            if (any(value is None for value in tied)
+                    or any(current < previous for previous, current in zip(tied, tied[1:]))):
                 volume, reason = None, 'ambiguous pre-minute cumulative-volume baseline'
         label = utc_label(minute)
         candles.append({

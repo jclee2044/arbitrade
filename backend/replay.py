@@ -81,13 +81,17 @@ class Replay:
                                 received_at_utc=received, source_time_utc=event[6])
         return self.snapshot()
 
-    def snapshot(self):
+    def snapshot(self, timeframe=None):
+        timeframe = timeframe or self.timeframe
         base = form_candles(self.connection, self.symbol, as_of=self.evaluation,
                             available_at=self.evaluation)
         versions = [MinuteVersion(c, self.evaluation) for c in base['candles']]
-        result = derive_timeframe(versions, self.timeframe, as_of=self.evaluation, calendar=self.calendar)
+        result = derive_timeframe(versions, timeframe, as_of=self.evaluation, calendar=self.calendar)
+        for status in result['coverage']:
+            status.update(volume_provenance='yahoo_quote_counter',
+                          volume_scope='Observed cumulative-volume change; not Yahoo reported bar volume')
         result = with_averages(result, self.short_window, self.long_window)
-        return dict(result, type='snapshot', symbol=self.symbol, interval=self.timeframe,
+        return dict(result, type='snapshot', symbol=self.symbol, interval=timeframe,
                     source=self.source,
                     feed=dict(status='replay', source_time_utc=(self.current or {}).get('source_time_utc')),
                     replay=dict(position=self.position, total=len(self.events), current=self.current,

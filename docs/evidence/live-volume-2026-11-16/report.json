@@ -1,0 +1,2497 @@
+{
+  "input": "ACTUAL Yahoo",
+  "checks": [
+    "Clicked Check connection; visible backend-connected result; default 1m",
+    "Actual Yahoo stored quote/time/OHLCV equals visible inspector",
+    "All timeframe selectors load matching backend history; daily included",
+    "Source age advances; disconnected upstream displayed while chart WebSocket remains open",
+    "Desktop/mobile chart renders; screenshots saved; no uncaught JavaScript errors"
+  ],
+  "phases": {
+    "seed": {
+      "1m": {
+        "timeframe": "1m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.866081Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.37,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-16T15:41:00Z",
+            "open": 354.385,
+            "high": 354.385,
+            "low": 354.385,
+            "close": 354.385,
+            "volume": 1030
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:41:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          },
+          {
+            "timestamp": "2026-11-16T15:41:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:42:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": false,
+            "complete": false,
+            "volume_known": true,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:40:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            },
+            {
+              "timestamp": "2026-11-16T15:41:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 1.867042,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "5m": {
+        "timeframe": "5m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.867048Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:45:00Z",
+            "expected_minutes": 5,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:40:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "5m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 1.867943,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "15m": {
+        "timeframe": "15m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.867949Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:45:00Z",
+            "expected_minutes": 15,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "15m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 1.868837,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "30m": {
+        "timeframe": "30m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.868843Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T16:00:00Z",
+            "expected_minutes": 30,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "30m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 1.869732,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1h": {
+        "timeframe": "1h",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.869737Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T16:30:00Z",
+            "expected_minutes": 60,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1h",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 1.870626,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1d": {
+        "timeframe": "1d",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.870631Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T21:00:00Z",
+            "expected_minutes": 390,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T14:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1d",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 1.87151,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1w": {
+        "timeframe": "1w",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:01.871516Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-20T21:00:00Z",
+            "expected_minutes": 1950,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T14:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1w",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 2.023408,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1mo": {
+        "timeframe": "1mo",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:02.023417Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-02T14:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-02T14:30:00Z",
+            "session": "2026-11-02",
+            "interval_end": "2026-11-30T21:00:00Z",
+            "expected_minutes": 7620,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-02T14:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1mo",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 2.181626,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      }
+    },
+    "disconnect": {
+      "1m": {
+        "timeframe": "1m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.252917Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.37,
+            "volume": null
+          },
+          {
+            "timestamp": "2026-11-16T15:41:00Z",
+            "open": 354.385,
+            "high": 354.385,
+            "low": 354.385,
+            "close": 354.385,
+            "volume": 1030
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:41:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": true,
+            "complete": true,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          },
+          {
+            "timestamp": "2026-11-16T15:41:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:42:00Z",
+            "expected_minutes": 1,
+            "available_minutes": 1,
+            "coverage_complete": true,
+            "ended": false,
+            "complete": false,
+            "volume_known": true,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:40:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            },
+            {
+              "timestamp": "2026-11-16T15:41:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.254095,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "5m": {
+        "timeframe": "5m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.254102Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:40:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:45:00Z",
+            "expected_minutes": 5,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:40:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "5m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.255031,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "15m": {
+        "timeframe": "15m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.255037Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T15:45:00Z",
+            "expected_minutes": 15,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "15m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.255941,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "30m": {
+        "timeframe": "30m",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.255946Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T16:00:00Z",
+            "expected_minutes": 30,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "30m",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.256854,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1h": {
+        "timeframe": "1h",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.256860Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T15:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T16:30:00Z",
+            "expected_minutes": 60,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T15:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1h",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.25777,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1d": {
+        "timeframe": "1d",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.257775Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-16T21:00:00Z",
+            "expected_minutes": 390,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T14:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1d",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.25867,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1w": {
+        "timeframe": "1w",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.258676Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-16T14:30:00Z",
+            "session": "2026-11-16",
+            "interval_end": "2026-11-20T21:00:00Z",
+            "expected_minutes": 1950,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-16T14:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1w",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.259723,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      },
+      "1mo": {
+        "timeframe": "1mo",
+        "calendar": "NASDAQ",
+        "as_of": "2026-11-16T15:41:05.259729Z",
+        "candles": [
+          {
+            "timestamp": "2026-11-02T14:30:00Z",
+            "open": 354.4225,
+            "high": 354.46,
+            "low": 354.24,
+            "close": 354.385,
+            "volume": null
+          }
+        ],
+        "coverage": [
+          {
+            "timestamp": "2026-11-02T14:30:00Z",
+            "session": "2026-11-02",
+            "interval_end": "2026-11-30T21:00:00Z",
+            "expected_minutes": 7620,
+            "available_minutes": 2,
+            "coverage_complete": false,
+            "ended": false,
+            "complete": false,
+            "volume_known": false,
+            "volume_scope": "Observed cumulative-volume change; not Yahoo reported bar volume",
+            "volume_provenance": "yahoo_quote_counter"
+          }
+        ],
+        "excluded_out_of_session_minutes": [],
+        "symbol": "AAPL",
+        "source": "Yahoo Finance \u00b7 stored observations",
+        "unbucketed_observation_ids": [],
+        "moving_averages": {
+          "short_window": 20,
+          "long_window": 50,
+          "rows": [
+            {
+              "timestamp": "2026-11-02T14:30:00Z",
+              "short": null,
+              "long": null,
+              "signal": null
+            }
+          ]
+        },
+        "type": "snapshot",
+        "interval": "1mo",
+        "feed": {
+          "status": "disconnected",
+          "source_time_utc": "2026-11-16T15:41:00+00:00",
+          "source_age_seconds": 5.261057,
+          "latest_observation": {
+            "ticker": "AAPL",
+            "price": 354.385,
+            "source_time_raw": "1794843660000",
+            "source_time_unit": "milliseconds since Unix epoch (inferred from magnitude)",
+            "source_time_utc": "2026-11-16T15:41:00+00:00",
+            "backend_received_at_utc": "2026-11-16T15:41:01.764874+00:00",
+            "backend_receipt_time_format": "ISO 8601 UTC, with subsecond precision",
+            "volume_fields": {
+              "day_volume": {
+                "value": "9853489",
+                "meaning": "Cumulative trading-day volume; shares for AAPL equities, not one-minute volume."
+              },
+              "last_size": {
+                "value": "500",
+                "meaning": "Size of the last trade; shares for AAPL equities, not cumulative volume."
+              }
+            }
+          },
+          "recording": {
+            "observation_id": 44,
+            "receipt_id": 44,
+            "exact_repeat": false
+          },
+          "error": null,
+          "historical": null
+        }
+      }
+    }
+  },
+  "stored_observation": {
+    "recording": {
+      "observation_id": 44,
+      "receipt_id": 44,
+      "exact_repeat": false
+    },
+    "source_time_utc": "2026-11-16T15:41:00+00:00",
+    "payload": {
+      "change": -1.8849792,
+      "change_percent": -0.5290873,
+      "day_volume": "9853489",
+      "exchange": "NMS",
+      "id": "AAPL",
+      "last_size": "500",
+      "market_hours": 1,
+      "price": 354.385,
+      "price_hint": "2",
+      "quote_type": 8,
+      "time": "1794843660000"
+    }
+  },
+  "result": "PASS",
+  "stored_records": {
+    "database": "/tmp/arbitrade-ui-3wsufcyt/observations.sqlite3",
+    "observations": [
+      {
+        "id": 1,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843620000\"",
+        "source_time_utc": "2026-11-16T15:40:20+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8475037,
+          "change_percent": -0.51854295,
+          "day_volume": "9813444",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "44",
+          "market_hours": 1,
+          "price": 354.4225,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843620000"
+        }
+      },
+      {
+        "id": 2,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843620000\"",
+        "source_time_utc": "2026-11-16T15:40:20+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8450012,
+          "change_percent": -0.517866,
+          "day_volume": "9813565",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.425,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843620000"
+        }
+      },
+      {
+        "id": 3,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843621000\"",
+        "source_time_utc": "2026-11-16T15:40:21+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8099976,
+          "change_percent": -0.50804096,
+          "day_volume": "9813725",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "86",
+          "market_hours": 1,
+          "price": 354.46,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843621000"
+        }
+      },
+      {
+        "id": 4,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843622000\"",
+        "source_time_utc": "2026-11-16T15:40:22+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8599854,
+          "change_percent": -0.5221305,
+          "day_volume": "9814238",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "55",
+          "market_hours": 1,
+          "price": 354.41,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843622000"
+        }
+      },
+      {
+        "id": 5,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843622000\"",
+        "source_time_utc": "2026-11-16T15:40:22+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8599854,
+          "change_percent": -0.52207184,
+          "day_volume": "9814273",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.41,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843622000"
+        }
+      },
+      {
+        "id": 6,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843624000\"",
+        "source_time_utc": "2026-11-16T15:40:24+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.914978,
+          "change_percent": -0.53750753,
+          "day_volume": "9814986",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "56",
+          "market_hours": 1,
+          "price": 354.355,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843624000"
+        }
+      },
+      {
+        "id": 7,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843625000\"",
+        "source_time_utc": "2026-11-16T15:40:25+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9649963,
+          "change_percent": -0.5515702,
+          "day_volume": "9816470",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "80",
+          "market_hours": 1,
+          "price": 354.305,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843625000"
+        }
+      },
+      {
+        "id": 8,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843627000\"",
+        "source_time_utc": "2026-11-16T15:40:27+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0099792,
+          "change_percent": -0.56417304,
+          "day_volume": "9817596",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.26,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843627000"
+        }
+      },
+      {
+        "id": 9,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843627000\"",
+        "source_time_utc": "2026-11-16T15:40:27+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0099792,
+          "change_percent": -0.56417304,
+          "day_volume": "9817616",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.26,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843627000"
+        }
+      },
+      {
+        "id": 10,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843628000\"",
+        "source_time_utc": "2026-11-16T15:40:28+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9599915,
+          "change_percent": -0.55014217,
+          "day_volume": "9824131",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "80",
+          "market_hours": 1,
+          "price": 354.31,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843628000"
+        }
+      },
+      {
+        "id": 11,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843628000\"",
+        "source_time_utc": "2026-11-16T15:40:28+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9649963,
+          "change_percent": -0.551547,
+          "day_volume": "9824728",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "107",
+          "market_hours": 1,
+          "price": 354.305,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843628000"
+        }
+      },
+      {
+        "id": 12,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843629000\"",
+        "source_time_utc": "2026-11-16T15:40:29+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9799805,
+          "change_percent": -0.5557528,
+          "day_volume": "9825017",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.29,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843629000"
+        }
+      },
+      {
+        "id": 13,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843630000\"",
+        "source_time_utc": "2026-11-16T15:40:30+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0,
+          "change_percent": -0.561372,
+          "day_volume": "9825082",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.27,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843630000"
+        }
+      },
+      {
+        "id": 14,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843630000\"",
+        "source_time_utc": "2026-11-16T15:40:30+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0,
+          "change_percent": -0.561372,
+          "day_volume": "9825579",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.27,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843630000"
+        }
+      },
+      {
+        "id": 15,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843631000\"",
+        "source_time_utc": "2026-11-16T15:40:31+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.024994,
+          "change_percent": -0.56838745,
+          "day_volume": "9825988",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "51",
+          "market_hours": 1,
+          "price": 354.245,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843631000"
+        }
+      },
+      {
+        "id": 16,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843632000\"",
+        "source_time_utc": "2026-11-16T15:40:32+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0099792,
+          "change_percent": -0.56417304,
+          "day_volume": "9826387",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.26,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843632000"
+        }
+      },
+      {
+        "id": 17,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843633000\"",
+        "source_time_utc": "2026-11-16T15:40:33+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.019989,
+          "change_percent": -0.5669349,
+          "day_volume": "9827061",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "60",
+          "market_hours": 1,
+          "price": 354.25,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843633000"
+        }
+      },
+      {
+        "id": 18,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843634000\"",
+        "source_time_utc": "2026-11-16T15:40:34+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9700012,
+          "change_percent": -0.55302936,
+          "day_volume": "9827181",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "100",
+          "market_hours": 1,
+          "price": 354.3,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843634000"
+        }
+      },
+      {
+        "id": 19,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843635000\"",
+        "source_time_utc": "2026-11-16T15:40:35+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9899902,
+          "change_percent": -0.5585624,
+          "day_volume": "9828098",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.28,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843635000"
+        }
+      },
+      {
+        "id": 20,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843636000\"",
+        "source_time_utc": "2026-11-16T15:40:36+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9949951,
+          "change_percent": -0.5599672,
+          "day_volume": "9828586",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.275,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843636000"
+        }
+      },
+      {
+        "id": 21,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843636000\"",
+        "source_time_utc": "2026-11-16T15:40:36+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9949951,
+          "change_percent": -0.5599672,
+          "day_volume": "9828640",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.275,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843636000"
+        }
+      },
+      {
+        "id": 22,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843638000\"",
+        "source_time_utc": "2026-11-16T15:40:38+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9700012,
+          "change_percent": -0.55295175,
+          "day_volume": "9829732",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "62",
+          "market_hours": 1,
+          "price": 354.3,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843638000"
+        }
+      },
+      {
+        "id": 23,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843639000\"",
+        "source_time_utc": "2026-11-16T15:40:39+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0149841,
+          "change_percent": -0.56557786,
+          "day_volume": "9829941",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.255,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843639000"
+        }
+      },
+      {
+        "id": 24,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843640000\"",
+        "source_time_utc": "2026-11-16T15:40:40+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -2.0299988,
+          "change_percent": -0.5697443,
+          "day_volume": "9832754",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "100",
+          "market_hours": 1,
+          "price": 354.24,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843640000"
+        }
+      },
+      {
+        "id": 25,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843641000\"",
+        "source_time_utc": "2026-11-16T15:40:41+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9599915,
+          "change_percent": -0.55014217,
+          "day_volume": "9839805",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "120",
+          "market_hours": 1,
+          "price": 354.31,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843641000"
+        }
+      },
+      {
+        "id": 26,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843642000\"",
+        "source_time_utc": "2026-11-16T15:40:42+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9599915,
+          "change_percent": -0.55014217,
+          "day_volume": "9840033",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "100",
+          "market_hours": 1,
+          "price": 354.31,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843642000"
+        }
+      },
+      {
+        "id": 27,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843642000\"",
+        "source_time_utc": "2026-11-16T15:40:42+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9599915,
+          "change_percent": -0.55014217,
+          "day_volume": "9840073",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.31,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843642000"
+        }
+      },
+      {
+        "id": 28,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843644000\"",
+        "source_time_utc": "2026-11-16T15:40:44+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9549866,
+          "change_percent": -0.5487451,
+          "day_volume": "9840197",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.315,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843644000"
+        }
+      },
+      {
+        "id": 29,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843645000\"",
+        "source_time_utc": "2026-11-16T15:40:45+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9199829,
+          "change_percent": -0.53891236,
+          "day_volume": "9840696",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.35,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843645000"
+        }
+      },
+      {
+        "id": 30,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843646000\"",
+        "source_time_utc": "2026-11-16T15:40:46+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.914978,
+          "change_percent": -0.53750753,
+          "day_volume": "9841247",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "285",
+          "market_hours": 1,
+          "price": 354.355,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843646000"
+        }
+      },
+      {
+        "id": 31,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843647000\"",
+        "source_time_utc": "2026-11-16T15:40:47+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.9400024,
+          "change_percent": -0.5445315,
+          "day_volume": "9841533",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "80",
+          "market_hours": 1,
+          "price": 354.33,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843647000"
+        }
+      },
+      {
+        "id": 32,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843648000\"",
+        "source_time_utc": "2026-11-16T15:40:48+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8499756,
+          "change_percent": -0.51926225,
+          "day_volume": "9847351",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "48",
+          "market_hours": 1,
+          "price": 354.42,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843648000"
+        }
+      },
+      {
+        "id": 33,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843649000\"",
+        "source_time_utc": "2026-11-16T15:40:49+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8699951,
+          "change_percent": -0.5248815,
+          "day_volume": "9848511",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "100",
+          "market_hours": 1,
+          "price": 354.4,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843649000"
+        }
+      },
+      {
+        "id": 34,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843650000\"",
+        "source_time_utc": "2026-11-16T15:40:50+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8549805,
+          "change_percent": -0.520689,
+          "day_volume": "9848738",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "200",
+          "market_hours": 1,
+          "price": 354.415,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843650000"
+        }
+      },
+      {
+        "id": 35,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843651000\"",
+        "source_time_utc": "2026-11-16T15:40:51+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8399963,
+          "change_percent": -0.5164612,
+          "day_volume": "9849291",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "93",
+          "market_hours": 1,
+          "price": 354.43,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843651000"
+        }
+      },
+      {
+        "id": 36,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843652000\"",
+        "source_time_utc": "2026-11-16T15:40:52+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8599854,
+          "change_percent": -0.5220426,
+          "day_volume": "9849416",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "100",
+          "market_hours": 1,
+          "price": 354.41,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843652000"
+        }
+      },
+      {
+        "id": 37,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843652000\"",
+        "source_time_utc": "2026-11-16T15:40:52+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8599854,
+          "change_percent": -0.52207184,
+          "day_volume": "9849484",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.41,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843652000"
+        }
+      },
+      {
+        "id": 38,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843655000\"",
+        "source_time_utc": "2026-11-16T15:40:55+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8699951,
+          "change_percent": -0.5248815,
+          "day_volume": "9850928",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "55",
+          "market_hours": 1,
+          "price": 354.4,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843655000"
+        }
+      },
+      {
+        "id": 39,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843655000\"",
+        "source_time_utc": "2026-11-16T15:40:55+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8649902,
+          "change_percent": -0.52347666,
+          "day_volume": "9851573",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.405,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843655000"
+        }
+      },
+      {
+        "id": 40,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843656000\"",
+        "source_time_utc": "2026-11-16T15:40:56+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.875,
+          "change_percent": -0.52628624,
+          "day_volume": "9851685",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "60",
+          "market_hours": 1,
+          "price": 354.395,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843656000"
+        }
+      },
+      {
+        "id": 41,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843657000\"",
+        "source_time_utc": "2026-11-16T15:40:57+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8899841,
+          "change_percent": -0.53049207,
+          "day_volume": "9851863",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "40",
+          "market_hours": 1,
+          "price": 354.38,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843657000"
+        }
+      },
+      {
+        "id": 42,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843658000\"",
+        "source_time_utc": "2026-11-16T15:40:58+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8499756,
+          "change_percent": -0.51926225,
+          "day_volume": "9852012",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "market_hours": 1,
+          "price": 354.42,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843658000"
+        }
+      },
+      {
+        "id": 43,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843659000\"",
+        "source_time_utc": "2026-11-16T15:40:59+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8999939,
+          "change_percent": -0.53322685,
+          "day_volume": "9852459",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "282",
+          "market_hours": 1,
+          "price": 354.37,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843659000"
+        }
+      },
+      {
+        "id": 44,
+        "provider": "yahoo",
+        "ticker": "AAPL",
+        "source_time_json": "\"1794843660000\"",
+        "source_time_utc": "2026-11-16T15:41:00+00:00",
+        "supersedes_observation_id": null,
+        "source_fields": {
+          "change": -1.8849792,
+          "change_percent": -0.5290873,
+          "day_volume": "9853489",
+          "exchange": "NMS",
+          "id": "AAPL",
+          "last_size": "500",
+          "market_hours": 1,
+          "price": 354.385,
+          "price_hint": "2",
+          "quote_type": 8,
+          "time": "1794843660000"
+        }
+      }
+    ],
+    "receipts": [
+      {
+        "id": 1,
+        "observation_id": 1,
+        "received_at_utc": "2026-11-16T15:40:20.529072+00:00"
+      },
+      {
+        "id": 2,
+        "observation_id": 2,
+        "received_at_utc": "2026-11-16T15:40:21.518115+00:00"
+      },
+      {
+        "id": 3,
+        "observation_id": 3,
+        "received_at_utc": "2026-11-16T15:40:22.506863+00:00"
+      },
+      {
+        "id": 4,
+        "observation_id": 4,
+        "received_at_utc": "2026-11-16T15:40:23.499428+00:00"
+      },
+      {
+        "id": 5,
+        "observation_id": 5,
+        "received_at_utc": "2026-11-16T15:40:24.562920+00:00"
+      },
+      {
+        "id": 6,
+        "observation_id": 6,
+        "received_at_utc": "2026-11-16T15:40:25.578406+00:00"
+      },
+      {
+        "id": 7,
+        "observation_id": 7,
+        "received_at_utc": "2026-11-16T15:40:26.623855+00:00"
+      },
+      {
+        "id": 8,
+        "observation_id": 8,
+        "received_at_utc": "2026-11-16T15:40:27.597534+00:00"
+      },
+      {
+        "id": 9,
+        "observation_id": 9,
+        "received_at_utc": "2026-11-16T15:40:27.647671+00:00"
+      },
+      {
+        "id": 10,
+        "observation_id": 10,
+        "received_at_utc": "2026-11-16T15:40:28.834819+00:00"
+      },
+      {
+        "id": 11,
+        "observation_id": 11,
+        "received_at_utc": "2026-11-16T15:40:29.871316+00:00"
+      },
+      {
+        "id": 12,
+        "observation_id": 12,
+        "received_at_utc": "2026-11-16T15:40:30.692646+00:00"
+      },
+      {
+        "id": 13,
+        "observation_id": 13,
+        "received_at_utc": "2026-11-16T15:40:30.715431+00:00"
+      },
+      {
+        "id": 14,
+        "observation_id": 14,
+        "received_at_utc": "2026-11-16T15:40:31.581622+00:00"
+      },
+      {
+        "id": 15,
+        "observation_id": 15,
+        "received_at_utc": "2026-11-16T15:40:32.667993+00:00"
+      },
+      {
+        "id": 16,
+        "observation_id": 16,
+        "received_at_utc": "2026-11-16T15:40:33.601553+00:00"
+      },
+      {
+        "id": 17,
+        "observation_id": 17,
+        "received_at_utc": "2026-11-16T15:40:34.671667+00:00"
+      },
+      {
+        "id": 18,
+        "observation_id": 18,
+        "received_at_utc": "2026-11-16T15:40:35.590367+00:00"
+      },
+      {
+        "id": 19,
+        "observation_id": 19,
+        "received_at_utc": "2026-11-16T15:40:36.631101+00:00"
+      },
+      {
+        "id": 20,
+        "observation_id": 20,
+        "received_at_utc": "2026-11-16T15:40:37.604783+00:00"
+      },
+      {
+        "id": 21,
+        "observation_id": 21,
+        "received_at_utc": "2026-11-16T15:40:38.574935+00:00"
+      },
+      {
+        "id": 22,
+        "observation_id": 22,
+        "received_at_utc": "2026-11-16T15:40:39.584156+00:00"
+      },
+      {
+        "id": 23,
+        "observation_id": 23,
+        "received_at_utc": "2026-11-16T15:40:40.623499+00:00"
+      },
+      {
+        "id": 24,
+        "observation_id": 24,
+        "received_at_utc": "2026-11-16T15:40:41.620117+00:00"
+      },
+      {
+        "id": 25,
+        "observation_id": 25,
+        "received_at_utc": "2026-11-16T15:40:42.566436+00:00"
+      },
+      {
+        "id": 26,
+        "observation_id": 26,
+        "received_at_utc": "2026-11-16T15:40:43.601115+00:00"
+      },
+      {
+        "id": 27,
+        "observation_id": 27,
+        "received_at_utc": "2026-11-16T15:40:44.642234+00:00"
+      },
+      {
+        "id": 28,
+        "observation_id": 28,
+        "received_at_utc": "2026-11-16T15:40:45.581702+00:00"
+      },
+      {
+        "id": 29,
+        "observation_id": 29,
+        "received_at_utc": "2026-11-16T15:40:46.602921+00:00"
+      },
+      {
+        "id": 30,
+        "observation_id": 30,
+        "received_at_utc": "2026-11-16T15:40:47.686607+00:00"
+      },
+      {
+        "id": 31,
+        "observation_id": 31,
+        "received_at_utc": "2026-11-16T15:40:48.691167+00:00"
+      },
+      {
+        "id": 32,
+        "observation_id": 32,
+        "received_at_utc": "2026-11-16T15:40:49.646965+00:00"
+      },
+      {
+        "id": 33,
+        "observation_id": 33,
+        "received_at_utc": "2026-11-16T15:40:50.675144+00:00"
+      },
+      {
+        "id": 34,
+        "observation_id": 34,
+        "received_at_utc": "2026-11-16T15:40:51.621535+00:00"
+      },
+      {
+        "id": 35,
+        "observation_id": 35,
+        "received_at_utc": "2026-11-16T15:40:52.660945+00:00"
+      },
+      {
+        "id": 36,
+        "observation_id": 36,
+        "received_at_utc": "2026-11-16T15:40:53.641366+00:00"
+      },
+      {
+        "id": 37,
+        "observation_id": 37,
+        "received_at_utc": "2026-11-16T15:40:54.606227+00:00"
+      },
+      {
+        "id": 38,
+        "observation_id": 38,
+        "received_at_utc": "2026-11-16T15:40:55.578375+00:00"
+      },
+      {
+        "id": 39,
+        "observation_id": 39,
+        "received_at_utc": "2026-11-16T15:40:56.860128+00:00"
+      },
+      {
+        "id": 40,
+        "observation_id": 40,
+        "received_at_utc": "2026-11-16T15:40:57.904482+00:00"
+      },
+      {
+        "id": 41,
+        "observation_id": 41,
+        "received_at_utc": "2026-11-16T15:40:58.736060+00:00"
+      },
+      {
+        "id": 42,
+        "observation_id": 42,
+        "received_at_utc": "2026-11-16T15:40:59.621277+00:00"
+      },
+      {
+        "id": 43,
+        "observation_id": 43,
+        "received_at_utc": "2026-11-16T15:41:00.618083+00:00"
+      },
+      {
+        "id": 44,
+        "observation_id": 44,
+        "received_at_utc": "2026-11-16T15:41:01.764874+00:00"
+      }
+    ]
+  }
+}

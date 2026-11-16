@@ -1,5 +1,11 @@
 # Recorded-session replay
 
+Saved counter updates sharing a source timestamp now yield observed volume
+when totals are nondecreasing in receipt order. Decreases, resets, invalid values
+and missing baselines remain unavailable. The chart identifies the counter-delta
+basis. This differs from Yahoo downloaded bar volume. The saved-Yahoo
+[volume trace](part-41-evidence.md) verifies SQL, backend and visible chart values.
+
 Choose **Replay** on the dashboard, select a saved symbol, and enter inclusive
 start/end **receipt times**, with an ISO 8601 timezone such as `+00:00` or `Z`.
 The defaults cover the saved receipts for that symbol. Click **Load / restart
