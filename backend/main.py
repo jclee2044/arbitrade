@@ -20,6 +20,10 @@ from dotenv import load_dotenv
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Response
 
+from backend.daily_history import daily_history
+from backend.daily_strategy import Mode, Variant, StrategySelection, backtest
+from backend.classroom_decisions import ChartCapture
+from backend.decision_provider import ProviderFailure
 from backend.history import history_response
 from backend.indicators import with_averages, validate_windows, DEFAULT_SHORT, DEFAULT_LONG, indicator_types, configured_indicators
 from backend.indicator_store import IndicatorStore, DEFAULT_CONFIG_DATABASE
@@ -275,6 +279,14 @@ def named_indicators(snapshot, symbol, timeframe, source_snapshot=None):
         presets = store.matrix_presets(symbol)
         for frame in dict.fromkeys(item['timeframe'] for item in presets):
             items = [item for item in presets if item['timeframe'] == frame]
+            if frame == '1d' and symbol == 'AAPL':
+                daily = [i for i in items if i['settings']['window'] == 200]
+                for item in daily:
+                    item.update(rows=daily_history().overlay(item['type'] + '200', snapshot),
+                                units='price', source='Frozen Yahoo daily research history')
+                items = [i for i in items if i not in daily]
+                if not items:
+                    continue
             source = snapshot if frame == timeframe else source_snapshot(frame)
             for item, calculated in zip(items, configured_indicators(source, items)):
                 rows = calculated['rows']
@@ -457,8 +469,6 @@ def get_decision_snapshot(snapshot_id: str, include_records: bool = False):
 @app.post('/api/decisions')
 async def create_decision(request: DecisionRequest):
     if request.snapshot_id is None and request.capture is not None:
-        from backend.classroom_decisions import ChartCapture
-        from backend.decision_provider import ProviderFailure
         from pydantic import ValidationError
         try:
             capture = ChartCapture.model_validate(request.capture)
@@ -478,6 +488,27 @@ async def create_decision(request: DecisionRequest):
 def chart_questions():
     from backend.chart_decisions import questions
     return questions()
+
+
+@app.get('/api/backtests/daily')
+def daily_backtest(variant: Variant = 'baseline'):
+    return backtest(variant)
+
+
+class StrategyDecisionRequest(BaseModel):
+    model_config = {'extra': 'forbid'}
+    capture: ChartCapture
+    strategy: StrategySelection
+    data_mode: Mode
+
+
+@app.post('/api/decisions/strategy')
+async def assess_strategy(request: StrategyDecisionRequest):
+    try:
+        return await app.state.classroom_decisions.decide(
+            request.capture, data_mode=request.data_mode, strategy=request.strategy)
+    except ProviderFailure as error:
+        raise HTTPException(status_code=422, detail=error.code) from None
 
 
 @app.get('/api/decisions/{decision_id}/image')
