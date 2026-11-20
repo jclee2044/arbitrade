@@ -9,6 +9,11 @@ System Python is /usr/bin/python 3.14.8 with FastAPI 0.156.8 and Uvicorn 0.54.0.
 
 ## Yahoo dependencies — approved and installed
 
+The original installation below used WebSockets 17.4. The approved SDK
+setup subsequently moved the shared backend to WebSockets 16.1.1 and added
+`backend/requirements-openai.txt`. See the
+[current setup record](verification.md#read-only-desk-agent--november-17-2026).
+
 yfinance 1.8.0 and websockets 17.4 are installed in backend/.packages and
 import successfully with PYTHONPATH=backend/.packages. System pip remains absent. The package database has no python-yfinance. Python is
 externally managed. Reuse /usr/bin/python and install into project-local

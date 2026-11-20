@@ -16,6 +16,7 @@ from pydantic import BaseModel
 
 from backend.paper import PaperBroker, RequestConflict, stock_quote
 from backend.decisions import DecisionService
+from backend.desk_agent import DeskAgentRequest, run_desk_agent
 from dotenv import load_dotenv
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Response
@@ -509,6 +510,13 @@ async def assess_strategy(request: StrategyDecisionRequest):
             request.capture, data_mode=request.data_mode, strategy=request.strategy)
     except ProviderFailure as error:
         raise HTTPException(status_code=422, detail=error.code) from None
+
+
+@app.post('/api/desk-agent')
+async def desk_agent(request: DeskAgentRequest, response: Response):
+    result = await run_desk_agent(request, app.state.classroom_decisions)
+    response.status_code = {'unavailable': 503, 'provider_error': 502, 'timeout': 504}.get(result['status'], 200)
+    return result
 
 
 @app.get('/api/decisions/{decision_id}/image')

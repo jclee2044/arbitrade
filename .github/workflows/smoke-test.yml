@@ -22,7 +22,7 @@ jobs:
       # Only the ephemeral runner is provisioned. No provider secrets are used.
       # Review these installation commands before enabling the first push run.
       - name: Prepare Python runtime
-        run: python -m pip install fastapi==0.156.8 uvicorn==0.54.0 pydantic==2.14.1 python-dotenv==1.2.4 websockets==17.4 -r backend/requirements-calendar.txt
+        run: python -m pip install fastapi==0.156.8 uvicorn==0.54.0 pydantic==2.14.1 python-dotenv==1.2.4 websockets==16.1.1 -r backend/requirements-calendar.txt -r backend/requirements-openai.txt
       - name: Prepare existing locked browser tools
         run: npm --prefix frontend ci
       - name: Prepare Playwright Chromium and Linux libraries
