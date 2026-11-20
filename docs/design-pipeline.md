@@ -93,6 +93,10 @@ update. Reconnect uses a new subscribed client after a three-second backoff.
 
 Vue defaults to AAPL at 1m. The Live ticker field normalizes the submitted
 symbol and opens matching history plus live updates for the current timeframe.
+When the ticker changes, the chart restores automatic price and volume scaling.
+When the first candles arrive, the newest sits about 90% across the price pane.
+Automatic price scaling uses the visible candle highs and lows with equal top
+and bottom margins. Price overlays and signal markers share that scale.
 Other tickers have separate Yahoo caches and share their upstream subscription
 between active charts and the live paper account. The chart uses the U.S.
 regular-session calendar.

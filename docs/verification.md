@@ -5398,3 +5398,15 @@ above are historical measurements and exclude rendering.
 | `git diff --check` and `git check-ignore report.md` | Clean tracked diff and local-only report | Both passed. |
 
 Student review, committing, pushing and checking the remote SHA are pending at this review checkpoint.
+
+## Center the candle on ticker change · November 19, 2026
+
+- `npm --prefix frontend run build` passed with 38 modules. Reused the installed dependencies on Omarchy 4.5.0 with Node 26.13.0, npm 11.20.0 and system Python 3.14.8.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-center-history` passed in Chromium using disposable three-day history. Starting with a manual AAPL price range of 100–120, the test switched to MSFT and verified that the 403 close was visible and its candle was within two pixels of the horizontal midpoint. Switching back to AAPL on the five-minute interval passed the same checks at 115. Both coordinate checks ran before hovering. Existing gesture, paging, replay and stored-history checks passed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke --output /tmp/arbitrade-center-baseline` passed the saved-Yahoo SQL, HTTP, WebSocket and browser checks before editing. Both browser runners initially encountered a sandbox socket permission error, then passed with loopback access and stopped their temporary services.
+
+## Vertical candle centering · November 19, 2026
+
+- Rechecked the prior horizontal behavior with `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-vertical-baseline`. The sandbox denied the local socket. The baseline passed with loopback access.
+- `npm --prefix frontend run build` passed with 38 modules. `git diff --check` passed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-vertical-history` passed. Chromium switched from a manually scaled AAPL chart to MSFT at one minute and back to AAPL at five minutes. Expected the latest candle 85–95% across the plot and top and bottom wick clearance within two pixels of each other. Both checks measured the latest candle at 235.25 of 270 pixels across, with 67.8 pixels above the highest wick and 68.8 below the lowest. History paging, gestures, volume scaling, replay and stored fixture values also passed. The runner stopped its temporary services.

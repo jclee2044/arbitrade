@@ -27,6 +27,26 @@ async function until(fn) {
   }
   throw Error('Timed out waiting for chart')
 }
+async function expectTickerFraming(close) {
+  await until(async () => await market(m => m.latest?.close) === close)
+  const position = await market(async m => {
+    await new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)))
+    const { prices, scale, size } = m.drawingAxes()
+    const range = scale.getVisibleRange()
+    const visible = m.candles.filter(c => c.time >= range.from && c.time <= range.to)
+    return {
+      x: scale.timeToCoordinate(m.latest.time),
+      top: prices.priceToCoordinate(Math.max(...visible.map(c => c.high))),
+      bottom: size.height - prices.priceToCoordinate(Math.min(...visible.map(c => c.low))),
+      ...size,
+    }
+  })
+  assert(position.x >= 0.85 * position.width && position.x <= 0.95 * position.width,
+    `Latest candle should be near the right edge: ${JSON.stringify(position)}`)
+  assert(position.top > 0 && position.bottom > 0 && Math.abs(position.top - position.bottom) <= 2,
+    `Visible candle highs and lows should have equal vertical clearance: ${JSON.stringify(position)}`)
+  checks.push({ close, ticker_framing_px: position })
+}
 try {
   await page.goto(`http://127.0.0.1:${process.env.ARBITRADE_FRONTEND_PORT}`, { waitUntil: 'networkidle' })
   await until(async () => await candleCount(page) === 256)
@@ -257,9 +277,11 @@ try {
   await ticker.press('Enter')
   assert(await page.getByRole('alert').filter({ hasText: 'Enter a ticker such as MSFT' }).isVisible())
   assert(await page.getByRole('heading', { name: 'AAPL · 1m candles' }).count())
+  await market(m => m.drawingAxes().prices.priceScale().setVisibleRange({ from: 100, to: 120 }))
   await ticker.fill(' msft ')
   await ticker.press('Enter')
   await page.getByRole('heading', { name: 'MSFT · 1m candles' }).waitFor()
+  await expectTickerFraming(403)
   await visibleClose(403)
   assert.equal(await ticker.inputValue(), 'MSFT')
   const history = await page.request.get(new URL('/api/history?symbol=MSFT&timeframe=1m&source=observations&calendar=NASDAQ', page.url()).href)
@@ -283,6 +305,7 @@ try {
   await ticker.fill('AAPL')
   await button('Go').click()
   await page.getByRole('heading', { name: 'AAPL · 5m candles' }).waitFor()
+  await expectTickerFraming(115)
   await visibleClose(115)
   checks.push('Ticker validation, lowercase MSFT entry, matching stored candles and volume, timeframe, replay, and Go back to AAPL')
   assert.deepEqual(errors, [])

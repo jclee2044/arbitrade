@@ -6,6 +6,9 @@ import { movingAverageColors, studyColor } from './chart-studies.js'
 import { chartGestures } from './chart-gestures.js'
 import { requestDeskAgent } from './desk-agent.js'
 
+// Studies on the price pane share the candle scale without setting its bounds.
+const priceOverlayOptions = { autoscaleInfoProvider: () => null }
+
 export function useMarketChart(container) {
   const availableTypes = ref([])
   const indicatorType = ref('')
@@ -136,6 +139,7 @@ export function useMarketChart(container) {
   const hover = ref(null)
   const candles = ref([])
   let hasOlder = false
+  let switchedTicker = false
   const chartSession = ref(0)
   const chartRevision = ref(0)
   const changeChartSnapshot = () => { chartRevision.value++ }
@@ -215,6 +219,13 @@ export function useMarketChart(container) {
       // A live revision or rollover must not pull a reader out of history.
       const offset = Math.max(0, data.candles.findIndex(c => c.time === previousFirst))
       scale.setVisibleLogicalRange({ from: visible.from + offset, to: visible.to + offset })
+    } else if (switchedTicker) {
+      // Set the offset once. The time scale follows new bars from that offset.
+      if (wasEmpty && count) {
+        const rightPadding = Math.round(capacity * 0.1)
+        const to = count - 1 + rightPadding
+        scale.setVisibleLogicalRange({ from: to - capacity + 1, to })
+      }
     } else if (wasEmpty && ['1d', '1w', '1mo'].includes(timeframe.value)) {
       scale.fitContent()
     } else if (wasEmpty && count > capacity) {
@@ -280,6 +291,7 @@ export function useMarketChart(container) {
         series = chart.addSeries(LineSeries, {
           color: studyColor(item), lineWidth: 2, lineStyle: item.type === 'ema' ? LineStyle.Dashed : LineStyle.Solid,
           priceLineVisible: false, lastValueVisible: false,
+          ...(item.pane === 'price' ? priceOverlayOptions : {}),
         }, item.pane === 'price' ? 0 : 2)
         if (item.pane !== 'price') chart.panes()[2].setStretchFactor(0.35)
         configuredSeries.set(item.id, series)
@@ -311,7 +323,13 @@ export function useMarketChart(container) {
   function connect(retain = false) {
     changeChartSnapshot()
     gestures?.stop()
-    symbol.value = mode.value === 'live' ? liveSymbol.value : replaySymbol.value
+    const nextSymbol = mode.value === 'live' ? liveSymbol.value : replaySymbol.value
+    if (retain !== true) switchedTicker = nextSymbol !== symbol.value
+    if (nextSymbol !== symbol.value) {
+      prices.priceScale().setAutoScale(true)
+      volume.priceScale().setAutoScale(true)
+    }
+    symbol.value = nextSymbol
     paperAccount.value = mode.value === 'live' ? 'live' : null
     clearTimeout(playback)
     playing.value = false
@@ -474,12 +492,14 @@ export function useMarketChart(container) {
       upColor: '#084c3d', downColor: '#682d40', borderVisible: false,
       wickUpColor: '#084c3d', wickDownColor: '#682d40',
     }, 0)
+    prices.priceScale().applyOptions({ scaleMargins: { top: 0.15, bottom: 0.15 } })
     volume = chart.addSeries(HistogramSeries, { priceFormat: { type: 'volume' }, title: 'Volume (shares)' }, 1)
     volume.priceScale().applyOptions({ scaleMargins: { top: 0.1, bottom: 0 } })
-    shortLine = chart.addSeries(LineSeries, { color: movingAverageColors.sma, lineWidth: 2, priceLineVisible: false, lastValueVisible: false }, 0)
-    longLine = chart.addSeries(LineSeries, { color: movingAverageColors.sma, lineWidth: 2, priceLineVisible: false, lastValueVisible: false }, 0)
+    const smaOptions = { ...priceOverlayOptions, color: movingAverageColors.sma, lineWidth: 2, priceLineVisible: false, lastValueVisible: false }
+    shortLine = chart.addSeries(LineSeries, smaOptions, 0)
+    longLine = chart.addSeries(LineSeries, smaOptions, 0)
     prices.attachPrimitive({ updateAllViews() { drawingRevision.value++ } })
-    markers = createSeriesMarkers(prices, [])
+    markers = createSeriesMarkers(prices, [], { autoScale: false })
     chart.panes()[0].setStretchFactor(1)
     chart.panes()[1].setStretchFactor(0.25)
     chart.subscribeCrosshairMove(inspect)

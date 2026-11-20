@@ -54,7 +54,9 @@ No authentication or credentials are used for Yahoo quotes.
 The live chart defaults to AAPL and one-minute candles. It supports
 1m, 5m, 15m, 30m, 1hr, daily, weekly and monthly candles. Switching ticker or timeframe
 opens a new WebSocket with matching stored history, followed by backend-derived
-updates. Feed details displays the source, latest source timestamp and age,
+updates. Changing ticker places its latest candle near the right edge and centers
+the visible candles vertically, with equal space above the highest wick and
+below the lowest wick. Feed details displays the source, latest source timestamp and age,
 and upstream feed status separately from the browser connection. The AI summary
 shows interval and coverage status for the selected candle. Unavailable volume
 is omitted from hover cards and leaves a gap in the histogram.

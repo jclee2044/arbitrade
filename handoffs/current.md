@@ -1,3 +1,15 @@
+# Vertical candle centering · November 19, 2026
+
+[Prompt 131](../prompts/131-vertical-candle-centering.md) clarifies the previous ticker-switch request for the Vue/FastAPI workstation at `/home/jlrj/Documents/arbitrade`. Updated `frontend/src/useMarketChart.js` to place the newest candle near the right edge and center the visible wick range vertically. Updated the chart check in `scripts/history_smoke.mjs`, the README and the design pipeline. The build and Chromium history SmokeTest passed. See the [verification record](../docs/verification.md#vertical-candle-centering--november-19-2026) for both ticker switches and their measured margins.
+
+The change is ready for student review before committing. On resumption, inspect Git status, preserve the existing local edits and verify the chart check using the system Python and existing dependencies.
+
+# Center the candle on ticker change · November 19, 2026
+
+Arbitrade is the Vue/FastAPI workstation at `/home/jlrj/Documents/arbitrade`. For [prompt 130](../prompts/130-center-ticker-candle.md), updated `frontend/src/useMarketChart.js` to center the latest candle horizontally and reset the chart scales when the active symbol changes. Added a regression check to `scripts/history_smoke.mjs` and updated the README and design pipeline. The frontend build and history browser SmokeTest passed, including switches in both directions. The saved-volume baseline passed before editing. See the [verification record](../docs/verification.md#center-the-candle-on-ticker-change--november-19-2026) for commands and observed results.
+
+Next step is student review before committing. On resumption, inspect Git status, preserve existing student edits and rerun the history SmokeTest with the existing system Python and local dependencies.
+
 # Modular commit review · November 19, 2026
 
 Arbitrade is the Vue/FastAPI/SQLite workstation at `/home/jlrj/Documents/arbitrade`. [Prompt 128](../prompts/128-modular-commits-and-push.md) requested a modular GitHub push. Seven review patches cover the original 114 paths and this task's records. Separate report-draft edits arrived during preparation. The base is `e40aa4d` on local and remote main. The focused tests, builds and both controlled browser checks passed. See the [verification record](../docs/verification.md#modular-commit-review--november-19-2026).
