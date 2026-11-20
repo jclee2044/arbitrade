@@ -47,7 +47,8 @@ def load_history(path: Path | None = None) -> list[dict[str, str | float | int]]
 
 def history_response(symbol='AAPL', timeframe='1m', *, as_of=None, source='sample',
                      calendar=None, database=DEFAULT_DATABASE, sessions=None,
-                     short_window=DEFAULT_SHORT, long_window=DEFAULT_LONG, receipt_limit=None):
+                     short_window=DEFAULT_SHORT, long_window=DEFAULT_LONG, receipt_limit=None,
+                     quote_filter=None):
     now = utc_datetime(as_of) if as_of is not None else datetime.now(UTC)
     symbol = symbol.strip().upper()
     if not symbol:
@@ -66,7 +67,8 @@ def history_response(symbol='AAPL', timeframe='1m', *, as_of=None, source='sampl
         if not path.is_file():
             raise ValueError('Observation database does not exist')
         with closing(sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)) as connection:
-            base = form_candles(connection, symbol, as_of=now, available_at=now, receipt_limit=receipt_limit)
+            base = form_candles(connection, symbol, as_of=now, available_at=now,
+                                receipt_limit=receipt_limit, quote_filter=quote_filter)
         # Snapshot is already filtered to receipts and source ticks visible at now.
         versions = [MinuteVersion(c, now) for c in base['candles']]
         unbucketed = base['unbucketed_observation_ids']

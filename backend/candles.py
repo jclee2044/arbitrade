@@ -60,13 +60,15 @@ def minute_volume(baseline, rows):
     return totals[-1] - totals[0], 'last cumulative total minus pre-minute baseline'
 
 
-def form_candles(connection, ticker, *, as_of=None, provider='yahoo', available_at=None, receipt_limit=None):
+def form_candles(connection, ticker, *, as_of=None, provider='yahoo', available_at=None, receipt_limit=None,
+                 quote_filter=None):
     """Return six-field candles plus separate status metadata.
 
     as_of evaluates minute end. By default all saved rows are considered;
     available_at additionally restricts receipts, source times, and effective
     correction links for replay. receipt_limit additionally caps arrival IDs,
     including when receipts share timestamps. The history service sets its cutoff.
+    quote_filter can restrict which decoded observations contribute to the candles.
     """
     now = utc_datetime(as_of) if as_of is not None else datetime.now(UTC)
     cursor = connection.execute('''
@@ -90,7 +92,9 @@ def form_candles(connection, ticker, *, as_of=None, provider='yahoo', available_
                 continue
             if row['source_time_utc'] is not None and utc_datetime(row['source_time_utc']) > cutoff:
                 continue
-        visible.append(row)
+        row['payload'] = json.loads(row['payload_json'])
+        if quote_filter is None or quote_filter(row['payload']):
+            visible.append(row)
     superseded = {row['supersedes_observation_id'] for row in visible}
     for row in visible:
         if row['id'] in superseded:
@@ -99,7 +103,6 @@ def form_candles(connection, ticker, *, as_of=None, provider='yahoo', available_
             unbucketed.append(row['id'])
             continue
         row['time'] = utc_datetime(row['source_time_utc'])
-        row['payload'] = json.loads(row['payload_json'])
         price = row['payload'].get('price')
         if isinstance(price, bool) or not isinstance(price, (int, float)) or not math.isfinite(price):
             raise ValueError(f"Invalid price in observation {row['id']}")

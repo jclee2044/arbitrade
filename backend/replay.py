@@ -98,8 +98,9 @@ class Replay:
                                 done=self.position == len(self.events),
                                 message='This selection has no recorded observations.' if not self.events else None))
 
-    def minute_snapshot(self):
-        base = form_candles(self.connection, self.symbol, as_of=self.evaluation, available_at=self.evaluation)
+    def minute_snapshot(self, *, quote_filter=None):
+        base = form_candles(self.connection, self.symbol, as_of=self.evaluation,
+                            available_at=self.evaluation, quote_filter=quote_filter)
         versions = [MinuteVersion(c, self.evaluation) for c in base['candles']]
         result = derive_timeframe(versions, '1m', as_of=self.evaluation, calendar=self.calendar)
         return dict(result, symbol=self.symbol)

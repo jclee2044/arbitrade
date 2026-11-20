@@ -3,16 +3,18 @@
 from bisect import bisect_left
 import asyncio
 import json
+import logging
 import os
+import re
 import sqlite3
 from pathlib import Path
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel
 
-from backend.paper import PaperBroker, RequestConflict
+from backend.paper import PaperBroker, RequestConflict, stock_quote
 from backend.decisions import DecisionService
 from dotenv import load_dotenv
 
@@ -23,10 +25,22 @@ from backend.indicators import with_averages, validate_windows, DEFAULT_SHORT, D
 from backend.indicator_store import IndicatorStore, DEFAULT_CONFIG_DATABASE
 
 from backend.replay import Replay, selections
-from backend.live import LiveFeed
+from backend.live import LiveFeed, LiveSubscriptions
 from backend.provider_history import ProviderHistory
 from backend.observations import DEFAULT_DATABASE
 from backend.timeframes import TIMEFRAMES
+
+
+async def track_live_paper(application):
+    broker = application.state.paper
+    while True:
+        await asyncio.sleep(1)
+        try:
+            if broker.tracked_symbols():
+                await asyncio.to_thread(broker.catch_up_live)
+            await application.state.subscriptions.track_paper(broker.tracked_symbols())
+        except (OSError, sqlite3.Error, ValueError) as error:
+            logging.getLogger(__name__).warning('Paper tracking will retry: %s', type(error).__name__)
 
 
 @asynccontextmanager
@@ -43,10 +57,19 @@ async def lifespan(app):
         await app.state.feed.start()
     else:
         app.state.feed.status = 'disabled'
+    worker = None
     try:
+        await app.state.subscriptions.track_paper(app.state.paper.tracked_symbols())
+        worker = asyncio.create_task(track_live_paper(app))
         yield
     finally:
-        await app.state.feed.stop()
+        try:
+            if worker is not None:
+                worker.cancel()
+                with suppress(asyncio.CancelledError):
+                    await worker
+        finally:
+            await app.state.subscriptions.stop()
 
 
 app = FastAPI(title="Arbitrade", lifespan=lifespan)
@@ -117,18 +140,21 @@ def live_page(snapshot, oldest=None, extend=False):
 async def live(websocket: WebSocket, paged: bool = False, oldest: str | None = None, symbol: str = 'AAPL', timeframe: str = '1m', matrix: bool = False,
                short_window: int = DEFAULT_SHORT, long_window: int = DEFAULT_LONG):
     await websocket.accept()
-    if symbol != 'AAPL' or timeframe not in TIMEFRAMES:
-        await websocket.send_json({'type': 'error', 'error': 'Choose AAPL and a supported timeframe'})
+    symbol = symbol.strip().upper()
+    if not re.fullmatch(r'[A-Z][A-Z0-9.-]{0,15}', symbol) or timeframe not in TIMEFRAMES:
+        await websocket.send_json({'type': 'error', 'error': 'Enter a valid ticker and timeframe'})
         await websocket.close(code=1008)
         return
-    feed = websocket.app.state.feed
+    subscriptions = websocket.app.state.subscriptions
+    feed = None
+
     def live_snapshot():
         snapshot = with_averages(feed.snapshot(timeframe), short_window, long_window)
         return named_indicators(snapshot, symbol, timeframe, feed.snapshot if matrix else None)
 
-    previous = {}
     try:
         validate_windows(short_window, long_window)
+        feed = await subscriptions.open_chart(symbol)
         snapshot = await shared_snapshot(feed, (symbol, timeframe, matrix, short_window, long_window), live_snapshot)
         if paged:
             snapshot = live_page(snapshot, oldest)
@@ -177,6 +203,9 @@ async def live(websocket: WebSocket, paged: bool = False, oldest: str | None = N
     except (ValueError, RuntimeError) as error:
         await websocket.send_json({'type': 'error', 'error': str(error)})
         await websocket.close(code=1011)
+    finally:
+        if feed is not None:
+            await subscriptions.close_chart(symbol)
 
 
 @app.get('/api/replay/selections')
@@ -207,7 +236,7 @@ async def replay(websocket: WebSocket, symbol: str, start: str, end: str,
                     row = session.events[session.position-1]
                     first = session.connection.execute('SELECT MIN(id) FROM receipts WHERE observation_id=?', (row[2],)).fetchone()[0]
                     # Complete bars value the prior holding before this receipt's fill.
-                    minute_snapshot = session.minute_snapshot()
+                    minute_snapshot = session.minute_snapshot(quote_filter=stock_quote)
                     websocket.app.state.paper.mark_completed(account_id, minute_snapshot,
                         event_time=session.evaluation, receipt_id=row[0])
                     websocket.app.state.paper.observe(account_id, dict(receipt_id=row[0], observation_id=row[2],
@@ -339,6 +368,7 @@ def setup_paper(application):
     application.state.classroom_decisions = ClassroomDecisions(broker.path,
         provider=getattr(application.state, 'classroom_provider', None))
     application.state.paper = broker
+    application.state.subscriptions = LiveSubscriptions(application.state.feed)
     application.state.paper_replays = {}
     application.state.feed.on_record = broker.catch_up_live
     application.state.decisions = DecisionService(broker.path, broker.market, broker,
@@ -378,7 +408,10 @@ async def paper_action(request: PaperAction):
             action=request.action, symbol=request.symbol, quantity=request.quantity,
             submitted_at=session.evaluation if session else None,
             after_receipt_id=(session.current or {}).get('receipt_id', 0) if session else broker.market_cursor(),
-            accept_new=request.account_id == 'live' or session is not None)
+            accept_new=request.account_id == 'live' or session is not None,
+            replay_symbol=session.symbol if session else None)
+        if request.account_id == 'live' and result['status'] == 'pending':
+            await app.state.subscriptions.track_paper(broker.tracked_symbols())
         return dict(result=result, state=broker.snapshot(request.account_id))
     except RequestConflict as error:
         raise HTTPException(status_code=409, detail=str(error)) from error

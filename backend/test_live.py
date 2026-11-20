@@ -63,6 +63,43 @@ class LiveTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.feed.feed_state()['status'], 'disconnected')
         self.assertEqual(self.feed.snapshot()['feed']['status'], 'disconnected')
 
+    async def test_alternate_symbol_records_and_subscribes_independently(self):
+        subscriptions = []
+
+        async def subscribe(symbols):
+            subscriptions.extend(symbols)
+
+        async def close():
+            pass
+
+        client = SimpleNamespace(subscribe=subscribe, close=close)
+        feed = LiveFeed(self.feed.database, lambda **kwargs: client, symbol='MSFT')
+        aapl = self.quote('2026-11-10T15:00:01+00:00', 100, 1000)
+        msft = dict(aapl, id='MSFT', price=400)
+        with ObservationStore(feed.database) as store:
+            self.accept(aapl, store)
+
+        received = asyncio.Event()
+
+        async def receive(client, handler):
+            handler(aapl)
+            handler(msft)
+            received.set()
+            await asyncio.Event().wait()
+
+        with patch('backend.live.listen_continuously', receive):
+            await feed.start()
+            try:
+                await asyncio.wait_for(received.wait(), timeout=1)
+                self.assertEqual(subscriptions, ['MSFT'])
+                self.assertEqual(feed.feed_state()['latest_observation']['ticker'], 'MSFT')
+                self.assertEqual(feed.snapshot()['candles'][-1]['close'], 400)
+                self.assertEqual(self.feed.snapshot()['candles'][-1]['close'], 100)
+                with ObservationStore(feed.database) as store:
+                    self.assertEqual(store.connection.execute('SELECT COUNT(*) FROM receipts').fetchone()[0], 2)
+            finally:
+                await feed.stop()
+
     async def test_clean_upstream_close_exits_instead_of_spinning(self):
         async def frames():
             yield json.dumps({'message': 'constructed'})

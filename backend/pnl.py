@@ -57,16 +57,9 @@ def append(c, *, account_id, symbol, event_key, event_type, event_time, price_ti
          str(unrealized) if unrealized is not None else None, fill_id, candle_time, receipt_id))
 
 
-def record_fill(c, fill, order, cash):
-    """Must run in the same transaction as its fill/balance updates."""
-    if c.execute('SELECT 1 FROM paper_pnl_history WHERE fill_id=?', (fill['id'],)).fetchone():
-        return
-    previous = state(c, order['account_id'], order['symbol'])
-    shares = previous['shares'] if previous else 0
-    basis = Fraction(previous['basis_exact']) if previous else Fraction(0)
-    realized = Fraction(previous['realized_exact']) if previous else Fraction(0)
-    price, quantity = Fraction(fill['price']), fill['quantity']
-    if order['side'] == 'buy':
+def apply_fill(shares, basis, realized, side, quantity, price):
+    """Apply a long-only fill using the existing weighted-average cost basis."""
+    if side == 'buy':
         basis += price * quantity
         shares += quantity
     else:
@@ -76,6 +69,19 @@ def record_fill(c, fill, order, cash):
         realized += quantity * (price - average)
         basis -= quantity * average
         shares -= quantity
+    return shares, basis, realized
+
+
+def record_fill(c, fill, order, cash):
+    """Must run in the same transaction as its fill/balance updates."""
+    if c.execute('SELECT 1 FROM paper_pnl_history WHERE fill_id=?', (fill['id'],)).fetchone():
+        return
+    previous = state(c, order['account_id'], order['symbol'])
+    shares = previous['shares'] if previous else 0
+    basis = Fraction(previous['basis_exact']) if previous else Fraction(0)
+    realized = Fraction(previous['realized_exact']) if previous else Fraction(0)
+    price, quantity = Fraction(fill['price']), fill['quantity']
+    shares, basis, realized = apply_fill(shares, basis, realized, order['side'], quantity, price)
     c.execute('''INSERT INTO paper_pnl_state
         (account_id,symbol,shares,basis_exact,realized_exact,last_fill_at) VALUES (?,?,?,?,?,?)
         ON CONFLICT(account_id,symbol) DO UPDATE SET shares=excluded.shares,
@@ -103,7 +109,7 @@ def backfill_fills(c):
 
 def mark_completed(c, account_id, snapshot, *, event_time, receipt_id):
     """Prospective 1m marks. Repeated/revised close handling is durable."""
-    symbol = snapshot.get('symbol', 'AAPL')
+    symbol = snapshot['symbol']
     previous = state(c, account_id, symbol)
     if previous is None or previous['shares'] == 0 or receipt_id < previous['last_mark_receipt']:
         return

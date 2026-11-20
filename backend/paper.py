@@ -5,7 +5,9 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 import json
 from pathlib import Path
+import re
 import sqlite3
+from threading import Lock
 import uuid
 
 from backend.candles import utc_datetime
@@ -18,12 +20,25 @@ class RequestConflict(ValueError):
     pass
 
 
+US_STOCK_SYMBOL = re.compile(r'[A-Z][A-Z0-9-]{0,15}')
+
+
+def stock_quote(payload):
+    symbol = payload.get('id')
+    # Yahoo uses quote type 8 for stocks. Older stock observations can omit
+    # type or currency, so only explicit non-stock or non-USD data is excluded.
+    return (isinstance(symbol, str) and US_STOCK_SYMBOL.fullmatch(symbol) is not None
+            and payload.get('currency', 'USD') == 'USD' and payload.get('quote_type', 8) == 8)
+
+
 class PaperBroker:
     def __init__(self, state_database, observation_database, *, clock=None, order_size=1):
         if type(order_size) is not int or not 0 < order_size <= 2147483647:
             raise ValueError('Configured paper order size must be a positive whole number')
         self.order_size = order_size
         self.clock = clock or (lambda: datetime.now(UTC))
+        self.receipt_lock = Lock()
+        self.last_valuation = {}
         self.path = Path(state_database).resolve()
         self.market = Path(observation_database).resolve()
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -123,8 +138,17 @@ class PaperBroker:
                     pnl_history=pnl_history, pnl_summary=pnl_summary,
                     simulated=True, currency='USD', starting_cash='1000', fees='0', configured_order_size=self.order_size)
 
+    def tracked_symbols(self):
+        with closing(sqlite3.connect(self.path)) as c:
+            return {row[0] for row in c.execute("""
+                SELECT symbol FROM paper_positions WHERE account_id='live' AND shares > 0
+                UNION
+                SELECT symbol FROM paper_orders WHERE account_id='live' AND status='pending'
+            """)}
+
     def execute(self, account_id, *, request_id, action, symbol='AAPL', quantity=None,
-                submitted_at=None, after_receipt_id=None, accept_new=True, automation_attempt_id=None):
+                submitted_at=None, after_receipt_id=None, accept_new=True, automation_attempt_id=None,
+                replay_symbol=None):
         """Shared execution entry point for HTTP or a future decision agent.
 
         Market context is supplied by the server/runner, never by a browser price.
@@ -134,8 +158,10 @@ class PaperBroker:
         if not isinstance(request_id, str) or not request_id.strip() or len(request_id) > 128:
             raise ValueError('A stable request ID of 1 to 128 characters is required')
         symbol = symbol.strip().upper()
-        if action not in {'buy', 'sell', 'close', 'hold', 'wait'} or symbol != 'AAPL':
-            raise ValueError('Choose buy, sell, close, hold or wait for AAPL')
+        if action not in {'buy', 'sell', 'close', 'hold', 'wait'}:
+            raise ValueError('Choose buy, sell, close, hold or wait')
+        if not US_STOCK_SYMBOL.fullmatch(symbol):
+            raise ValueError('Enter a U.S. stock ticker in Yahoo format, such as MSFT or BRK-B')
         payload = json.dumps(dict(action=action, symbol=symbol, quantity=quantity), sort_keys=True, allow_nan=False)
         timestamp = utc_datetime(submitted_at or self.clock()).isoformat()
         with self.transaction() as c:
@@ -150,6 +176,8 @@ class PaperBroker:
                 return json.loads(previous['result_json'])
             if not accept_new:
                 raise ValueError('Replay session is closed; reopen replay to submit a new action')
+            if replay_symbol is not None and symbol != replay_symbol:
+                raise ValueError('Order ticker must match the replay ticker')
             if automation_attempt_id:
                 from backend.automation import authorize_submission
                 reason=authorize_submission(c,self,automation_attempt_id,account_id,action,symbol,quantity)
@@ -196,7 +224,7 @@ class PaperBroker:
         try:
             payload = event['payload']
             price = Decimal(str(payload.get('price')))
-            if (payload.get('id') != 'AAPL' or isinstance(payload.get('price'), bool)
+            if (not stock_quote(payload) or isinstance(payload.get('price'), bool)
                     or not price.is_finite() or price <= 0 or event.get('repeat') or event.get('supersedes') is not None):
                 return None
             if not isinstance(event.get('source_time_utc'), str) or not isinstance(event.get('received_at_utc'), str):
@@ -259,23 +287,36 @@ class PaperBroker:
                 finish(c,order['id'],'filled',fill_id=fill['id'])
 
     def catch_up_live(self,account_id='live'):
-        state = self.snapshot(account_id)
         if not self.market.exists():
             return
+        # Recorder callbacks, dashboard polling and the background broker may
+        # all see the same receipts. Replay the live ledger in one serial pass.
+        with self.receipt_lock:
+            self._catch_up_receipts(account_id)
+
+    def _catch_up_receipts(self, account_id):
+        with closing(sqlite3.connect(self.path)) as c:
+            c.row_factory = sqlite3.Row
+            cursor = self._account(c, account_id)['last_receipt_id']
         with closing(sqlite3.connect(self.market.as_uri()+'?mode=ro', uri=True)) as c:
             rows = c.execute('''SELECT r.id,r.observation_id,r.received_at_utc,o.source_time_utc,o.payload_json,
                               o.supersedes_observation_id,(SELECT MIN(id) FROM receipts WHERE observation_id=o.id)
                               FROM receipts r JOIN observations o ON o.id=r.observation_id
                               WHERE r.id>? AND o.provider='yahoo' ORDER BY r.id''',
-                             (state['account']['last_receipt_id'],)).fetchall()
+                             (cursor,)).fetchall()
         for row in rows:
             if utc_datetime(row[2]) > utc_datetime(self.clock()):
                 break
             self.mark_live(as_of=row[2], receipt_limit=row[0],account_id=account_id)
             self.observe(account_id, dict(receipt_id=row[0], observation_id=row[1], received_at_utc=row[2],
                                      source_time_utc=row[3], payload=json.loads(row[4]), supersedes=row[5], repeat=row[0] != row[6]))
+            cursor = row[0]
 
-        self.mark_live(as_of=self.clock(), receipt_limit=self.snapshot(account_id)['account']['last_receipt_id'],account_id=account_id)
+        now = utc_datetime(self.clock())
+        key = cursor, now.replace(second=0, microsecond=0)
+        if key != self.last_valuation.get(account_id):
+            self.mark_live(as_of=now, receipt_limit=cursor, account_id=account_id)
+            self.last_valuation[account_id] = key
 
     def mark_completed(self, account_id, snapshot, *, event_time, receipt_id):
         with self.transaction() as c:
@@ -283,10 +324,12 @@ class PaperBroker:
             pnl.mark_completed(c, account_id, snapshot, event_time=utc_datetime(event_time).isoformat(), receipt_id=receipt_id)
 
     def mark_live(self, *, as_of, receipt_limit,account_id='live'):
-        # No mark can change a flat account. Avoid unnecessary history queries.
-        current = self.snapshot(account_id)
-        if not any(position['shares'] for position in current['positions']):
-            return
-        snapshot = history_response(source='observations', database=self.market, as_of=as_of,
-                                    receipt_limit=receipt_limit)
-        self.mark_completed(account_id, snapshot, event_time=as_of, receipt_id=receipt_limit)
+        with closing(sqlite3.connect(self.path)) as c:
+            symbols = [row[0] for row in c.execute('''
+                SELECT symbol FROM paper_positions WHERE account_id=? AND shares>0 ORDER BY symbol
+            ''', (account_id,))]
+        for symbol in symbols:
+            snapshot = history_response(symbol, source='observations', calendar='NASDAQ',
+                                        database=self.market, as_of=as_of, receipt_limit=receipt_limit,
+                                        quote_filter=stock_quote)
+            self.mark_completed(account_id, snapshot, event_time=as_of, receipt_id=receipt_limit)

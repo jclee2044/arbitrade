@@ -28,8 +28,8 @@ def describe_update(message, received_at):
             source_utc = datetime.fromtimestamp(numeric_time, UTC).isoformat()
     volumes = {}
     meanings = {
-        'day_volume': 'Cumulative trading-day volume; shares for AAPL equities, not one-minute volume.',
-        'last_size': 'Size of the last trade; shares for AAPL equities, not cumulative volume.',
+        'day_volume': 'Cumulative provider trading-day volume, in shares for stocks.',
+        'last_size': 'Size of the last trade, in shares for stocks.',
         'vol_24hr': 'Provider 24-hour volume; instrument-specific units, not one-minute volume.',
         'vol_all_currencies': 'Provider volume across currencies; units not established here.',
     }

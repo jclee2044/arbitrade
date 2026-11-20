@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from backend.provider_history import ProviderHistory, months_before, validate
 from backend.timeframes import exchange_sessions
@@ -28,6 +28,17 @@ class HistoryTests(unittest.TestCase):
 
     def merge(self, frame='1d', now=NOW):
         return self.history.merge(self.empty, self.empty, frame, now)
+
+    def test_alternate_symbol_is_used_for_daily_and_intraday_downloads(self):
+        history = ProviderHistory(self.path, symbol='MSFT')
+        with patch('backend.provider_history.download_daily', return_value=fixture_rows()) as daily:
+            history.merge(self.empty, self.empty, '1d', NOW)
+            daily.assert_called_once_with('MSFT')
+        minute = dict(timestamp='2026-11-12T14:30:00Z', open=400, high=402, low=399, close=401, volume=10)
+        with patch('backend.provider_history.download_intraday', return_value=[minute]) as intraday:
+            result = history.merge(self.empty, self.empty, '1m', NOW)
+            intraday.assert_called_once_with('1m', None, symbol='MSFT')
+            self.assertEqual(result['candles'], [minute])
 
     def test_ranges_weekly_ohlcv_dst_and_shared_cache(self):
         daily, weekly = self.merge(), self.merge('1w')

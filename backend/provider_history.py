@@ -23,9 +23,9 @@ def months_before(day, months):
     return date(year, month + 1, min(day.day, monthrange(year, month + 1)[1]))
 
 
-def download_daily():
+def download_daily(symbol='AAPL'):
     import yfinance as yf
-    frame = yf.Ticker('AAPL').history(period='6mo', interval='1d', auto_adjust=False,
+    frame = yf.Ticker(symbol).history(period='6mo', interval='1d', auto_adjust=False,
                                      actions=False, prepost=False, timeout=10, raise_errors=True)
     return [dict(date=str(index.date()), **{
         key: float(row[column]) for key, column in
@@ -55,11 +55,11 @@ def validate(rows, key="date"):
     return [result[day] for day in sorted(result)]
 
 
-def download_intraday(timeframe, earliest=None):
+def download_intraday(timeframe, earliest=None, *, symbol='AAPL'):
     import yfinance as yf
     # Yahoo has different retention limits for each native resolution.
     period = '8d' if timeframe == '1m' else '6mo' if timeframe == '1h' else '60d'
-    ticker = yf.Ticker('AAPL')
+    ticker = yf.Ticker(symbol)
     settings = dict(interval=timeframe, auto_adjust=False, actions=False, prepost=False,
                     timeout=10, raise_errors=True)
     frame = ticker.history(period=period, **settings)
@@ -84,15 +84,16 @@ def intraday_rows(frame):
 
 
 class ProviderHistory:
-    def __init__(self, path, downloader=None, *, timeframe=None, background=False):
+    def __init__(self, path, downloader=None, *, timeframe=None, background=False, symbol='AAPL'):
         self.background = background
+        self.symbol = symbol
         self.schedule_lock = Lock()
         self.worker = None
         self.timeframe = timeframe
         self.key = "timestamp" if timeframe else "date"
         self.intraday = {}
         self.path = Path(path)
-        self.downloader = downloader or (self.fetch_intraday if timeframe else download_daily)
+        self.downloader = downloader or (self.fetch_intraday if timeframe else self.fetch_daily)
         self.lock = Lock()
         self.rows = []
         self.fetched_at = None
@@ -106,9 +107,12 @@ class ProviderHistory:
             self.rows = []
             self.fetched_at = None
 
+    def fetch_daily(self):
+        return download_daily(self.symbol)
+
     def fetch_intraday(self):
         earliest = date.fromisoformat(self.rows[0]['timestamp'][:10]) if self.rows else None
-        return download_intraday(self.timeframe, earliest)
+        return download_intraday(self.timeframe, earliest, symbol=self.symbol)
 
     def refresh(self, now):
         if self.background and self.rows:
@@ -152,7 +156,8 @@ class ProviderHistory:
         with self.schedule_lock:
             if timeframe not in self.intraday:
                 path = self.path.with_name(f'{self.path.stem}.{timeframe}.history.json')
-                self.intraday[timeframe] = ProviderHistory(path, timeframe=timeframe, background=self.background)
+                self.intraday[timeframe] = ProviderHistory(path, timeframe=timeframe,
+                                                          background=self.background, symbol=self.symbol)
             cache = self.intraday[timeframe]
         cache.refresh(now)
         start = months_before(now.astimezone(MARKET_ZONE).date(), HISTORY_MONTHS)
