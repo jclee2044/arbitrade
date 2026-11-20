@@ -1,3 +1,4 @@
+import { candleCount, pinCandle } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { resolve } from 'node:path'
 import { writeFile } from 'node:fs/promises'
@@ -14,15 +15,15 @@ try {
  await page.getByRole('tab', { name: 'Signals', exact: true }).click()
  await page.getByText('Crossover windows', {exact:true}).click()
  await page.locator('#sma-short').fill('2');await page.locator('#sma-long').fill('3');await button('Apply SMA windows').click()
- await until(async()=>await page.locator('#candle-time option').count()>3)
- let stamp=String(Date.parse('2026-11-10T15:04:00Z')/1000)
+ await until(async()=>await candleCount(page)>3)
+ let stamp='2026-11-10T15:04:00Z'
  if(live){
    const history=await(await page.request.get(base+'/api/history?source=observations&include_status=true&short_window=2&long_window=3')).json()
    const rows=history.moving_averages.rows
    const chosen=[...rows].reverse().find(r=>r.signal&&r.short!=null&&r.long!=null)||[...rows].reverse().find(r=>r.short!=null&&r.long!=null)
-   assert(chosen,'Need completed candle with SMA values');stamp=String(Date.parse(chosen.timestamp)/1000)
+   assert(chosen,'Need completed candle with SMA values');stamp=chosen.timestamp
  }
- await page.locator('#candle-time').selectOption(stamp)
+ await pinCandle(page, stamp)
  await page.getByRole('tab', {name:'AI', exact:true}).click()
  await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  await button('Ask about chart').click()
@@ -33,10 +34,10 @@ try {
  assert(await page.locator('#chart-preview').evaluate(img=>img.complete&&img.naturalWidth>100&&img.naturalHeight>100))
  const sid=(await page.locator('#snapshot-id').textContent()).replace('Snapshot ID: ','')
  const saved=await(await page.request.get(base+'/api/decision-snapshots/'+sid)).json()
- assert.equal(Date.parse(saved.snapshot.candle_timestamp)/1000,Number(stamp))
+ assert.equal(Date.parse(saved.snapshot.candle_timestamp),Date.parse(stamp))
  assert.equal(saved.snapshot.chart.candles.at(-1).timestamp,saved.snapshot.candle.timestamp)
  assert.equal(await page.locator('.chart-question').count(),3)
- assert((await page.locator('#capture-cutoff').textContent()).includes(saved.snapshot.decision_time))
+ assert.match(await page.locator('#capture-cutoff').textContent(), /Cutoff .* ET · Range .* ET to .* ET/)
  if(!live){assert.equal(saved.snapshot.indicators.crossover,'up');assert.equal(saved.snapshot.candle.close,19)
    assert(saved.snapshot.chart.candles.some(c=>c.volume===100));assert.equal(saved.snapshot.chart.indicators[0].name,'Range 2')}
  await writeFile(resolve(output,'submitted.png'),Buffer.from(capture.split(',')[1],'base64'))

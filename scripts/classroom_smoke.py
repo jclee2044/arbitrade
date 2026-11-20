@@ -15,7 +15,9 @@ from scripts.chart_smoke import paper_records
 def verify(output):
     output.mkdir(parents=True, exist_ok=True)
     for port in (18162, 15262):
-        with socket.socket() as probe: probe.bind(('127.0.0.1', port))
+        with socket.socket() as probe:
+            probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            probe.bind(('127.0.0.1', port))
     backend = frontend = None
     report = dict(result='FAIL', provider='controlled', market_data='constructed')
     with tempfile.TemporaryDirectory(prefix='arbitrade-classroom-') as directory, tempfile.TemporaryFile(mode='w+') as logs:

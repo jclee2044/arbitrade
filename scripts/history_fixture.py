@@ -23,6 +23,10 @@ async def lifespan(application):
                 store.record(dict(id='AAPL', time=int(now.timestamp()*1000),
                                   price=100 + day + minute / 100, day_volume=1000 + minute*10,
                                   test_data=True), now, source_time_utc=now.isoformat())
+        for minute, price in enumerate((400, 403)):
+            now = datetime(2026, 11, 11, 15, minute, 10, tzinfo=UTC)
+            store.record(dict(id='MSFT', time=int(now.timestamp()*1000), price=price,
+                              day_volume=2000 + minute*15, test_data=True), now, source_time_utc=now.isoformat())
     application.state.fixture_now = [datetime(2026, 11, 11, 17, tzinfo=UTC)]
     application.state.feed = Feed(market)
     application.state.feed.status = 'disabled'

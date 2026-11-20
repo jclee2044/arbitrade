@@ -1,3 +1,4 @@
+import { candleCount, hoverCandle } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -16,7 +17,7 @@ async function until(fn) {
 }
 try {
   await page.goto(`http://127.0.0.1:${process.env.ARBITRADE_FRONTEND_PORT}`, { waitUntil: 'networkidle' })
-  await until(async () => await page.locator('#candle-time option').count() >= 2)
+  await until(async () => await candleCount(page) >= 2)
   const historyCaption = page.getByText(/Three-month window ·/)
   assert.equal(await historyCaption.count(), 0)
   const daily10 = page.getByRole('button', {name:'SMA 10 · 1D', exact:true})
@@ -28,7 +29,7 @@ try {
   assert(await page.locator('.overlay-legend').getByText('SMA 10 · 1D', {exact:true}).isVisible())
   const dailyOverlay = await market(m => m.presets.find(i => i.id === '1d-sma-10').rows.at(-1).value)
   await page.locator('[data-frame="1d"]').click()
-  await until(async () => await page.locator('#candle-time option').count() >= 60)
+  await until(async () => await candleCount(page) >= 60)
   const priorCloses = await market(m => m.candles.slice(-11,-1).map(c=>c.close))
   assert.equal(dailyOverlay, priorCloses.reduce((a,b)=>a+b,0)/10)
   await daily10.click()
@@ -39,12 +40,11 @@ try {
   assert.equal(daily.first, '2026-08-12T13:30:00Z')
   assert.equal(daily.range.from, Date.parse(daily.first)/1000)
   assert.equal(await historyCaption.count(), 0)
-  await page.locator('#history-day').selectOption('2026-08-12')
-  assert.equal(await page.locator('#history-day').inputValue(), '2026-08-12')
+  await hoverCandle(page, daily.first)
   await page.screenshot({ path:resolve(output,'daily.png'), fullPage:true })
-  checks.push('D loads three months of daily candles; earliest date is visible and selectable')
+  checks.push('D loads three months of daily candles; earliest date is visible on the chart')
   await page.locator('[data-frame="1w"]').click()
-  await until(async () => { const n=await page.locator('#candle-time option').count(); return n>=13 && n<=15 })
+  await until(async () => { const n=await candleCount(page); return n>=13 && n<=15 })
   const weekly = await market(m => ({count:m.candles.length,first:m.candles[0].timestamp,range:m.visibleRange()}))
   assert.equal(weekly.first,'2026-08-10T13:30:00Z')
   assert.equal(weekly.range.from,Date.parse(weekly.first)/1000)
@@ -55,14 +55,15 @@ try {
   const cached = JSON.parse(readFileSync(cachePath,'utf8'))
   assert(cached.rows.length>=125)
   const oldFetch = cached.fetched_at
+  await page.locator('.feed-details summary').click()
   await page.request.post(`http://127.0.0.1:${process.env.ARBITRADE_BACKEND_PORT}/fixture/history-failure`)
   await until(async () => await page.getByRole('status').filter({hasText:'Cached history; download retry pending'}).isVisible())
-  assert.equal(await page.locator('#candle-time option').count(),weekly.count)
+  assert.equal(await candleCount(page),weekly.count)
   assert.equal(JSON.parse(readFileSync(cachePath,'utf8')).fetched_at,oldFetch)
   checks.push('Provider outage preserves visible history and stored cache, and reports automatic retry')
   await page.setViewportSize({width:390,height:844})
   await page.locator('[data-frame="1d"]').click()
-  await until(async () => await page.locator('#candle-time option').count() === daily.count)
+  await until(async () => await candleCount(page) === daily.count)
   await page.waitForTimeout(300)
   assert.equal((await market(m=>m.visibleRange())).from,Date.parse(daily.first)/1000)
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth))
@@ -70,9 +71,8 @@ try {
   for (const frame of ['1mo', '1h', '30m', '15m', '5m', '1m']) {
     await page.locator(`[data-frame="${frame}"]`).click()
     const first = frame === '1mo' ? '2026-08-03' : '2026-08-12'
-    await until(async () => await page.locator(`#history-day option[value="${first}"]`).count() > 0)
-    await page.locator('#history-day').selectOption(first)
-    assert.equal(await page.locator('#history-day').inputValue(), first)
+    await until(async () => (await market(m => m.candles[0]?.timestamp))?.startsWith(first))
+    await hoverCandle(page, await market(m => m.candles[0].timestamp))
   }
   checks.push('Monthly and all five intraday charts allow navigation to the earliest fixture period')
   assert.deepEqual(errors,[])

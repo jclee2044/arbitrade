@@ -25,6 +25,7 @@ export default {
     const collections = reactive(new Map())
     const scope = computed(() => JSON.stringify([m.mode, m.symbol, m.timeframe]))
     const drawings = computed(() => collections.get(scope.value) || [])
+    watch(drawings, () => m.changeChartSnapshot(), { deep: true, flush: 'sync' })
     const history = new Map()
     let gesture = null
     let lastContact = null

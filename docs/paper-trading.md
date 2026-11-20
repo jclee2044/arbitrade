@@ -4,9 +4,12 @@ Explicit Start/Stop paper automation can now apply approved decisions through a
 separate guarded path; manual questions remain read-only. See
 [paper-automation.md](paper-automation.md) for current execution/dedup rules.
 
-The dashboard's **Paper trading · Simulation only** panel shows USD cash,
-AAPL whole shares, order history, rejection reasons and linked fills. Accounts
-start at **$1,000**. Buy shares, sell part, or close the position. **Hold** keeps
+The dashboard's **Trade → Orders** panel shows USD cash, the selected ticker's
+whole shares and P&L, plus the account's order history, rejection reasons and
+linked fills. Enter a supported U.S. stock ticker such as MSFT or BRK-B in the
+Live chart before submitting. Accounts start at **$1,000** with cash shared
+across tickers. **Open positions** shows holdings and valuation across tickers.
+Buy shares, sell part, or close the selected position. **Hold** keeps
 an existing position; **Wait** leaves an empty position in cash. Neither creates
 an order. Hold from cash and wait while holding return an explanation without
 an order. No broker integration or real order routing exists.
@@ -24,8 +27,8 @@ including changes caused by earlier pending orders.
    boundary. The currently displayed quote/candle is never a fill price.
 2. Fill at the **next eligible arriving receipt** after that boundary for the
    same symbol, with zero fees. An eligible quote has a finite positive price,
-   a known source timestamp in the regular NASDAQ session, and source time no
-   later than receipt time. Previously seen exact repeats and explicit revisions
+   USD stock pricing, and a known source timestamp in the U.S. regular session
+   at or before receipt time. Previously seen exact repeats and explicit revisions
    are skipped; after-hours, invalid and future-timestamp quotes are skipped.
    A normal delayed quote can fill when it arrives: “after submission” is
    evaluated by receipt arrival/time, not by requiring a newer source timestamp.
@@ -42,11 +45,15 @@ including changes caused by earlier pending orders.
    source time is separately retained. Later revisions never rewrite old fills.
 
 Accepted orders stay pending with the feed disabled, no next eligible receipt,
-or at replay end. No automatic cancellation/reset is performed. The live
-receiver invokes catch-up after committing each observation. Startup, live
-account reads and submissions also recover committed receipts after the saved
-cursor, covering a receiver commit followed by a process crash. Recovery does
-not invent prices or replay an already filled receipt.
+or at replay end. The backend keeps each live subscription active while its
+ticker has an open position or a pending order, including when the user changes
+charts or closes the page. Startup restores the subscriptions from SQLite.
+The server processes committed receipts in receipt-ID order independently of
+the dashboard, and marks each open position with the same ticker's completed
+one-minute observed close. Realized P&L uses that ticker's weighted-average
+cost and its sell fills. The dashboard reports the price and time of the last
+valuation. Startup, live account reads and submissions also recover committed
+receipts after the saved cursor.
 
 ## Accounts, persistence and replay isolation
 
@@ -61,8 +68,8 @@ Its first creation records the current last saved receipt, so preexisting
 history cannot immediately fill a new order. It is bound to the observation
 file path; using another observation database requires separate account state.
 
-Each replay connection has its **own** `replay-<uuid>` account. New orders use
-the current replay receipt and clock. Only `next` delivers its newly revealed
+Each replay connection has its **own** `replay-<uuid>` account. New orders match
+the replay ticker and use the current receipt and clock. Only `next` delivers its newly revealed
 observation to execution. Reading account state and indicator `refresh` cannot
 peek ahead or fill against future rows already stored on disk. Live receipts
 never update replay accounts; replay does not spend live paper cash.
@@ -125,9 +132,24 @@ a new ID for a transport retry.
 Response contains `result` and current `state`. Business rejection is a normal
 response with `status: rejected` and a reason, retaining the audit record.
 Malformed/unsupported requests return 422; conflicting retry IDs return 409.
-For close/hold/wait, omit quantity or send null. Only AAPL is currently supported.
+For close/hold/wait, omit quantity or send null. Manual orders support U.S. stock
+tickers in Yahoo format. Reviewed automation uses AAPL.
 
 ## Repeatable browser SmokeTest
+
+```bash
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.multi_ticker_paper_smoke
+```
+
+The multi-ticker runner uses the production FastAPI lifecycle with a constructed
+Yahoo transport. Chromium submits AAPL and MSFT trades, switches charts and
+closes the page. A read-only SQLite connection verifies that the backend
+keeps the MSFT stream, rejects unrelated and non-USD quotes as fill prices,
+and updates the right positions independently. The runner also verifies
+restoration from a persisted pending order at startup and cleans up its
+browser, services and disposable databases.
+
+Run the original AAPL regression with this command.
 
 ```bash
 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arbitrade-paper-results

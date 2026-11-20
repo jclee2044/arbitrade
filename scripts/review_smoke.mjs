@@ -1,3 +1,4 @@
+import { pinCandle } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { resolve } from 'node:path'
 import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
@@ -12,7 +13,7 @@ try{
  await page.getByRole('tab', { name: 'Signals', exact: true }).click()
  await page.getByText('Crossover windows', {exact:true}).click()
  await page.locator('#sma-short').fill('2');await page.locator('#sma-long').fill('3');await button('Apply SMA windows').click()
- await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:04:00Z')/1000))
+ await pinCandle(page, '2026-11-10T15:04:00Z')
  await page.getByRole('tab', {name:'AI', exact:true}).click()
  await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  await button('Freeze selected candle').click();await page.locator('#snapshot-id').waitFor()

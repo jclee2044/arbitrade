@@ -1,3 +1,4 @@
+import { formatEasternTimestamp } from './chart-data.js'
 import { h, ref, watch, onBeforeUnmount, computed } from 'vue'
 
 export default {
@@ -9,6 +10,8 @@ export default {
     let timer, generation = 0
     const pnlSummary = computed(() => state.value?.pnl_summary?.find((item) => item.symbol === props.symbol))
     const pnlRows = computed(() => (state.value?.pnl_history || []).filter((item) => item.symbol === props.symbol))
+    const openPositions = computed(() => (state.value?.pnl_summary || []).filter((position) => position.shares > 0))
+    const tradeable = computed(() => /^[A-Z][A-Z0-9-]{0,15}$/.test(props.symbol))
     const pnlUsd = (value) => value == null ? 'Unavailable' : usd(value)
     const usd = (value) => Number(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
     async function load() {
@@ -21,12 +24,12 @@ export default {
         if (token === generation) {
           state.value = result; connectionError.value = ''
           const order = result.orders.find((item) => item.request_id === lastRequest.value?.request_id)
-          if (order && order.status !== 'pending') message.value = order.rejection_reason || `Order ${order.id} · ${order.status}`
+          if (order && order.status !== 'pending') message.value = order.rejection_reason || `${order.symbol} order ${order.id} · ${order.status}`
         }
       } catch (failure) { if (token === generation) connectionError.value = failure.message }
     }
     async function send(action, retry = false) {
-      if (!props.accountId || busy.value) return
+      if (!props.accountId || busy.value || (!retry && !tradeable.value)) return
       error.value = ''
       message.value = ''
       let request = lastRequest.value
@@ -54,8 +57,8 @@ export default {
         if (!response.ok) throw new Error(typeof result.detail === 'string' ? result.detail : 'Could not submit paper action')
         if (token !== generation) return
         state.value = result.state
-        message.value = result.result.rejection_reason || (result.result.status === 'pending' ? 'Order accepted · pending next eligible observed price.' :
-          result.result.status === 'no_order' ? `${action || request.action}: no order created.` : `Order ${result.result.id} · ${result.result.status}`)
+        message.value = result.result.rejection_reason || (result.result.status === 'pending' ? `${request.symbol} order accepted · pending next eligible observed price.` :
+          result.result.status === 'no_order' ? `${action || request.action}: no order created.` : `${request.symbol} order ${result.result.id} · ${result.result.status}`)
       } catch (failure) { if (token === generation) error.value = `Request uncertain: ${failure.message}. Use Retry last request to reuse its ID.` }
       finally { if (token === generation) busy.value = false }
     }
@@ -79,32 +82,46 @@ export default {
         h('dt', 'Cash'), h('dd', { id: 'paper-cash' }, usd(state.value.account.cash)),
         h('dt', `${props.symbol} shares`), h('dd', { id: 'paper-shares' }, String(holding())),
       ]) : null,
+      openPositions.value.length ? h('details', { open: true }, [
+        h('summary', 'Open positions'),
+        h('div', { class: 'open-positions', role: 'region', 'aria-label': 'Open positions', tabindex: 0 }, [
+          h('table', [
+            h('thead', [h('tr', ['Ticker', 'Shares', 'Price', 'Unrealized P&L'].map(label => h('th', label)))]),
+            h('tbody', openPositions.value.map(position => h('tr', { key: position.symbol }, [
+              position.symbol, position.shares, pnlUsd(position.price), pnlUsd(position.unrealized),
+            ].map(value => h('td', String(value)))))),
+          ]),
+        ]),
+      ]) : null,
+      !tradeable.value ? h('p', 'Manual orders use U.S. stock tickers in Yahoo format, such as MSFT or BRK-B.') : null,
+      h('p', ['Order ticker ', h('strong', props.symbol)]),
       h('label', { for: 'paper-quantity' }, 'Whole shares '),
       h('input', { id: 'paper-quantity', type: 'number', min: 1, step: 1, value: quantity.value,
         onInput: (event) => { quantity.value = event.target.value } }),
       h('div', { class: 'paper-actions' }, [
         ...[['buy', 'Buy shares'], ['sell', 'Sell shares'], ['close', 'Close position'], ['hold', 'Hold'], ['wait', 'Wait']].map(([action, label]) =>
-          h('button', { class: action, disabled: busy.value || !state.value, onClick: () => send(action) }, label)),
-        h('button', { disabled: busy.value || !lastRequest.value, onClick: () => send(null, true) }, 'Retry last request'),
+          h('button', { class: action, disabled: busy.value || !state.value || !tradeable.value, onClick: () => send(action) }, label)),
+        h('button', { disabled: busy.value || !lastRequest.value, onClick: () => send(null, true) },
+          lastRequest.value && lastRequest.value.symbol !== props.symbol ? `Retry ${lastRequest.value.symbol} request` : 'Retry last request'),
       ]),
       message.value ? h('p', { id: 'paper-result', role: 'status' }, message.value) : null,
       error.value ? h('p', { role: 'alert' }, error.value) : null,
       connectionError.value ? h('p', { role: 'alert' }, connectionError.value) : null,
       h('details', [h('summary', 'Paper order history'),
       h('div', { class: 'paper-history', role: 'region', 'aria-label': 'Paper order history', tabindex: 0 }, [h('table', [
-        h('thead', [h('tr', ['ID', 'Symbol', 'Side', 'Quantity', 'Submitted (UTC)', 'Status / reason', 'Fill'].map((text) => h('th', text)))]),
+        h('thead', [h('tr', ['ID', 'Symbol', 'Side', 'Quantity', 'Submitted (ET)', 'Status / reason', 'Fill'].map((text) => h('th', text)))]),
         h('tbody', (state.value?.orders || []).map((order) => {
           const fill = state.value.fills.find((item) => item.order_id === order.id)
           return h('tr', { key: order.id, 'data-order-id': order.id }, [
-            order.id, order.symbol, order.side, order.quantity ?? 'Invalid', order.submitted_at,
+            order.id, order.symbol, order.side, order.quantity ?? 'Invalid', formatEasternTimestamp(order.submitted_at),
             `${order.status}${order.rejection_reason ? ` · ${order.rejection_reason}` : ''}`,
-            fill ? `${fill.quantity} @ ${usd(fill.price)} · Observation ${fill.observation_id} / receipt ${fill.receipt_id} · ${fill.executed_at}` : '—',
+            fill ? `${fill.quantity} @ ${usd(fill.price)} · Observation ${fill.observation_id} / receipt ${fill.receipt_id} · ${formatEasternTimestamp(fill.executed_at)}` : '—',
           ].map((text) => h('td', String(text))))
         })),
       ])]),
       !state.value?.orders.length ? h('p', 'No paper orders. Hold and wait do not create orders.') : null]),
       h('div', { class: 'pnl-panel', 'aria-labelledby': 'pnl-title' }, [
-        h('h4', { id: 'pnl-title' }, 'Profit and loss · USD'),
+        h('h4', { id: 'pnl-title' }, `${props.symbol} profit and loss · USD`),
         h('p', 'Based on weighted average purchase cost.'),
         h('dl', { class: 'paper-balances pnl-summary' }, [
           h('dt', 'Average cost / share'), h('dd', { id: 'pnl-average' }, holding() ? pnlUsd(pnlSummary.value?.average_cost) : '—'),
@@ -113,14 +130,14 @@ export default {
           h('dt', 'Total P&L'), h('dd', { id: 'pnl-total' }, pnlUsd(pnlSummary.value?.total ?? (holding() ? null : '0'))),
         ]),
         h('p', { id: 'pnl-price' }, pnlSummary.value?.price != null
-          ? `Valuation price: ${usd(pnlSummary.value.price)} · ${pnlSummary.value.price_source} · Price time (UTC): ${pnlSummary.value.price_time}`
+          ? `Valuation price: ${usd(pnlSummary.value.price)} · ${pnlSummary.value.price_source} · Price time (ET): ${formatEasternTimestamp(pnlSummary.value.price_time)}`
           : holding() ? 'Valuation unavailable: no usable price for this open position.' : 'No open position to value.'),
         h('details', [h('summary', 'P&L history'),
         h('div', { class: 'pnl-history', role: 'region', 'aria-label': 'Profit and loss history', tabindex: 0 }, [h('table', { id: 'pnl-history' }, [
-          h('thead', [h('tr', ['Event / time (UTC)', 'Price / source / price time (UTC)', 'Cash', 'Shares', 'Average cost', 'Realized', 'Unrealized', 'Total P&L'].map((label) => h('th', label)))]),
+          h('thead', [h('tr', ['Event / time (ET)', 'Price / source / price time (ET)', 'Cash', 'Shares', 'Average cost', 'Realized', 'Unrealized', 'Total P&L'].map((label) => h('th', label)))]),
           h('tbody', pnlRows.value.map((row) => h('tr', { key: row.id, 'data-pnl-event': row.event_key }, [
-            `${row.symbol} · ${row.event_type === 'fill' ? `Fill ${row.fill_id}` : 'Completed 1m candle'} · ${row.event_time}`,
-            `${pnlUsd(row.price)} · ${row.price_source} · ${row.price_time || 'Unknown time'}`,
+            `${row.symbol} · ${row.event_type === 'fill' ? `Fill ${row.fill_id}` : 'Completed 1m candle'} · ${formatEasternTimestamp(row.event_time)}`,
+            `${pnlUsd(row.price)} · ${row.price_source} · ${row.price_time ? formatEasternTimestamp(row.price_time) : 'Unknown time'}`,
             usd(row.cash), String(row.shares), row.average_cost == null ? '—' : usd(row.average_cost),
             pnlUsd(row.realized), pnlUsd(row.unrealized), pnlUsd(row.total),
           ].map((value) => h('td', value))))),

@@ -1,3 +1,4 @@
+import { pinCandle, selectedTime } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { checkDrawings } from './drawing_smoke.mjs'
 import { resolve } from 'node:path'
@@ -38,7 +39,7 @@ try{
  await page.locator('#replay-end').fill('2026-11-10T15:07:00+00:00')
  await button('Load / restart replay').click();await button('Play replay').click()
  await until(async()=>(await page.locator('#replay-status').textContent()).includes('8 / 8'))
- await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:04:00Z')/1000))
+ await pinCandle(page, '2026-11-10T15:04:00Z')
  await checkDrawings(page, resolve(output, 'drawing-tools.png'))
  checks.push('Trend Line, Freehand, drag-sized ratio previews, locked resizing, contact eraser and drawing undo')
  await page.getByRole('tab', {name:'Indicators', exact:true}).click()
@@ -49,9 +50,9 @@ try{
  await entry.locator('input').fill('3');await entry.getByRole('button',{name:'Save window',exact:true}).click()
  await until(async()=>(await entry.locator('.indicator-value').textContent())==='13') // (7+13+19)/3
  checks.push('Recorded replay: added SMA2=(13+19)/2=16; edited same saved SMA to window3=(7+13+19)/3=13 on 15:04 candle')
- const selectedTime = await page.locator('#candle-time').inputValue()
+ const pinnedTime = await selectedTime(page)
  await button('Collapse sidebar').click()
- assert.equal(await page.locator('#candle-time').inputValue(), selectedTime)
+ assert.equal(await selectedTime(page), pinnedTime)
  await page.locator('.masthead').hover()
  await page.screenshot({path:resolve(output,'trading-desk.png')})
  await button('Expand sidebar').click()
@@ -75,7 +76,7 @@ try{
  try {
    await Promise.all([page.waitForRequest(isAnalysis),button('Analyze captured chart').click()])
    await button('Close paper proposal').click()
-   assert.equal(await page.locator('#candle-time').inputValue(),selectedTime)
+   assert.equal(await selectedTime(page),pinnedTime)
    assert.equal(await page.locator('#replay-status').innerText(),replayPosition)
  } finally { releaseAnalysis() }
  assert((await analyzed).ok())
@@ -87,6 +88,7 @@ try{
  const decisionId=(await page.locator('#decision-id').innerText()).replace('Decision ID: ','')
  await button('Discuss this decision').click()
  await until(async()=>await page.locator('#voice-selected').isVisible() && (await page.locator('#voice-selected').innerText()).includes(decisionId))
+ assert.match(await page.locator('#voice-selected').innerText(), /Cutoff 2026-11-10 10:05:00 ET/)
  assert.equal(await page.locator('#voice-microphone').innerText(),'Mic off')
  await page.getByRole('button', { name: 'Review paper proposal', exact: true }).click()
  assert.equal(await page.locator('#chart-preview').getAttribute('src'),capture)

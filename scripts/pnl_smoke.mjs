@@ -26,8 +26,8 @@ async function compare(count,phase) {
     const cells=await page.locator('#pnl-history tbody tr').nth(i).locator('td').allTextContents()
     const [cash,shares,average,realized,unrealized,total]=expected[i]
     assert.deepEqual(cells.slice(2),[usd(cash),String(shares),average===null?'—':usd(average),usd(realized),usd(unrealized),usd(total)])
-    assert.match(cells[0],/AAPL.*2026-11-10T15:/)
-    assert.match(cells[1],/2026-11-10T15:/)
+    assert.match(cells[0],/AAPL.*2026-11-10 10:\d{2}:\d{2}(\.\d+)? ET/)
+    assert.match(cells[1],/2026-11-10 10:\d{2}:\d{2}(\.\d+)? ET/)
     assert.match(cells[1],i===1||i===3?/Completed 1m candle close/:/Fill · order/)
   }
   const sql=await request('snapshot',{phase})
@@ -49,7 +49,7 @@ try {
   await page.request.get('http://127.0.0.1:15173/api/paper/account')
   assert.equal(await page.locator('#pnl-history tbody tr').count(),1,'Forming candle must not create valuation')
   await request('advance',{seconds:60}); await compare(2,'value-110')
-  assert.match(await page.locator('#pnl-price').textContent(),/\$110\.00.*Completed 1m candle.*15:01:00/)
+  assert.match(await page.locator('#pnl-price').textContent(),/\$110\.00.*Completed 1m candle.*10:01:00 ET/)
   await page.locator('#paper-quantity').fill('1'); await button('Sell shares').click(); await pending()
   await request('price',{price:110,seconds:70}); await compare(3,'partial-sale')
   await request('price',{price:95,seconds:100}); await request('advance',{seconds:120}); await compare(4,'value-95')

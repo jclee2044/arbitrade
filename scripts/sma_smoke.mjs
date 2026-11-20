@@ -1,3 +1,4 @@
+import { pinCandle, selectedTime } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
 import { resolve } from 'node:path'
@@ -30,17 +31,17 @@ async function step(position) {
   return frames.at(-1)
 }
 async function inspect(row) {
-  await page.locator('#candle-time').selectOption(String(Date.parse(row.timestamp) / 1000))
+  await pinCandle(page, row.timestamp)
   const expected = [row.short === null ? 'Unavailable' : String(row.short),
     row.long === null ? 'Unavailable' : String(row.long), row.signal || 'None']
   await until(async () => JSON.stringify(await page.locator('.sma-values dd').allTextContents()) === JSON.stringify(expected))
 }
 try {
   await page.goto('http://127.0.0.1:15173', { waitUntil: 'networkidle' })
-  await page.getByRole('tab', { name: 'Signals', exact: true }).click()
- await page.getByText('Crossover windows', {exact:true}).click()
   await page.locator('.feed-details summary').click()
   await page.getByText('Feed: disabled', { exact: false }).waitFor()
+  await page.getByRole('tab', { name: 'Signals', exact: true }).click()
+  await page.getByText('Crossover windows', {exact:true}).click()
   // Server validation is independent of native input validation.
   for (const [short, long] of [['0', '3'], ['2', '2'], ['1.5', '3']]) {
     const response = await page.request.get(`http://127.0.0.1:15173/api/history?include_status=true&short_window=${short}&long_window=${long}`)
@@ -57,7 +58,7 @@ try {
   await page.locator('#sma-short').fill('2')
   await page.locator('#sma-long').fill('3')
   await page.getByRole('button', { name: 'Apply SMA windows', exact: true }).click()
-  await until(async () => (await page.locator('.pair-caption').textContent()).includes('SMA 2 and SMA 3'))
+  await until(async () => (await page.locator('.sma-crossovers .pair-caption').textContent()).includes('SMA 2 and SMA 3'))
   checks.push('UI and HTTP reject zero, fractional and unordered windows; user applies 2/3')
   const params = new URLSearchParams({ source: 'observations', include_status: 'true', as_of: fixture.end,
     short_window: '2', long_window: '3' })
@@ -93,18 +94,20 @@ try {
   const final = await step(8)
   assert.deepEqual(final.moving_averages.rows, batch)
   for (const row of batch) await inspect(row)
-  await page.getByText('Source: Replay · CONSTRUCTED test_data=true', { exact: false }).waitFor()
   const signals = await page.locator('.sma-crossovers li').allTextContents()
   assert.equal(signals.length, 2)
-  assert.match(signals[0], /Downward.*15:06.*Short 4.*Long 9/)
-  assert.match(signals[1], /Upward.*15:04.*Short 16.*Long 13/)
-  await page.locator('.sma-crossovers').getByRole('button', { name: /Upward.*15:04/ }).click()
-  assert.equal(await page.locator('#candle-time').inputValue(), String(Date.parse(batch.find(row => row.signal === 'up').timestamp) / 1000))
+  assert.match(signals[0], /Downward.*10:06.*Short 4.*Long 9/)
+  assert.match(signals[1], /Upward.*10:04.*Short 16.*Long 13/)
+  await page.locator('.sma-crossovers').getByRole('button', { name: /Upward.*10:04/ }).click()
+  assert.equal(await selectedTime(page), Date.parse(batch.find(row => row.signal === 'up').timestamp) / 1000)
   assert.equal(await page.getByRole('alert').count(), 0)
   await page.locator('.chart').screenshot({ path: resolve(output, 'two-crossovers.png') })
   await page.screenshot({ path: resolve(output, 'reference-desktop.png'), fullPage: true })
   checks.push('Every replay prefix and visible inspector matches batch; forming seventh candle has no confirmed down signal')
   checks.push('Final repeated receipt closes seventh candle: upward at 16/13 and downward at 4/9; two marker entries')
+  await page.getByRole('tab', { name: 'Indicators', exact: true }).click()
+  await page.locator('.feed-details').getByText('Source: Replay · CONSTRUCTED test_data=true', { exact: false }).waitFor()
+  await page.getByRole('tab', { name: 'Signals', exact: true }).click()
   await page.setViewportSize({ width: 390, height: 844 })
   await page.screenshot({ path: resolve(output, 'reference-mobile.png'), fullPage: true })
   const box = await page.locator('.chart').boundingBox()

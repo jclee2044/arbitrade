@@ -1,6 +1,7 @@
 import { h, nextTick, ref, watch } from 'vue'
 import { periods, movingAverageColors, timeframes } from './chart-studies.js'
-import { average, formatUtc } from './chart-data.js'
+import { average, formatEastern } from './chart-data.js'
+import FeedDetails from './FeedDetails.js'
 
 function strategy(m) {
   return [
@@ -78,7 +79,7 @@ function crossoverHistory(m) {
         return h('li', { key: row.timestamp }, h('button', { class: 'signal-link',
           'aria-pressed': m.pinned && m.selectedTime === time, onClick: () => m.pin(time) }, [
           h('span', { class: 'signal-heading' }, [h('strong', [h('i', { 'aria-hidden': true, class: upward ? 'up' : 'down' }, upward ? '↗' : '↘'), upward ? 'Upward' : 'Downward']),
-            h('time', { datetime: row.timestamp, title: formatUtc(time) }, formatUtc(time).replace(' UTC', ''))]),
+            h('time', { datetime: row.timestamp, title: formatEastern(time) }, formatEastern(time))]),
           h('span', { class: 'signal-levels' }, ['Short ' + average(row.short), 'Long ' + average(row.long)].map(text => h('span', text))),
         ]))
       })) : h('p', { class: 'empty-signals' }, 'No confirmed crossovers in this history.'),
@@ -169,6 +170,7 @@ export default {
                   ]),
                   h('details', { class: 'rail-details custom-studies' }, [h('summary', 'Rolling price range & custom indicators'), ...namedStudies(m)]),
                   m.indicatorError ? h('p', { role: 'alert' }, m.indicatorError) : null,
+                  h(FeedDetails, { market: m }),
                 ]),
               ])))),
         ]),

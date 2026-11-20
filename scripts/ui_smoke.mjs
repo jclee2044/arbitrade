@@ -1,3 +1,4 @@
+import { candleCount, hoverCandle, hoverValues, market } from './chart-browser.mjs'
 // UI driver for ui_smoke.py. It is run only after Playwright use is approved.
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
@@ -38,48 +39,51 @@ page.on('websocket', (socket) => {
   sockets.add(socket)
   socket.on('close', () => sockets.delete(socket))
 })
-const utc = (timestamp) => new Date(timestamp).toISOString().replace('T', ' ').slice(0, 16) + ' UTC'
-const inspector = async () => {
-  const labels = await page.locator('.candle-values dt').allTextContents()
-  const values = await page.locator('.candle-values dd').allTextContents()
-  return Object.fromEntries(labels.map((label, i) => [label, values[i]]))
-}
+const eastern = new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' })
+const usd = value => value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 4 })
 async function compare(snapshot, index = snapshot.candles.length - 1) {
   const candle = snapshot.candles[index]
   const completion = snapshot.coverage[index]
   assert(candle, 'Expected a candle from stored observations')
-  const selection = String(Date.parse(candle.timestamp) / 1000)
-  await until(async () => await page.locator('#candle-time option').count() === snapshot.candles.length,
-    'matching number of candle options')
-  await page.locator('#candle-time').selectOption(selection)
-  const disclosure = page.locator('.facts-disclosure')
-  if (!await disclosure.evaluate(details => details.open)) await disclosure.locator('summary').click()
+  await until(async () => await candleCount(page) === snapshot.candles.length, 'matching number of chart candles')
+  const card = await hoverCandle(page, candle.timestamp)
   const expected = {
-    'Date and time': utc(candle.timestamp), Open: String(candle.open), High: String(candle.high),
-    Low: String(candle.low), Close: String(candle.close),
-    ...(candle.volume == null ? {} : { Volume: `${candle.volume.toLocaleString('en-US')} shares` }),
-    Interval: completion.ended ? 'Ended' : 'Still forming',
-    Coverage: completion.coverage_complete ? 'Complete' : 'Partial',
+    Open: usd(candle.open), High: usd(candle.high), Low: usd(candle.low), Close: usd(candle.close),
   }
-  await until(async () => JSON.stringify(await inspector()) === JSON.stringify(expected), 'inspector equals stored backend candle')
-  if (candle.volume != null && completion.volume_provenance === 'yahoo_quote_counter') {
-    assert.match(await page.locator('#volume-basis').innerText(), /observed cumulative change/)
+  if (candle.volume != null) {
+    const label = completion.volume_provenance === 'yahoo_quote_counter' ? 'Observed volume' : 'Volume'
+    expected[label] = candle.volume.toLocaleString('en-US')
   }
+  await until(async () => JSON.stringify(await hoverValues(card)) === JSON.stringify(expected), 'hover values equal stored backend candle')
+  assert.equal(await card.locator('strong').innerText(), eastern.format(new Date(candle.timestamp)) + ' ET')
+  const shown = await market(page).evaluate(el => el.__vueParentComponent.props.market.hoveredCandle?.time)
+  assert.equal(shown, Date.parse(candle.timestamp) / 1000)
   assert.equal(await page.locator('#timeframe [aria-pressed=true]').getAttribute('data-frame'), snapshot.interval)
   await page.getByRole('heading', { name: `AAPL · ${snapshot.interval} candles`, exact: true }).waitFor()
   assert.equal(await page.getByRole('alert').count(), 0)
 }
+async function fillsViewport() {
+  await until(() => page.locator('.chart').evaluate(chart =>
+    Math.abs(chart.getBoundingClientRect().bottom - innerHeight) <= 1 &&
+    document.documentElement.scrollHeight <= innerHeight + 1), 'chart reaches the viewport bottom')
+}
 try {
   await page.goto(process.argv[4] || 'http://127.0.0.1:5173', { waitUntil: 'networkidle' })
   assert.equal(await page.locator('#timeframe [aria-pressed=true]').getAttribute('data-frame'), '1m')
-  await page.locator('.feed-details summary').click()
+  await fillsViewport()
+  assert.equal(await page.locator('.market-column').locator('.history-navigation, .feed-strip, .feed-details').count(), 0)
+  assert.equal(await page.getByRole('button', { name: /^(Previous day|Latest candles)$/ }).count(), 0)
+  assert.equal(await page.getByText('Go to date', { exact: false }).count(), 0)
+  const feed = page.locator('.rail-pane:not([inert]) > .feed-details:last-child')
+  await feed.locator('summary').click()
   await page.getByRole('button', { name: 'Check connection', exact: true }).click()
   await page.getByText('Backend connected:', { exact: false }).waitFor()
-  checks.push('Clicked Check connection; visible backend-connected result; default 1m')
+  await fillsViewport()
+  checks.push('Removed chart controls and feed strip; Feed details is last in Indicators and Check connection works without resizing the chart')
   if (!live) {
     await page.getByText('Waiting for stored or live observations', { exact: false }).waitFor()
   } else {
-    await page.locator('#candle-time').waitFor({ timeout: 45000 })
+    await until(async () => await candleCount(page) > 0, 'live candles received', 45000)
   }
   let snapshots = await request('seed')
   await compare(snapshots['1m'])
@@ -111,22 +115,22 @@ try {
     }
   }
   await page.getByText(live ? 'Source: Yahoo Finance' : 'Source: CONSTRUCTED replay', { exact: false }).waitFor()
-  checks.push(live ? 'Actual Yahoo stored quote/time/OHLCV equals visible inspector' : 'Labeled constructed input; exact OHLCV and still-forming label')
-  const initialCount = await page.locator('#candle-time option').count()
+  checks.push(live ? 'Actual Yahoo stored quote/time/OHLCV equals visible hover card' : 'Labeled constructed input; exact OHLCV and Eastern hover timestamp')
+  const initialCount = await candleCount(page)
   await page.screenshot({ path: resolve(output, 'initial.png'), fullPage: true })
   if (!live) {
     snapshots = await request('same')
     await compare(snapshots['1m'])
-    assert.equal(await page.locator('#candle-time option').count(), initialCount)
+    assert.equal(await candleCount(page), initialCount)
     await page.screenshot({ path: resolve(output, 'same-minute.png'), fullPage: true })
     checks.push('Same-minute close and volume replaced without a duplicate candle')
     snapshots = await request('rollover')
     await compare(snapshots['1m'])
-    assert.equal(await page.locator('#candle-time option').count(), initialCount + 1)
+    assert.equal(await candleCount(page), initialCount + 1)
     await page.screenshot({ path: resolve(output, 'rollover-forming.png'), fullPage: true })
     await compare(snapshots['1m'], snapshots['1m'].candles.length - 2)
     await page.screenshot({ path: resolve(output, 'prior-minute-ended.png'), fullPage: true })
-    checks.push('Next minute adds a candle; preceding minute visibly ended')
+    checks.push('Next minute adds a candle; preceding minute remains available for hover')
   }
   for (const interval of ['5m', '15m', '30m', '1h', '1d', '1w', '1mo', '1m']) {
     await page.locator('[data-frame="' + interval + '"]').click()
@@ -139,7 +143,6 @@ try {
   const firstAge = (await status.textContent()).match(/Source age: (\d+)/)[1]
   await until(async () => (await status.textContent()).match(/Source age: (\d+)/)?.[1] !== firstAge, 'source age advances')
   await request('disconnect')
-  await until(async () => (await page.locator('#market-status').innerText()).toLowerCase() === 'disconnected', 'feed outage visible on desk')
   await until(async () => /Chart: Connected to FastAPI.*Feed: disconnected/.test(await status.textContent()), 'upstream loss shown with connected chart transport')
   await until(() => sockets.size === 1, 'one surviving chart WebSocket')
   checks.push('Source age advances; disconnected upstream displayed while chart WebSocket remains open')
@@ -149,15 +152,18 @@ try {
   assert(box.width > 200 && box.height > 50, 'Rendered chart canvas has useful dimensions')
   await page.screenshot({ path: resolve(output, 'disconnected-desktop.png'), fullPage: true })
   await page.setViewportSize({ width: 390, height: 844 })
+  await page.getByRole('button', { name: 'Collapse sidebar' }).click()
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await fillsViewport()
   await compare(snapshots['1m'])
   const mobileChart = await page.locator('.chart').boundingBox()
   assert(mobileChart.x >= 0 && mobileChart.x + mobileChart.width <= 391)
   await page.screenshot({ path: resolve(output, 'mobile.png'), fullPage: true })
   assert.deepEqual(errors, [], 'No uncaught browser JavaScript errors')
-  checks.push('Desktop/mobile chart renders; screenshots saved; no uncaught JavaScript errors')
+  checks.push('Chart reaches the viewport bottom on desktop and collapsed mobile; screenshots saved; no uncaught browser errors')
   process.stdout.write(JSON.stringify({ action: 'done', checks }) + '\n')
 } catch (error) {
-  if (live && checks.length > 0 && errors.length === 0 && await page.locator('#candle-time').count() === 0) {
+  if (live && checks.length > 0 && errors.length === 0 && await candleCount(page) === 0) {
     await page.screenshot({ path: resolve(output, 'pending-live.png'), fullPage: true })
     process.stdout.write(JSON.stringify({ action: 'pending', checks, reason: 'No in-session candle received within the live browser deadline' }) + '\n')
   } else {

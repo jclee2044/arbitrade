@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import { formatUtc, price } from './chart-data.js'
+import { formatEastern, price } from './chart-data.js'
 
 function candleReading(bar, signal, market, ended) {
   if (signal) {
@@ -33,7 +33,7 @@ export default {
           h('p', result.error_code ? 'Result · ' + result.error_code.replaceAll('_',' ') : 'Validation · ' + result.validation_status),
         ]) : bar && !ended ? h('p', { class: 'summary-meta' }, 'Decision API can interpret the visible chart, including a forming candle.') : null,
         h('div', { class: 'observed-candle' }, [
-          h('p', { class: 'summary-meta' }, bar ? candleLabel + ' · ' + formatUtc(bar.time) : 'Candle evidence'),
+          h('p', { class: 'summary-meta' }, bar ? candleLabel + ' · ' + formatEastern(bar.time) : 'Candle evidence'),
           h('h3', !bar ? 'Awaiting a candle' : signal ? (signal === 'up' ? 'Upward' : 'Downward') + ' SMA crossover' : (ended ? 'Close ' : 'Latest price ') + price(bar.close)),
           bar ? h('p', { class: 'candle-reading' }, candleReading(bar, signal, m, ended)) : null,
           bar ? h('p', { class: 'bar-state' }, (ended ? 'Ended' : 'Forming') + ' · ' + (m.selectedCoverage.coverage_complete ? 'Complete coverage' : 'Partial coverage')) : null,
@@ -47,8 +47,8 @@ export default {
         h('div', { class: 'summary-actions' }, [
           h('button', { class: 'primary', disabled: props.busy || !m.candles.length, onClick: () => emit('analyze') },
             props.busy ? 'Analyzing…' : 'Decision API'),
-          h('button', { class: 'review-link', 'aria-expanded': props.proposalOpen, 'aria-controls': 'proposal-view',
-            onClick: () => emit('review') }, props.proposalOpen ? 'Close paper proposal' : 'Review paper proposal'),
+          m.symbol === 'AAPL' ? h('button', { class: 'review-link', 'aria-expanded': props.proposalOpen, 'aria-controls': 'proposal-view',
+            onClick: () => emit('review') }, props.proposalOpen ? 'Close paper proposal' : 'Review paper proposal') : null,
         ]),
         slots.default?.(),
       ])

@@ -1,3 +1,4 @@
+import { formatEasternTimestamp } from './chart-data.js'
 import { h, ref, watch, onBeforeUnmount, nextTick } from 'vue'
 import { chartPng, renderFrozenChart } from './chart-capture.js'
 
@@ -86,14 +87,14 @@ export default {
     return()=>h('div',{class:'decision-panel','aria-labelledby':'decision-title'},[
       h('h3',{id:'decision-title'},'Paper decision proposal'),
       h('p','Separate paper workflow: frozen candle/account evidence, position-aware actions and reviewer checks. A proposal never places an order.'),
-      h('p',{class:'fine-print'},props.candleTimestamp ? 'Selected: '+props.symbol+' · '+props.candleTimestamp+' · '+(props.completed?'Ended':'Forming') : 'No candle selected.'),
+      h('p',{class:'fine-print'},props.candleTimestamp ? 'Selected: '+props.symbol+' · '+formatEasternTimestamp(props.candleTimestamp)+' · '+(props.completed?'Ended':'Forming') : 'No candle selected.'),
       h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(false)},'Freeze selected candle'),
       h('button',{disabled:busy.value||!props.accountId||!props.candleTimestamp||!props.completed,onClick:()=>freeze(true)},'Ask about chart'),
       !props.completed?h('p','Select a completed candle in the candle inspector to freeze it.'):null,
       error.value?h('p',{role:'alert'},error.value):null,
       frozen.value?h('div',{key:'frozen-snapshot',class:'frozen-snapshot'},[
         h('p',{id:'snapshot-id'},`Snapshot ID: ${frozen.value.snapshot.snapshot_id}`),
-        h('p',{id:'snapshot-market'},`Market data: ${frozen.value.snapshot.provenance.market_data_kind} · ${frozen.value.snapshot.symbol} / ${frozen.value.snapshot.interval} · Decision time: ${frozen.value.snapshot.decision_time}`),
+        h('p',{id:'snapshot-market'},`Market data: ${frozen.value.snapshot.provenance.market_data_kind} · ${frozen.value.snapshot.symbol} / ${frozen.value.snapshot.interval} · Decision time: ${formatEasternTimestamp(frozen.value.snapshot.decision_time)}`),
         h('p',`Frozen account: ${frozen.value.snapshot.account?.account_id || 'Unavailable'} · SHA-256: ${frozen.value.sha256}`),
         h('dl',{class:'snapshot-facts'},[
           ['Close',frozen.value.snapshot.candle?.close??'Unavailable'],
@@ -110,7 +111,7 @@ export default {
           : `Incomplete snapshot · Ineligible for paper orders: ${frozen.value.snapshot.completeness.missing.join(', ')}`),
         capture.value?h('div',{class:'chart-capture'},[
           h('h4','Captured chart · Blue short SMA / amber long SMA'),
-          h('p',{id:'capture-cutoff'},`${capture.value.manifest.symbol} / ${capture.value.manifest.interval} · Cutoff ${capture.value.manifest.cutoff} · Range ${capture.value.manifest.range_start} to ${capture.value.manifest.range_end}`),
+          h('p',{id:'capture-cutoff'},`${capture.value.manifest.symbol} / ${capture.value.manifest.interval} · Cutoff ${formatEasternTimestamp(capture.value.manifest.cutoff)} · Range ${formatEasternTimestamp(capture.value.manifest.range_start)} to ${formatEasternTimestamp(capture.value.manifest.range_end)}`),
           h('p','This separate paper workflow submits the frozen chart with saved candle and account evidence.'),
           h('img',{id:'chart-preview',src:capture.value.image_url,alt:'Frozen chart PNG to submit for analysis'}),
           h('h4','Questions sent with this chart'),
@@ -123,7 +124,8 @@ export default {
         h('p',{id:'decision-provider'},`Model call: ${decision.value.model_call_kind} · ${decision.value.provider} / ${decision.value.model} · Market data: ${decision.value.market_data_kind}`),
         h('p',{id:'decision-status'},`Status: ${decision.value.status} · Validation: ${decision.value.validation_status}`),
         h('p',{id:'decision-proposal'},`Model proposal: ${decision.value.proposal||'None'}${decision.value.quantity!=null?` · Quantity ${decision.value.quantity}`:''}`),
-        h('p',{id:'decision-explanation'},decision.value.explanation),
+        h('p',{id:'decision-explanation'},decision.value.explanation?.replace(/Backend facts at (\S+): /,
+          (_, stamp) => `Backend facts at ${formatEasternTimestamp(stamp)}: `)),
         h('button',{onClick:()=>emit('discuss',decision.value.id)},'Discuss this decision'),
         decision.value.image_analysis?h('div',{id:'chart-answers'},[
           ...Object.entries(decision.value.image_analysis.answers||{}).map(([name,a])=>h('p',{'data-answer':name},`${name}: ${a.choice}`)),

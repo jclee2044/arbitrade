@@ -1,3 +1,4 @@
+import { pinCandle } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
 import { resolve } from 'node:path'
@@ -71,7 +72,7 @@ try {
   assert.deepEqual(catalog.map((type) => type.type), ['sma', 'price_range', 'ema'])
   assert.equal(catalog[1].settings.window.minimum, 1)
   assert.equal(catalog[1].units, 'price difference')
-  await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:02:00Z')/1000))
+  await pinCandle(page, '2026-11-10T15:02:00Z')
   await add('price_range', 'Range 2', 2)
   await expectValue('Range 2', '5')
   await add('price_range', 'Range 3', 3)
@@ -135,10 +136,10 @@ try {
   const history = await (await page.request.get(`http://127.0.0.1:15173/api/history?${params}`)).json()
   const values = Object.fromEntries(history.indicators.map((item) => [item.name, item.rows.map((row) => row.value)]))
   assert.deepEqual(values, { 'Range 2': [null, 6, 5], 'Range 3': [null, null, 6], 'SMA 2': [null, 13.5, 14], 'EMA 2': [null, 13.5, 13.5 + (13-13.5)*2/3] })
-  await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:00:00Z')/1000))
+  await pinCandle(page, '2026-11-10T15:00:00Z')
   await expectValue('Range 2', 'Unavailable')
   await expectValue('Range 3', 'Unavailable')
-  await page.locator('#candle-time').selectOption(String(Date.parse('2026-11-10T15:02:00Z')/1000))
+  await pinCandle(page, '2026-11-10T15:02:00Z')
   await expectValue('Range 2', '5')
   await page.locator('.chart').screenshot({ path: resolve(output, 'range-lines.png') })
   await page.screenshot({ path: resolve(output, 'saved-indicators-desktop.png'), fullPage: true })
@@ -177,8 +178,10 @@ try {
   await page.screenshot({ path: resolve(output, 'saved-indicators-mobile.png'), fullPage: true })
   const box = await page.locator('.chart').boundingBox()
   assert(box.x >= 0 && box.x+box.width <= 391)
-  await page.locator('.feed-details summary').click()
-  await page.getByText('Source: Replay · CONSTRUCTED test_data=true', { exact: false }).waitFor()
+  await page.getByRole('tab', { name: 'Indicators', exact: true }).click()
+  const feed = page.locator('.feed-details')
+  if (await feed.getAttribute('open') === null) await feed.locator('summary').click()
+  await feed.getByText('Source: Replay · CONSTRUCTED test_data=true', { exact: false }).waitFor()
   assert.deepEqual(errors, [])
   checks.push('Settings scoped to symbol/timeframe, return on reopening 1m; desktop/mobile render without page errors')
   console.log(JSON.stringify({ checks, values, saved: before, replay_position: position }))

@@ -1,6 +1,6 @@
 import {h,ref,onMounted,onBeforeUnmount,nextTick,watch} from 'vue'
 import {VoiceConnection} from './voice-connection.js'
-import {formatUtc} from './chart-data.js'
+import {formatEastern, formatEasternTimestamp} from './chart-data.js'
 
 export default {
  emits:['session'],
@@ -61,7 +61,7 @@ export default {
   const busy=()=>['requesting','connecting','active','ending'].includes(phase.value)
   return()=>h('section',{class:'voice-panel','aria-labelledby':'voice-title'},[
    h('header',[h('h2',{id:'voice-title'},'Voice chat'),h('span',{id:'voice-microphone',class:mic.value?'mic-active':''},mic.value?'Mic on':'Mic off')]),
-   h('p',{class:'voice-intro'},record.value ? 'Discuss '+record.value.symbol+' · '+record.value.interval+' · '+(record.value.analyst.proposal||record.value.status||'saved decision')+' · '+formatUtc(Date.parse(record.value.cutoff)/1000) : 'Choose a recorded decision to discuss.'),
+   h('p',{class:'voice-intro'},record.value ? 'Discuss '+record.value.symbol+' · '+record.value.interval+' · '+(record.value.analyst.proposal||record.value.status||'saved decision')+' · '+formatEastern(Date.parse(record.value.cutoff)/1000) : 'Choose a recorded decision to discuss.'),
    h('div',{class:'voice-actions'},[
     h('button',{class:'primary',disabled:busy()||!record.value,onClick:start},'Start voice'),
     busy()?h('button',{onClick:()=>connection?.end()},'End voice'):null,
@@ -74,10 +74,10 @@ export default {
    ]),
    h('button',{disabled:busy(),onClick:load},'Reload saved decisions'),
    record.value?h('div',{class:'voice-record'},[
-    h('p',{id:'voice-selected'},`${record.value.decision_id} · ${record.value.symbol} / ${record.value.interval} · Cutoff ${record.value.cutoff}`),
+    h('p',{id:'voice-selected'},`${record.value.decision_id} · ${record.value.symbol} / ${record.value.interval} · Cutoff ${formatEasternTimestamp(record.value.cutoff)}`),
     h('p',{id:'voice-record-facts'},`Analyst ${record.value.analyst.proposal||'No proposal'} · Reviewer ${record.value.reviewer?.verdict||'Not recorded'} · Python ${record.value.validation.status}`),
     h('p',{id:'voice-record-outcome'},record.value.paper_outcome.fill?`Recorded fill ${record.value.paper_outcome.fill.quantity} @ ${record.value.paper_outcome.fill.price} · Cash ${record.value.paper_outcome.fill_account?.cash} · Shares ${record.value.paper_outcome.fill_account?.shares}`:`No recorded fill · ${record.value.paper_outcome.application?.reason||record.value.paper_outcome.order?.status||record.value.paper_outcome.application?.status||'Manual analysis; no linked order'}`),
-    h('p',`Record read at ${record.value.summary_read_at}. End and start again to refresh later outcomes.`),
+    h('p',`Record read at ${formatEasternTimestamp(record.value.summary_read_at)}. End and start again to refresh later outcomes.`),
    ]):h('p','No saved decision selected. Create a manual decision or choose one from the saved list.'),
    ]),
    h('p',{id:'voice-status',role:'status',hidden:phase.value==='idle'&&!session.value},message.value),

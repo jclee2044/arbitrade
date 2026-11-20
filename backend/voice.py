@@ -14,6 +14,7 @@ from backend.decision_provider import ProviderFailure
 MODEL='gpt-live-1'
 INSTRUCTIONS=('Discuss only the selected saved paper-trading decision and the supplied recorded summary. '
     'Use concise spoken English; keep the conversation open for follow-up questions. '
+    'Speak times in Eastern Time, using the America/New_York offset for the timestamp date. '
     'Clearly distinguish the analyst proposal, reviewer verdict, Python validation, and actual recorded paper outcome. '
     'Never describe a proposal or pending order as a fill. If there is no linked trade, say so. '
     'Distinguish frozen decision-time balances, fill-time balances and current recorded balances. '

@@ -9,14 +9,17 @@ export function chartGestures(chart, host, volumeSeries) {
     if (priceDrag && host.hasPointerCapture(priceDrag.id)) host.releasePointerCapture(priceDrag.id)
     priceDrag = null
   }
-  function priceScaleAt(event) {
+  function priceScaleAt(event, includeVolumePlot = false) {
     const rect = host.getBoundingClientRect()
-    if (event.clientX - rect.left < chart.timeScale().width()) return null
-    const pane = chart.panes().find(pane => {
+    const overAxis = event.clientX - rect.left >= chart.timeScale().width()
+    if (!overAxis && !includeVolumePlot) return null
+    const volumePane = volumeSeries.getPane().paneIndex()
+    const pane = chart.panes().find((pane, index) => {
+      if (!overAxis && index !== volumePane) return false
       const bounds = pane.getHTMLElement()?.getBoundingClientRect()
       return bounds && event.clientY >= bounds.top && event.clientY < bounds.bottom
     })
-    return pane ? { scale: pane.priceScale('right'), anchorZero: pane.getSeries().includes(volumeSeries) } : null
+    return pane ? { scale: pane.priceScale('right'), anchorZero: pane.paneIndex() === volumePane } : null
   }
   function scalePrices({ scale, anchorZero }, range, factor) {
     if (anchorZero) {
@@ -79,11 +82,13 @@ export function chartGestures(chart, host, volumeSeries) {
     return Math.abs(next.from - range.from) + Math.abs(next.to - range.to) > 0.00001
   }
   function wheel(event) {
-    const priceScale = priceScaleAt(event), priceRange = priceScale?.scale.getVisibleRange()
-    if (priceRange && event.deltaY) {
+    const volumeScroll = !event.ctrlKey && Math.abs(event.deltaY) >= Math.abs(event.deltaX)
+    const priceScale = priceScaleAt(event, volumeScroll)
+    if (priceScale && event.deltaY) {
       stop()
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? host.clientHeight : 1
-      scalePrices(priceScale, priceRange, Math.exp(clamp(event.deltaY * unit * 0.012, -0.6, 0.6)))
+      const range = priceScale.scale.getVisibleRange()
+      if (range) scalePrices(priceScale, range, Math.exp(clamp(event.deltaY * unit * 0.012, -0.6, 0.6)))
       event.preventDefault()
       event.stopImmediatePropagation()
       return

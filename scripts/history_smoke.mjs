@@ -1,3 +1,4 @@
+import { candleCount, hoverCandle } from './chart-browser.mjs'
 import assert from 'node:assert/strict'
 import { resolve } from 'node:path'
 import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
@@ -10,6 +11,15 @@ const market = fn => page.locator('.market-column').evaluate((el, source) => {
   const m = el.__vueParentComponent.props.market
   return Function('m', `return (${source})(m)`)(m)
 }, fn.toString())
+const showNovember10 = () => market(m => {
+  const first = m.candles.findIndex(c => c.timestamp.startsWith('2026-11-10'))
+  m.drawingAxes().scale.setVisibleLogicalRange({ from: first, to: first + 110 })
+})
+async function visibleClose(close) {
+  await until(async () => await market(m => m.latest?.close) === close)
+  const card = await hoverCandle(page)
+  await card.getByText(close.toLocaleString('en-US', { style: 'currency', currency: 'USD' }), { exact: true }).first().waitFor()
+}
 async function until(fn) {
   for (let i = 0; i < 100; i++) {
     if (await fn()) return
@@ -19,21 +29,21 @@ async function until(fn) {
 }
 try {
   await page.goto(`http://127.0.0.1:${process.env.ARBITRADE_FRONTEND_PORT}`, { waitUntil: 'networkidle' })
-  await until(async () => await page.locator('#candle-time option').count() === 256)
-  assert.equal(await page.locator('#history-day option').count(), 3)
-  assert.equal(await page.locator('#history-day').inputValue(), '2026-11-11')
-  await button('Previous day').click()
-  await until(async () => (await market(m => m.visibleRange())).from === Date.parse('2026-11-10T15:00Z') / 1000)
-  assert.equal(await page.locator('#history-day').inputValue(), '2026-11-10')
-  await button('Previous day').click()
-  await until(async () => (await page.locator('#history-day').inputValue()) === '2026-11-09')
-  assert(await button('Previous day').isDisabled())
-  checks.push('Previous day traverses three recorded dates and stops at earliest history')
-  await page.locator('#history-day').selectOption('2026-11-10')
+  await until(async () => await candleCount(page) === 256)
+  const initial = await market(m => m.visibleRange())
+  const chart = page.locator('.chart')
+  const initialBox = await chart.boundingBox()
+  await page.mouse.move(initialBox.x + initialBox.width / 2, initialBox.y + 100)
+  await page.mouse.wheel(-1800, 0)
+  await until(async () => await candleCount(page) === 360)
+  await page.mouse.click(initialBox.x + initialBox.width / 2, initialBox.y + 100)
+  assert((await market(m => m.visibleRange())).from < initial.from)
+  checks.push('Panning toward older candles pages in earlier history')
+  await showNovember10()
   const before = await market(m => m.visibleRange())
   const response = await page.request.post(`http://127.0.0.1:${process.env.ARBITRADE_BACKEND_PORT}/fixture/rollover`)
   assert(response.ok())
-  await until(async () => await page.locator('#candle-time option').count() === 361)
+  await until(async () => await candleCount(page) === 361)
   assert.deepEqual(await market(m => m.visibleRange()), before)
   checks.push('A new streamed candle arrives while earlier-day viewport remains unchanged')
   const gestureBox = await page.locator('.chart').boundingBox()
@@ -59,10 +69,9 @@ try {
   assert.equal(await span(), settled, 'Zoom must stop')
   await page.mouse.wheel(0, -20)
   await until(async () => await span() < settled * 0.85)
-  // A date navigation cancels an active release tail immediately.
-  await page.locator('#history-day').selectOption('2026-11-10')
+  // A new pointer input cancels an active release tail immediately.
+  await page.mouse.click(gestureBox.x + gestureBox.width * 0.45, gestureBox.y + 100)
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
-  assert.equal(await page.locator('#history-day').inputValue(), '2026-11-10')
   const resetRange = await market(m => m.visibleRange())
   await page.waitForTimeout(500)
   assert.deepEqual(await market(m => m.visibleRange()), resetRange)
@@ -76,7 +85,7 @@ try {
   await pinch(20)
   await until(async () => await span() > beforePinch * 0.95)
   assert.equal(await page.evaluate(() => window.visualViewport.scale), 1)
-  await page.locator('#history-day').selectOption('2026-11-10')
+  await showNovember10()
   const startIndex = () => market(m => {
     const r = m.visibleRange()
     return m.candles.findIndex(c => c.time === r.from)
@@ -95,8 +104,8 @@ try {
   await page.waitForTimeout(200)
   assert.equal(await startIndex(), panSettled, 'Scroll must stop')
   checks.push({ zoom_release_samples: zoomSamples, scroll_release_samples: panSamples,
-    result: 'More sensitive zoom; zoom and horizontal scroll continue after release, decelerate, and stop. Date navigation cancels momentum; reverse pinch stays responsive.' })
-  await button('Latest candles').click()
+    result: 'More sensitive zoom; zoom and horizontal scroll continue after release, decelerate, and stop. New pointer input cancels momentum; reverse pinch stays responsive.' })
+  await market(m => m.drawingAxes().scale.scrollToRealTime())
   await until(async () => (await market(m => m.visibleRange())).to >= Date.parse('2026-11-11T17:01Z') / 1000)
   const tail = await market(m => m.visibleRange())
   const box = await page.locator('.chart').boundingBox()
@@ -109,9 +118,9 @@ try {
   await page.waitForTimeout(180)
   const dragCoast = await market(m => m.visibleRange())
   assert(dragCoast.from < dragRelease.from, 'A quick mouse drag must coast after release')
-  checks.push('Dragging right scrolls into older candles and coasts after release; Latest candles returns to current data')
+  checks.push('Dragging right scrolls into older candles and coasts after release')
   // Measure rendered candle height, rather than adding chart-only testing APIs.
-  await page.locator('#history-day').selectOption('2026-11-10')
+  await showNovember10()
   await page.waitForTimeout(100)
   const candleHeight = () => page.locator('.chart').evaluate(host => {
     let low = Infinity, high = -Infinity
@@ -206,6 +215,17 @@ try {
   const volumeReset = await volumeBars()
   assertBaseline(volumeReset)
   assert(Math.abs(volumeReset.height / volumeBefore.height - 1) < 0.06, 'Volume reset must restore automatic scaling')
+  const priceHeight = await candleHeight()
+  await page.mouse.move(axisBox.x + axisBox.width / 2, volumeBefore.axisY)
+  await page.mouse.wheel(0, 20)
+  await page.waitForTimeout(100)
+  const volumePlotCompressed = await volumeBars()
+  assertBaseline(volumePlotCompressed)
+  assert(volumePlotCompressed.height < volumeReset.height * 0.9, 'Wheel over volume bars must compress only volume')
+  assert.deepEqual(await market(m => m.visibleRange()), volumeTimeRange)
+  assert.equal(await candleHeight(), priceHeight, 'Volume scrolling must not scale the main price pane')
+  await page.mouse.dblclick(axisX, volumeBefore.axisY)
+  await page.waitForTimeout(100)
   // Cross numeric/K/M tick-label widths in both directions, including frames
   // between wheel inputs. Resizing the shared axis shifts every bar sideways.
   const plotWidth = () => page.locator('.chart canvas').evaluateAll(canvases =>
@@ -225,13 +245,46 @@ try {
   await page.waitForTimeout(100)
   checks.push({ volume_scroll_plot_widths: [...new Set(widths)], result: 'Repeated volume scrolling preserves horizontal geometry' })
   checks.push({ volume_axis: { before: volumeBefore, compressed: volumeCompressed, expanded: volumeExpanded,
-    dragged: volumeDragged, reset: volumeReset }, result: 'Volume wheel/drag/reset keep zero at pane bottom' })
+    dragged: volumeDragged, reset: volumeReset, plotScroll: volumePlotCompressed }, result: 'Volume wheel over bars and axis leaves the price and time scales fixed and anchors volume at zero' })
   await page.screenshot({ path: resolve(output, 'history-desktop.png'), fullPage: true })
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.locator('#history-day').selectOption('2026-11-09')
-  assert.equal(await page.locator('#history-day').inputValue(), '2026-11-09')
+  await page.getByRole('button', { name: 'Collapse sidebar' }).click()
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
   await page.screenshot({ path: resolve(output, 'history-mobile.png'), fullPage: true })
+  const ticker = page.getByRole('textbox', { name: 'Ticker', exact: true })
+  assert.equal(await ticker.inputValue(), 'AAPL')
+  await ticker.fill('bad ticker')
+  await ticker.press('Enter')
+  assert(await page.getByRole('alert').filter({ hasText: 'Enter a ticker such as MSFT' }).isVisible())
+  assert(await page.getByRole('heading', { name: 'AAPL · 1m candles' }).count())
+  await ticker.fill(' msft ')
+  await ticker.press('Enter')
+  await page.getByRole('heading', { name: 'MSFT · 1m candles' }).waitFor()
+  await visibleClose(403)
+  assert.equal(await ticker.inputValue(), 'MSFT')
+  const history = await page.request.get(new URL('/api/history?symbol=MSFT&timeframe=1m&source=observations&calendar=NASDAQ', page.url()).href)
+  assert(history.ok())
+  const stored = await history.json()
+  assert.deepEqual(stored.map(row => [row.close, row.volume]), [[400, null], [403, 15]])
+  assert.equal(await candleCount(page), 2)
+  await page.locator('[data-frame="5m"]').click()
+  await page.getByRole('heading', { name: 'MSFT · 5m candles' }).waitFor()
+  await visibleClose(403)
+  assert.equal(await candleCount(page), 1)
+  await page.locator('#mode').selectOption('replay')
+  assert.equal(await ticker.count(), 0)
+  await page.locator('#replay-symbol').selectOption('MSFT')
+  await button('Load / restart replay').click()
+  await button('Next observation').click()
+  await visibleClose(400)
+  await page.locator('#mode').selectOption('live')
+  assert.equal(await ticker.inputValue(), 'MSFT')
+  await visibleClose(403)
+  await ticker.fill('AAPL')
+  await button('Go').click()
+  await page.getByRole('heading', { name: 'AAPL · 5m candles' }).waitFor()
+  await visibleClose(115)
+  checks.push('Ticker validation, lowercase MSFT entry, matching stored candles and volume, timeframe, replay, and Go back to AAPL')
   assert.deepEqual(errors, [])
   console.log(JSON.stringify({ checks, initial_candles: 256, after_rollover: 361, earlier_viewport: before }))
 } catch (error) {

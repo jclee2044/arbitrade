@@ -24,6 +24,21 @@ createApp({
     const m = useMarketChart(chartHost)
     const tool = ref('chart')
     const menu = ref('indicators')
+    const isApple = computed(() => m.symbol === 'AAPL')
+    const tickerDraft = ref(m.symbol)
+    const tickerError = ref('')
+    function submitTicker(event) {
+      event.preventDefault()
+      const symbol = tickerDraft.value.trim().toUpperCase()
+      if (!/^[A-Z][A-Z0-9.-]{0,15}$/.test(symbol)) {
+        tickerError.value = 'Enter a ticker such as MSFT or BRK-B.'
+        return
+      }
+      tickerDraft.value = symbol
+      tickerError.value = ''
+      if (symbol !== m.symbol) proposalOpen.value = false
+      m.changeLiveSymbol(symbol)
+    }
     const collapsed = ref(window.matchMedia('(max-width: 700px)').matches)
     const paperTab = ref('Orders')
     const proposalOpen = ref(false)
@@ -91,7 +106,7 @@ createApp({
                 busy: busy.value, message: notice.value?.key === currentKey.value ? notice.value.message : '',
                 proposalOpen: proposalOpen.value, onAnalyze: analyze, onReview: toggleProposal }, {
                 default: () => [h(ClassroomDecision, { ref: classroomPanel, capture: m.captureVisibleChart,
-                  onBusy: value => { busy.value = value } }), view('proposal-view', proposalOpen.value, [h(DecisionPanel, {
+                  onBusy: value => { busy.value = value } }), view('proposal-view', isApple.value && proposalOpen.value, [h(DecisionPanel, {
                   ref: decisionPanel, chartRange: m.visibleRange, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe,
                   candleTimestamp: m.selected?.timestamp, completed: Boolean(m.selectedCoverage?.ended),
                   shortWindow: m.appliedShort, longWindow: m.appliedLong, onOutcome: receiveAnalysis, onBusy: value => { busy.value = value },
@@ -102,7 +117,18 @@ createApp({
             ]),
           }),
           h('div', { class: 'market-desk' }, [
-            h('div', { class: 'instrument' }, [h('h2', m.symbol === 'AAPL' ? 'Apple Inc.' : m.symbol), h('span', { class: 'ticker' }, m.symbol)]),
+            h('div', { class: 'instrument' }, [
+              h('h2', isApple.value ? 'Apple Inc.' : m.symbol),
+              m.mode === 'live' ? h('form', { class: 'ticker-form', onSubmit: submitTicker }, [
+                h('input', { type: 'text', size: 8, value: tickerDraft.value, 'aria-label': 'Ticker',
+                  'aria-invalid': tickerError.value ? 'true' : undefined,
+                  'aria-describedby': tickerError.value ? 'ticker-error' : undefined,
+                  autocomplete: 'off', autocapitalize: 'characters', spellcheck: false,
+                  onInput: event => { tickerDraft.value = event.target.value; tickerError.value = '' } }),
+                h('button', { type: 'submit' }, 'Go'),
+              ]) : h('span', { class: 'ticker' }, m.symbol),
+              tickerError.value && m.mode === 'live' ? h('p', { id: 'ticker-error', role: 'alert' }, tickerError.value) : null,
+            ]),
             h(CandleChart, { market: m, chartHost: setChartHost, drawingOpen: menu.value === 'drawing' && !collapsed.value }),
           ]),
 
@@ -113,6 +139,7 @@ createApp({
               'aria-pressed': paperTab.value === name, onClick: () => { paperTab.value = name },
             }, name))),
             view('trade-view', paperTab.value === 'Orders', [h(PaperTrading, { accountId: m.paperAccount, symbol: m.symbol })]),
+            !isApple.value && paperTab.value === 'Automation' ? h('p', 'Paper automation is available for AAPL.') : null,
             view('automation-view', paperTab.value === 'Automation', [h(AutomationPanel, {
               ref: automation, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe, shortWindow: m.appliedShort,
               longWindow: m.appliedLong, completed: m.completed, onRunning: value => { automationOn.value = value },

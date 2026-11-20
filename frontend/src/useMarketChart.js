@@ -1,7 +1,7 @@
 import { compositeDrawings } from './DrawingLayer.js'
 import { reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { createChart, CandlestickSeries, HistogramSeries, LineSeries, LineStyle, createSeriesMarkers } from 'lightweight-charts'
-import { adaptCandles, formatUtc } from './chart-data.js'
+import { adaptCandles, easternTick, easternTimestamp, formatEastern } from './chart-data.js'
 import { movingAverageColors, studyColor } from './chart-studies.js'
 import { chartGestures } from './chart-gestures.js'
 
@@ -110,7 +110,8 @@ export function useMarketChart(container) {
   const paperAccount = ref('live')
   const mode = ref('live')
   const saved = ref([])
-  const symbol = ref('AAPL')
+  const liveSymbol = ref('AAPL')
+  const symbol = ref(liveSymbol.value)
   const replaySymbol = ref('AAPL')
   const start = ref('')
   const end = ref('')
@@ -121,8 +122,8 @@ export function useMarketChart(container) {
   function chooseSymbol(value) {
     replaySymbol.value = value
     const selection = saved.value.find((item) => item.symbol === value)
-    start.value = selection?.start || ''
-    end.value = selection?.end || ''
+    start.value = easternTimestamp(selection?.start)
+    end.value = easternTimestamp(selection?.end)
   }
   function next() {
     if (socket?.readyState === WebSocket.OPEN && !waiting.value && !replay.value?.done) {
@@ -133,29 +134,12 @@ export function useMarketChart(container) {
   const pinned = ref(false)
   const hover = ref(null)
   const candles = ref([])
-  const visibleDay = ref('')
-  const historyDays = computed(() => [...new Set(candles.value.map(c => c.timestamp.slice(0, 10)))])
   let hasOlder = false
   function trackRange(range) {
     if (hasOlder && range && range.from < 32 && socket?.readyState === WebSocket.OPEN) {
       hasOlder = false
       socket.send(JSON.stringify({ action: 'older' }))
     }
-    const index = range ? Math.max(0, Math.min(candles.value.length - 1, Math.floor((range.from + range.to) / 2))) : -1
-    visibleDay.value = candles.value[index]?.timestamp.slice(0, 10) || ''
-  }
-  function showDay(day) {
-    gestures?.stop()
-    const first = candles.value.findIndex(c => c.timestamp.startsWith(day))
-    if (first < 0) return
-    const count = candles.value.filter(c => c.timestamp.startsWith(day)).length
-    const range = chart.timeScale().getVisibleLogicalRange()
-    const width = Math.min(count, range ? range.to - range.from : 60)
-    chart.timeScale().setVisibleLogicalRange({ from: first, to: first + Math.max(1, width - 1) })
-  }
-  function previousDay() {
-    const index = historyDays.value.indexOf(visibleDay.value)
-    if (index > 0) showDay(historyDays.value[index - 1])
   }
   const coverage = ref({})
   const selectedTime = ref(null)
@@ -314,7 +298,7 @@ export function useMarketChart(container) {
 
   function connect(retain = false) {
     gestures?.stop()
-    symbol.value = mode.value === 'live' ? 'AAPL' : replaySymbol.value
+    symbol.value = mode.value === 'live' ? liveSymbol.value : replaySymbol.value
     paperAccount.value = mode.value === 'live' ? 'live' : null
     clearTimeout(playback)
     playing.value = false
@@ -332,7 +316,6 @@ export function useMarketChart(container) {
       selectedTime.value = null
       pinned.value = false
       hover.value = null
-      visibleDay.value = ''
       prices.setData([])
       volume.setData([])
       renderAverages(null)
@@ -341,7 +324,7 @@ export function useMarketChart(container) {
       drawStudies()
       source.value = mode.value === 'replay' ? 'Recorded observations' : 'Yahoo Finance'
     }
-    feed.value = { ...feed.value, status: 'connecting' }
+    feed.value = retain === true ? { ...feed.value, status: 'connecting' } : { status: 'connecting' }
     chart.timeScale().applyOptions({ timeVisible: !['1d', '1w', '1mo'].includes(timeframe.value) })
     failure.value = ''
     transport.value = 'Connecting'
@@ -360,6 +343,7 @@ export function useMarketChart(container) {
       }
       params.set('start', start.value)
       params.set('end', end.value)
+      params.set('calendar', 'NASDAQ')
     }
     if (mode.value === 'live') params.set('paged', 'true')
     if (retain === true && candles.value.length) params.set('oldest', candles.value[0].timestamp)
@@ -431,14 +415,6 @@ export function useMarketChart(container) {
     }
   }
 
-  function followLatest() {
-    gestures?.stop()
-    pinned.value = false
-    selectedTime.value = candles.value.at(-1)?.time
-    renderMarkers()
-    chart.timeScale().scrollToRealTime()
-  }
-
   function inspect(event) {
     hover.value = event.point && event.seriesData.has(prices)
       ? { time: event.time, x: event.point.x, y: event.point.y } : null
@@ -450,6 +426,13 @@ export function useMarketChart(container) {
 
   function changeMode(value) {
     mode.value = value
+    connect()
+    if (value === 'replay') loadSelections()
+  }
+
+  function changeLiveSymbol(value) {
+    if (value === liveSymbol.value) return
+    liveSymbol.value = value
     connect()
   }
 
@@ -468,8 +451,8 @@ export function useMarketChart(container) {
       // Otherwise the shared plot width changes and bars jump horizontally.
       rightPriceScale: { borderVisible: false, minimumWidth: 96 },
       crosshair: { vertLine: { color: '#739db0' }, horzLine: { color: '#739db0' } },
-      localization: { timeFormatter: formatUtc },
-      timeScale: { timeVisible: true, secondsVisible: false, borderVisible: false },
+      localization: { timeFormatter: formatEastern },
+      timeScale: { timeVisible: true, secondsVisible: false, borderVisible: false, tickMarkFormatter: easternTick },
       handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
       kineticScroll: { mouse: true, touch: true },
     })
@@ -528,7 +511,7 @@ export function useMarketChart(container) {
       ticker: symbol.value, interval: timeframe.value,
       captured_at: new Date().toISOString(), candle_timestamp: visible.at(-1).timestamp,
       visible_candles: visible.length,
-      last_quote_at: observation?.backend_received_at_utc ?? null,
+      last_quote_at: mode.value === 'replay' ? replay.value?.current?.received_at_utc ?? null : observation?.backend_received_at_utc ?? null,
       last_source_at: sourceTime ?? null,
       is_stale: feed.value.status !== 'live' || !sourceTime || Date.now() - Date.parse(sourceTime) > 30000,
       volume_status: visible.some(row => row.volume != null) ? 'visible' : 'unavailable',
@@ -539,9 +522,8 @@ export function useMarketChart(container) {
 
   return reactive({
     drawingRevision, drawingTool, drawingAxes: () => chart && ({ scale: chart.timeScale(), prices, size: chart.paneSize(0) }),
-    mode, changeMode, symbol, timeframe, connect, source, feed, transport, failure, age,
-    candles, coverage, selected, selectedTime, pinned, pin, followLatest, hover,
-    historyDays, visibleDay, showDay, previousDay,
+    mode, changeMode, changeLiveSymbol, symbol, timeframe, connect, source, feed, transport, failure, age,
+    candles, coverage, selected, selectedTime, pinned, pin, hover,
     selectedCoverage: computed(() => coverage.value[selectedTime.value]),
     latest: computed(() => candles.value.at(-1)),
     lastEnded: computed(() => candles.value.findLast(c => coverage.value[c.time]?.ended)),
