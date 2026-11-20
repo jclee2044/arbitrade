@@ -1,0 +1,671 @@
+[
+  {
+    "id": "alignment",
+    "topic": "Weekly regime and daily market structure",
+    "video": "k6I04ciE1KE",
+    "start": 37,
+    "end": 208,
+    "evidence": "Creator description, chapter and companion episode transcript",
+    "lesson": "A move through a daily level can matter to traders on several horizons. Look for agreement across horizons when judging a setup.",
+    "hypothesis": "For continuation, label the last completed week bullish when its close exceeds its 10-week SMA and that average rose from the prior week. Reverse both comparisons for bearish. Otherwise label mixed and wait.",
+    "requires": "Completed weekly closes, including the prior average. Never use Friday's eventual close earlier in that week.",
+    "source": {
+      "title": "How to Use Multi-Timeframe Analysis & Find the Best Trading Setups",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion explanation",
+      "evidence_url": "https://theonelanceb.com/blog/how-to-use-multi-timeframe-analysis/"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "continuation",
+    "topic": "Long breakout and short breakdown from a range",
+    "video": "k-X0164r66U",
+    "start": 616,
+    "end": null,
+    "evidence": "Creator chapter on continuation, with breakout and breakdown named in the swing lessons companion episode",
+    "lesson": "Continuation is one of Lance's two swing setup families. The working premise is that price will keep moving in the direction of the break.",
+    "hypothesis": "In a bullish weekly regime, flag a long when today's completed close exceeds the highest high of the prior 20 sessions. In a bearish regime, flag a short below the lowest low of those sessions. Record range width divided by ATR before the break so tight and wide bases can be compared.",
+    "requires": "Completed daily OHLC and weekly regime. Equality or a wick through the level alone leaves the candidate flat.",
+    "source": {
+      "title": "The 2 Swing Trading Strategies That Made me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated chapter notes",
+      "evidence_url": "https://podcasts.apple.com/ca/podcast/the-2-swing-trading-strategies-that-made-me-millions/id1888279300?i=1000793445930"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "reversal",
+    "topic": "Mean reversion after capitulation or upside exhaustion",
+    "video": "k-X0164r66U",
+    "start": 520,
+    "end": 616,
+    "evidence": "Creator chapter on mean reversion, with multi-day capitulation discussed in the swing lessons companion episode",
+    "lesson": "Mean reversion is a separate swing setup family. A multi-day extreme can be the context for a reversal.",
+    "hypothesis": "On day D, flag a downside stretch if the close is at least two prior ATRs below the prior 20-session SMA. Require D+1 to close above D's high before flagging a long. Mirror the stretch and confirmation for a short. An unconfirmed stretch expires after D+1.",
+    "requires": "Comparable split-adjusted OHLC, completed confirmation bar and warmed indicators. Tag weekly regime for analysis. Conflicting continuation and reversal signals on the same close mean wait.",
+    "source": {
+      "title": "The 2 Swing Trading Strategies That Made me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated chapter notes",
+      "evidence_url": "https://podcasts.apple.com/ca/podcast/the-2-swing-trading-strategies-that-made-me-millions/id1888279300?i=1000793445930"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "features",
+    "topic": "Relative volume, volatility and trend indicators",
+    "video": "k6I04ciE1KE",
+    "start": 208,
+    "end": 358,
+    "evidence": "Creator chapter showing multi-timeframe trade examples. Indicator definitions below are research choices.",
+    "lesson": "Compare how the same setup appears on different chart horizons.",
+    "hypothesis": "Use SMA for trend, ATR for comparable distances, and relative daily volume for participation. Compare each feature with a price-only baseline. Relative volume is today's downloaded daily share volume divided by the mean of the prior 20 valid consecutive sessions. Leave missing or zero-denominator ratios unknown.",
+    "requires": "Use mean true range over 14 completed sessions for this pilot. Each true range is the maximum of high minus low and the absolute gaps from prior close to high or low. Keep provider bar volume separate from observed counter deltas.",
+    "source": {
+      "title": "How to Use Multi-Timeframe Analysis & Find the Best Trading Setups",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion explanation",
+      "evidence_url": "https://theonelanceb.com/blog/how-to-use-multi-timeframe-analysis/"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "indicator or chart input"
+  },
+  {
+    "id": "gap",
+    "topic": "Overnight gap risk, stops and position sizing",
+    "video": "bZ7-iBaI_Xw",
+    "start": 100,
+    "end": 183,
+    "evidence": "Creator chapter and companion episode transcript",
+    "lesson": "A swing trade can require a wider structural stop and can open beyond that stop. Carrying intraday share size overnight changes the exposure.",
+    "hypothesis": "For continuation use the breakout day's low as the long stop or high as the short stop. For reversal use the stretch day's extreme. At entry use shares = floor(dollar risk budget / (max(structural stop distance, adverse gap stress per share) + round-trip cost allowance per share)). Round shares down. Skip invalid stops or zero shares.",
+    "requires": "Entry price, stop on the loss side, positive gap stress, risk budget, estimated costs and buying power. A stressed loss estimate is not a maximum loss.",
+    "source": {
+      "title": "16 Years of Swing Trading Lessons in 12 Minutes",
+      "author": "TheOneLanceB",
+      "evidence_type": "Available companion transcript and creator chapters",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/16-years-of-swing-trading-lessons-in-12-minutes"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "capacity",
+    "topic": "Portfolio buying power and competing positions",
+    "video": "bZ7-iBaI_Xw",
+    "start": 459,
+    "end": 510,
+    "evidence": "Creator chapter and companion episode transcript",
+    "lesson": "A multi-day position consumes buying power that may be needed for a better opportunity. Evaluate new ideas alongside existing positions.",
+    "hypothesis": "Cap proposed shares by available buying power and remaining portfolio risk. For a short also require confirmed borrow availability, borrow cost and margin. Return wait with the missing input or binding constraint.",
+    "requires": "Timestamped account snapshot, open positions and declared exposure limits. Arbitrade's current paper account supports long inventory only.",
+    "source": {
+      "title": "16 Years of Swing Trading Lessons in 12 Minutes",
+      "author": "TheOneLanceB",
+      "evidence_type": "Available companion transcript and creator chapters",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/16-years-of-swing-trading-lessons-in-12-minutes"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "pivots",
+    "topic": "Trend direction from swing highs and swing lows",
+    "video": "ZOHG-OnQuos",
+    "start": null,
+    "end": null,
+    "evidence": "Creator companion article",
+    "lesson": "Successive rising peaks and troughs describe an uptrend. Falling peaks and troughs describe a downtrend. A sideways sequence has no clear direction.",
+    "hypothesis": "Annotate the last two confirmed peaks and troughs with their confirmation times. Classify mixed sequences as indeterminate. Compare pivot direction with the weekly filter before proposing continuation.",
+    "requires": "Sufficient left and right history to confirm each pivot as of the decision. Mark an emerging pivot provisional.",
+    "source": {
+      "title": "99% of Traders Don't Know How to Trade with the Trend",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion article",
+      "evidence_url": "https://theonelanceb.com/blog/99-of-traders-dont-know-how-to-trade-with-the-trend/"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "range",
+    "topic": "Wait in chop inside a range",
+    "video": "fCp6CRu6E5Y",
+    "start": null,
+    "end": null,
+    "evidence": "Creator companion article",
+    "lesson": "Repeated entries inside a directionless range can accumulate losses before a meaningful break occurs.",
+    "hypothesis": "Mark the two boundaries before reviewing the latest bar. In the interior, return wait on a breakout thesis. A failed probe back inside is evidence against continuation.",
+    "requires": "Both range edges and an uncropped history. A tight range alone supplies no direction.",
+    "source": {
+      "title": "Stop Trading in No Man’s Land If You Want to Be Profitable",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion article",
+      "evidence_url": "https://theonelanceb.com/blog/stop-trading-in-no-mans-land-if-you-want-to-become-profitable/"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "level",
+    "topic": "Support resistance level quality and rejection",
+    "video": "UAlhNPmvB14",
+    "start": null,
+    "end": null,
+    "evidence": "Creator companion episode transcript excerpt",
+    "lesson": "A meaningful level has visible evidence of a reaction. Agreement with a higher-timeframe level gives additional context.",
+    "hypothesis": "Record the level before the trigger, the earlier reactions, and where candles closed after each test. If a wide price zone allows either interpretation, mark the level ambiguous.",
+    "requires": "Readable price scale and earlier tests. A line drawn by a user is an annotation, not independent evidence.",
+    "source": {
+      "title": "Why Your Support & Resistance Lines Don’t Work",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion episode transcript excerpt",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/why-your-support-amp-resistance-lines-dont-work-100m-trader-explains"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "turn",
+    "topic": "Right side of the V and reversal confirmation after a selloff",
+    "video": "wtQIj6Apiq0",
+    "start": 143,
+    "end": 308,
+    "evidence": "Creator description, chapters and companion article",
+    "lesson": "Waiting for price to turn changes the entry evidence even if the same price traded during the fall.",
+    "hypothesis": "For a candidate bounce, compare the close after a reclaim with the earlier falling leg. Record the extreme and the reclaim separately. A green bar in an ongoing decline is insufficient on its own.",
+    "requires": "Ordered completed bars on the setup horizon, an identifiable extreme and a predeclared confirmation rule.",
+    "source": {
+      "title": "This Right Side of the V Trading Strategy Made Me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description, chapters and companion article",
+      "evidence_url": "https://theonelanceb.com/blog/the-right-side-of-the-v-a-game-changer-for-traders/"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "comparison",
+    "topic": "Long bounce versus continuation chart comparisons",
+    "video": "9SgNXrWTefY",
+    "start": 175,
+    "end": 703,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance compares charts within a long-bounce category and gives long continuation a separate chapter. Similar-looking charts can warrant different assessments.",
+    "hypothesis": "Record both the reversal and continuation explanations before revealing subsequent bars. Distinguish a low reclaim from a range-high breakout. Grade the call against the evidence visible at the time.",
+    "requires": "Pre-entry chart and prior structure. Exact plotted levels and outcomes in the video have not been checked.",
+    "source": {
+      "title": "Can You Pass This Technical Analysis Test? (How to Know Which Charts Are Worth Trading)",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=9SgNXrWTefY"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "shortstructure",
+    "topic": "Short continuation chart comparison",
+    "video": "9SgNXrWTefY",
+    "start": 926,
+    "end": null,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "The chart exercise includes separate long and short continuation examples.",
+    "hypothesis": "Require a defined floor and acceptance below it for the breakdown hypothesis. A lower wick followed by a close back inside is a failed break under this convention.",
+    "requires": "Completed close, range floor and adverse invalidation level. Short feasibility is a separate check.",
+    "source": {
+      "title": "Can You Pass This Technical Analysis Test? (How to Know Which Charts Are Worth Trading)",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=9SgNXrWTefY"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "watchlist",
+    "topic": "Stocks in play and unusually high volume",
+    "video": "7FbTZZNljSo",
+    "start": 146,
+    "end": 274,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "High activity is one way Lance finds stocks for his watchlist.",
+    "hypothesis": "Tag the catalyst only if verified from time-stamped news. Compare volume through the same session time with prior sessions. Promote unusual activity to the watchlist before evaluating direction.",
+    "requires": "Historical session-aligned volume, current session boundaries and source time. A tall bar on an autoscaled chart cannot establish historical relative volume.",
+    "source": {
+      "title": "I Only Trade Stocks That Meet This Criteria",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=7FbTZZNljSo"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "indicator or chart input"
+  },
+  {
+    "id": "avwap",
+    "topic": "Anchored VWAP versus session VWAP",
+    "video": "D2P-0xh6aEM",
+    "start": 317,
+    "end": 482,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance distinguishes session VWAP from an anchored measure and discusses how he uses the latter.",
+    "hypothesis": "Declare the anchor event and time in advance. Sum traded price times volume from that anchor and divide by summed volume. Label a bar typical-price calculation an approximation. Compare price relative to the line with and without this feature.",
+    "requires": "Anchor, price basis and volume provenance. Return unknown for zero cumulative volume, an unidentified overlay or incomplete coverage.",
+    "source": {
+      "title": "The Anchored VWAP Edge Most Traders Never Discover",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=D2P-0xh6aEM"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "indicator or chart input"
+  },
+  {
+    "id": "averages",
+    "topic": "Moving average selection SMA EMA crossover",
+    "video": "H01JbbEY7ac",
+    "start": 404,
+    "end": 550,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance examines which average to use and distinguishes his practice from Qullamaggie’s examples.",
+    "hypothesis": "Log average type, period, interval, slope and price location. Test a fixed specification across unseen dates. Treat crossing two averages derived from the same closes as one related signal family.",
+    "requires": "Legend, interval, warm-up and completed prices. Line color alone cannot identify the period or average type.",
+    "source": {
+      "title": "Reacting to Kristjan Qullamaggie’s Moving Average Trading Strategy",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=H01JbbEY7ac"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "indicator or chart input"
+  },
+  {
+    "id": "horizon",
+    "topic": "Chart layout tick intraday daily horizon",
+    "video": "9WqaZ_4Cld0",
+    "start": null,
+    "end": null,
+    "evidence": "Creator description and available companion transcript",
+    "lesson": "Lance uses different chart horizons for immediate activity and broader context. A longer daily view supplies context that a short zoom can omit.",
+    "hypothesis": "Inventory symbol, interval, session, visible span, adjusted basis and whether the last candle has closed. Ask for daily or weekly context when a short viewport cannot establish swing structure.",
+    "requires": "Legible axes, timestamps and separate completed higher-timeframe observations. Intraday bars from one day cannot establish a multiweek base.",
+    "source": {
+      "title": "How to Set Up Your Trading Charts Like a Pro (Beginner’s Guide)",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and available companion transcript",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/how-to-set-up-your-trading-charts-like-a-pro-beginners-guide-1"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "review_scope": "indicator or chart input",
+    "supplement": "https://theonelanceb.com/blog/what-minute-bars-should-i-use-in-trading/"
+  },
+  {
+    "id": "opening",
+    "topic": "Opening range breakout after earnings or macro catalyst",
+    "video": "QmPUp9ISuDw",
+    "start": 325,
+    "end": 404,
+    "evidence": "Creator syndicated description and chapters",
+    "lesson": "Lance discusses earnings continuation as one opening-range context. The episode also describes exhaustion gaps and macro events.",
+    "hypothesis": "Freeze the chosen opening window before testing a break. Separate a news continuation from an exhaustion gap. Use this as intraday timing research only after independently establishing the swing thesis.",
+    "requires": "Intraday regular-session bars, time zone, event time, comparable activity and a completed opening window. Daily OHLC cannot reconstruct the order of intraday events.",
+    "source": {
+      "title": "3 ORB Trading Strategies That Made Me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated description and chapters",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/3-orb-trading-strategies-that-made-me-millions"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "intraday evidence only"
+  },
+  {
+    "id": "tape",
+    "topic": "Order flow liquidity and tape evidence",
+    "video": "2DXQqwKSwJE",
+    "start": null,
+    "end": null,
+    "evidence": "Creator companion article",
+    "lesson": "The scalping examples rely on very short-lived changes in orders and executions around a price level.",
+    "hypothesis": "If the explanation depends on a resting offer being absorbed, label it unobservable from candles. Retain the price-level observation and drop the tape claim.",
+    "requires": "Synchronized trades and quotes for any tape inference. Seconds-long execution examples do not establish an overnight holding edge.",
+    "source": {
+      "title": "The 3 Scalping Trading Strategies That Made Me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion article",
+      "evidence_url": "https://theonelanceb.com/blog/3-scalping-strategies-every-trader-should-know/"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "review_scope": "intraday evidence only"
+  },
+  {
+    "id": "limit",
+    "topic": "Daily loss limit and trade invalidation",
+    "video": "gb7nNveNBjg",
+    "start": 31,
+    "end": 129,
+    "evidence": "Creator syndicated chapter notes",
+    "lesson": "The risk framework includes a daily loss limit and a separate stop for each trade.",
+    "hypothesis": "Calculate session loss from a reconciled account using a declared realized/unrealized policy. Reject new risk at the limit. Enforce outside the model, including across simultaneous proposals.",
+    "requires": "Current positions, fills, pending orders, loss limit and account clock. A price chart cannot supply daily P&L.",
+    "source": {
+      "title": "15 Years of Trading Risk Management in 20 Minutes",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated chapter notes",
+      "evidence_url": "https://podcasts.apple.com/za/podcast/15-years-of-trading-risk-management-in-20-minutes/id1888279300?i=1000757721623"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "shortcost",
+    "topic": "Short selling squeeze borrow and margin risk",
+    "video": "gb7nNveNBjg",
+    "start": 859,
+    "end": 941,
+    "evidence": "Creator syndicated chapter notes",
+    "lesson": "Lance singles out short selling as a distinct risk in his risk-management framework.",
+    "hypothesis": "Separate bearish chart evidence from the ability to short. Stress an upside gap and include borrow expense and recalls. Decline sizing when locate, margin or inventory is unknown.",
+    "requires": "Timestamped borrow, margin, financing, spread and account permissions. Paper inventory sales cannot open a short.",
+    "source": {
+      "title": "15 Years of Trading Risk Management in 20 Minutes",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated chapter notes",
+      "evidence_url": "https://podcasts.apple.com/za/podcast/15-years-of-trading-risk-management-in-20-minutes/id1888279300?i=1000757721623"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "ruin",
+    "topic": "Drawdown math and correlated portfolio stress",
+    "video": "hC4g7qY6UcQ",
+    "start": 549,
+    "end": 966,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance treats drawdown and risk of ruin as portfolio problems and addresses defensive sizing separately.",
+    "hypothesis": "Stress simultaneous gaps in correlated holdings. Report gross and net exposure and remaining risk budget. A 20% equity loss requires a 25% subsequent gain to return to starting equity.",
+    "requires": "Portfolio snapshot, sector exposures, outstanding orders and explicit stress scenarios. Chart confidence is not a probability of ruin.",
+    "source": {
+      "title": "52 Minute Risk Management Masterclass from a $100,000,000 Trader",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=hC4g7qY6UcQ"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "kelly",
+    "topic": "Expected value and Kelly sizing uncertainty",
+    "video": "hC4g7qY6UcQ",
+    "start": 1822,
+    "end": 2487,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "The masterclass discusses the Kelly criterion in its section on offensive risk management.",
+    "hypothesis": "For evaluation, estimate net win and loss distributions out of sample. Do not substitute model confidence or a video example for a calibrated win probability. Leave sizing unavailable when estimates are unsupported.",
+    "requires": "Independent labeled trades, after-cost outcomes, dependence analysis and uncertainty intervals.",
+    "source": {
+      "title": "52 Minute Risk Management Masterclass from a $100,000,000 Trader",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=hC4g7qY6UcQ"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution",
+    "supplement": "https://theonelanceb.com/blog/what-is-edge-in-trading/"
+  },
+  {
+    "id": "drawdown",
+    "topic": "Drawdown protocol reduce size",
+    "video": "o7DfwJTC_Ow",
+    "start": 318,
+    "end": 386,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance describes cutting size during a drawdown and subsequently reviewing the loss and setting guardrails. His writing recommends reviewing whether the market or the trader’s execution has changed during a slump.",
+    "hypothesis": "Record whether losses come from model errors, execution failures or losses within plan. Apply a precommitted account-level pause or reduced-risk state until its documented recovery condition holds.",
+    "requires": "High-water mark, account equity, incident history and independent recovery rule.",
+    "source": {
+      "title": "How to Handle Trading Drawdowns (Step-by-step process)",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=o7DfwJTC_Ow"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution",
+    "supplement": "https://theonelanceb.com/blog/trading-slumps-drawdowns-market-shifts/"
+  },
+  {
+    "id": "audit",
+    "topic": "Daily report card and process grading",
+    "video": "vKy6Q9hwon4",
+    "start": 125,
+    "end": 465,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "A daily report card makes trading practice and progress reviewable.",
+    "hypothesis": "Freeze the image, data cutoff, retrieved lesson IDs, missing inputs and both candidate and abstention reasons before outcomes arrive. Score process compliance and net outcome separately.",
+    "requires": "Immutable decision record and later timestamped outcomes. Include waits and losers to avoid selection bias.",
+    "source": {
+      "title": "Copy My Trading Report Card That Made Me $100 Million",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=vKy6Q9hwon4"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "post-trade review"
+  },
+  {
+    "id": "lossreview",
+    "topic": "Losing trade postmortem",
+    "video": "ABzXM-9LonM",
+    "start": 0,
+    "end": 49,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance describes reviewing losses to inform future practice.",
+    "hypothesis": "Replay a losing trade up to the original cutoff. Classify signal error, execution error, risk breach or ordinary adverse outcome. Propose a change only after testing it against untouched examples.",
+    "requires": "Original evidence, prediction, fills and costs. Hindsight bars are labels only.",
+    "source": {
+      "title": "Learn from Your Losing Trades with My 3-Step Review System",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=ABzXM-9LonM"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "post-trade review"
+  },
+  {
+    "id": "capital",
+    "topic": "Trading capital and lifestyle risk budget",
+    "video": "9Mr2dSi-EEc",
+    "start": 0,
+    "end": 90,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "The barbell discussion distinguishes the risks taken in trading from risks taken outside the trading account.",
+    "hypothesis": "Read the approved risk allocation from account policy. Do not equate buying power with money available to lose or infer that allocation from recent wins.",
+    "requires": "Externally approved capital-at-risk limit and account snapshot. This is a portfolio constraint, independent of pattern quality.",
+    "source": {
+      "title": "This Risk Management Trading Strategy Saved My Career",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=9Mr2dSi-EEc"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "porous",
+    "topic": "False breakout and repeated crosses at a porous level",
+    "video": "UAlhNPmvB14",
+    "start": null,
+    "end": null,
+    "evidence": "Creator companion episode transcript excerpt",
+    "lesson": "Repeated trading on both sides weakens the case that a line marks a clean boundary. Lance also describes assessing breakout failures probabilistically.",
+    "hypothesis": "Count closes on either side before the trigger. Distinguish a wick rejected at the boundary from repeated closes through it. Record the classification before revealing the next bar.",
+    "requires": "Consistently scaled, consecutive completed bars with the level specified before entry. Exact touch tolerance requires numeric OHLC.",
+    "source": {
+      "title": "Why Your Support & Resistance Lines Don’t Work",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator companion episode transcript excerpt",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/why-your-support-amp-resistance-lines-dont-work-100m-trader-explains"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "supplement": "https://theonelanceb.com/blog/how-to-avoid-false-breakouts-in-trading/",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "acceleration",
+    "topic": "Steady trend versus accelerating capitulation",
+    "video": "wtQIj6Apiq0",
+    "start": null,
+    "end": null,
+    "evidence": "Creator description, chapters and companion article",
+    "lesson": "Lance distinguishes an orderly persistent trend from an accelerating move. Distance traveled alone can make an orderly move look deceptively ready to reverse.",
+    "hypothesis": "Compare signed returns and true ranges across the approach to the extreme. Record whether the approach accelerated and separately whether a turn occurred. Test fading a confirmed turn against fading any large move.",
+    "requires": "Time-ordered bars, consistent scale and an explicit comparison window. Characterize acceleration in price units or percent per session.",
+    "source": {
+      "title": "This Right Side of the V Trading Strategy Made Me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description, chapters and companion article",
+      "evidence_url": "https://theonelanceb.com/blog/the-right-side-of-the-v-a-game-changer-for-traders/"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "supplement": "https://theonelanceb.com/blog/steady-strong-vs-capitulatory-price-action/",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "extension",
+    "topic": "Overextension distance from moving average",
+    "video": "k-X0164r66U",
+    "start": null,
+    "end": null,
+    "evidence": "Creator chapter on mean reversion, with multi-day capitulation discussed in the swing lessons companion episode",
+    "lesson": "In his companion writing Lance describes distance from a widely watched average as one measure of a stretch. The video introduces the swing mean-reversion family.",
+    "hypothesis": "Compute percent distance from a preselected average and compare with the symbol’s prior distribution. Record both that percentile and ATR-normalized distance. Use a later reversal test for entry.",
+    "requires": "Point-in-time historical distribution, split-consistent series and warmed MA. An extreme percentile describes rarity, not the probability of reversal.",
+    "source": {
+      "title": "The 2 Swing Trading Strategies That Made me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated chapter notes",
+      "evidence_url": "https://podcasts.apple.com/ca/podcast/the-2-swing-trading-strategies-that-made-me-millions/id1888279300?i=1000793445930"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "supplement": "https://theonelanceb.com/blog/measures-of-overextension-how-to-tell-if-a-stock-is-overextended/",
+    "review_scope": "swing structure"
+  },
+  {
+    "id": "participation",
+    "topic": "Volume expansion and participation at a level",
+    "video": "7FbTZZNljSo",
+    "start": null,
+    "end": null,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance uses unusual activity to find stocks. His volume article explains how elevated turnover can change the mix of holders.",
+    "hypothesis": "Distinguish a price advance on expanding activity from a low-participation drift. Treat absorption, identity of buyers, and inventory still held as unobserved. Track the reaction after the level trades.",
+    "requires": "Comparable complete bar volumes. A daily total cannot reveal which participants initiated trades.",
+    "source": {
+      "title": "I Only Trade Stocks That Meet This Criteria",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=7FbTZZNljSo"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "supplement": "https://theonelanceb.com/blog/how-important-is-volume-in-trading/",
+    "review_scope": "indicator or chart input"
+  },
+  {
+    "id": "exhaustiongap",
+    "topic": "Opening exhaustion gap versus earnings continuation",
+    "video": "QmPUp9ISuDw",
+    "start": 220,
+    "end": 325,
+    "evidence": "Creator syndicated description and chapters",
+    "lesson": "The opening-range lesson explicitly separates exhaustion gaps from continuation. A large gap in isolation leaves the direction unresolved.",
+    "hypothesis": "Record pre-gap trend, open relative to prior range, reaction inside the opening range, and which side breaks first. For an overnight hypothesis require separate daily evidence.",
+    "requires": "Intraday timestamps, verified catalyst when claimed, and same-session volume baseline. A daily wick can represent either order of events.",
+    "source": {
+      "title": "3 ORB Trading Strategies That Made Me Millions",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated description and chapters",
+      "evidence_url": "https://podscan.fm/podcasts/theonelanceb-trading-podcast/episodes/3-orb-trading-strategies-that-made-me-millions"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "review_scope": "intraday evidence only"
+  },
+  {
+    "id": "stopfill",
+    "topic": "Stop trigger versus realized fill through a gap",
+    "video": "gb7nNveNBjg",
+    "start": 129,
+    "end": 175,
+    "evidence": "Creator syndicated chapter notes",
+    "lesson": "The risk chapter calls for a stop on each trade. A stop order can execute away from its trigger, as the SEC explains.",
+    "hypothesis": "Store invalidation, stop order type, modeled fill and realized fill as separate fields. Stress a gap past the stop. A stop-limit may remain unfilled.",
+    "requires": "Order type, tradability, session, bid/ask and halt status. Same-bar stop/target ordering can be ambiguous.",
+    "source": {
+      "title": "15 Years of Trading Risk Management in 20 Minutes",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator syndicated chapter notes",
+      "evidence_url": "https://podcasts.apple.com/za/podcast/15-years-of-trading-risk-management-in-20-minutes/id1888279300?i=1000757721623"
+    },
+    "locator": "chapter",
+    "status": "research_only",
+    "supplement": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-15",
+    "review_scope": "risk and execution"
+  },
+  {
+    "id": "scaling",
+    "topic": "Adding to an existing position",
+    "video": "hC4g7qY6UcQ",
+    "start": null,
+    "end": null,
+    "evidence": "Creator description and published chapter headings",
+    "lesson": "Lance’s sizing discussion distinguishes defensive and offensive risk. In his writing he evaluates an add as a fresh trade on its own merits.",
+    "hypothesis": "Require a new trigger, an aggregate position stop and an updated portfolio stress loss. Compare the incremental trade with remaining flat on the add. A profitable first entry is insufficient.",
+    "requires": "Existing inventory, pending orders, stop and proposed add as of the same clock. No averaging rule follows from the original entry.",
+    "source": {
+      "title": "52 Minute Risk Management Masterclass from a $100,000,000 Trader",
+      "author": "TheOneLanceB",
+      "evidence_type": "Creator description and published chapter headings",
+      "evidence_url": "https://www.youtube.com/watch?v=hC4g7qY6UcQ"
+    },
+    "locator": "video-level",
+    "status": "research_only",
+    "supplement": "https://theonelanceb.com/blog/when-do-you-add-to-positions-in-trading/",
+    "review_scope": "risk and execution"
+  }
+]
