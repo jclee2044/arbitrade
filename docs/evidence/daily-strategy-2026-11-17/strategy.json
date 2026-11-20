@@ -1,0 +1,69 @@
+{
+  "selected_facts": {
+    "rule_version": "daily-sma20-50-v1",
+    "dataset_id": "340ffdb8ed3685fd75f7192542b37b1bfd349a427e1de3917e60570d18396b99",
+    "ticker": "AAPL",
+    "interval": "1d",
+    "variant": "sma200",
+    "cutoff": "2025-06-06T20:00:00Z",
+    "close": 203.9199981689453,
+    "sma20": 204.27099990844727,
+    "sma50": 203.67940093994142,
+    "crossover": "up",
+    "sma200": 225.11779998779298,
+    "ema200": 215.58947377809693,
+    "verdict": "wait",
+    "reason": "entry_filter_failed",
+    "shares": 0,
+    "cash": "967.03001403808594",
+    "equity": "967.03001403808594",
+    "realized": "-32.96998596191406",
+    "unrealized": "0"
+  },
+  "intraday_daily_cutoff": "2026-11-09T21:00:00Z",
+  "comparisons": [
+    {
+      "shares": 1,
+      "cash": "690.91999816894538",
+      "equity": "1043.69999694824228",
+      "realized": "23.44999694824228",
+      "unrealized": "20.25",
+      "variant": "baseline",
+      "max_drawdown_pct": 6.28450233492585,
+      "return_pct": 4.369999694824228,
+      "fills": 15,
+      "skipped": 0,
+      "label": "20/50 baseline"
+    },
+    {
+      "shares": 1,
+      "cash": "651.02000427246097",
+      "equity": "1003.80000305175787",
+      "realized": "-16.44999694824213",
+      "unrealized": "20.25",
+      "variant": "sma200",
+      "max_drawdown_pct": 7.157407485547662,
+      "return_pct": 0.380000305175787,
+      "fills": 11,
+      "skipped": 2,
+      "label": "Close above SMA 200"
+    },
+    {
+      "shares": 1,
+      "cash": "651.02000427246097",
+      "equity": "1003.80000305175787",
+      "realized": "-16.44999694824213",
+      "unrealized": "20.25",
+      "variant": "ema200",
+      "max_drawdown_pct": 7.157407485547662,
+      "return_pct": 0.380000305175787,
+      "fills": 11,
+      "skipped": 2,
+      "label": "Close above EMA 200"
+    }
+  ],
+  "model_choice": "buy",
+  "model_probability": 0.65,
+  "failure": "controlled_strategy_timeout",
+  "answer": "AAPL sma200 at 2025-06-06T20:00:00Z: wait, entry_filter_failed. Close 203.92, SMA 200 225.12. Model: buy at 65%."
+}

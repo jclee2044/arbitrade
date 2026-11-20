@@ -32,6 +32,10 @@ jobs:
         run: |
           ./scripts/smoke-test --output /tmp/arbitrade-smoke/first
           ./scripts/smoke-test --output /tmp/arbitrade-smoke/second
+      - name: Daily strategy reference and evidence parity
+        run: |
+          python -m unittest backend.test_daily_strategy
+          python -m scripts.desk_chat_smoke --strategy --output /tmp/arbitrade-smoke/strategy
       - name: Preserve reports and failure evidence
         if: always()
         uses: actions/upload-artifact@v4

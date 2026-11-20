@@ -27,6 +27,8 @@ export default {
           h('label', { class: 'sr-only', for: 'mode' }, 'Market mode'),
           h('select', { id: 'mode', class: 'mode-select', value: props.mode, onChange: e => emit('mode', e.target.value) },
             [h('option', { value: 'live' }, 'Live'), h('option', { value: 'replay' }, 'Replay')]),
+          h('button', { 'aria-pressed': props.tool === 'backtest',
+            onClick: () => emit('navigate', props.tool === 'backtest' ? 'chart' : 'backtest') }, 'Backtest'),
           h('button', { class: 'paper-entry primary', 'aria-expanded': props.tool === 'paper', 'aria-controls': 'paper-workspace',
             onClick: () => emit('navigate', props.tool === 'paper' ? 'chart' : 'paper') },
           [icon('M3 7h18v12H3z M4 7V5l13-2v4 M16 12h5'), 'Trade']),

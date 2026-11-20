@@ -1,9 +1,10 @@
 import { compositeDrawings } from './DrawingLayer.js'
-import { reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { reactive, ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { createChart, CandlestickSeries, HistogramSeries, LineSeries, LineStyle, createSeriesMarkers } from 'lightweight-charts'
 import { adaptCandles, easternTick, easternTimestamp, formatEastern } from './chart-data.js'
 import { movingAverageColors, studyColor } from './chart-studies.js'
 import { chartGestures } from './chart-gestures.js'
+import { requestDeskAgent } from './desk-agent.js'
 
 export function useMarketChart(container) {
   const availableTypes = ref([])
@@ -135,7 +136,16 @@ export function useMarketChart(container) {
   const hover = ref(null)
   const candles = ref([])
   let hasOlder = false
+  const chartSession = ref(0)
+  const chartRevision = ref(0)
+  const changeChartSnapshot = () => { chartRevision.value++ }
+  let viewport = ''
   function trackRange(range) {
+    const key = range ? `${Math.max(0, Math.ceil(range.from))}:${Math.min(candles.value.length - 1, Math.floor(range.to))}` : ''
+    if (key !== viewport) {
+      viewport = key
+      changeChartSnapshot()
+    }
     if (hasOlder && range && range.from < 32 && socket?.readyState === WebSocket.OPEN) {
       hasOlder = false
       socket.send(JSON.stringify({ action: 'older' }))
@@ -150,6 +160,7 @@ export function useMarketChart(container) {
   const failure = ref('')
   const clock = ref(Date.now())
   const selected = computed(() => candles.value.find((c) => c.time === selectedTime.value))
+  watch([candles, selectedTime, pinned, tab, configured, presets], changeChartSnapshot, { flush: 'sync' })
   const age = computed(() => feed.value.source_time_utc
     ? `${Math.max(0, (clock.value - Date.parse(feed.value.source_time_utc)) / 1000).toFixed(0)} seconds`
     : 'No source observation received in this session')
@@ -217,6 +228,7 @@ export function useMarketChart(container) {
   }
 
   function renderAverages(value) {
+    if (tab.value === 'signals' && averages.value !== value) changeChartSnapshot()
     averages.value = value
     for (const [series, field] of [[shortLine, 'short'], [longLine, 'long']]) {
       series.setData((value?.rows || []).map((row) => ({
@@ -297,6 +309,7 @@ export function useMarketChart(container) {
   }
 
   function connect(retain = false) {
+    changeChartSnapshot()
     gestures?.stop()
     symbol.value = mode.value === 'live' ? liveSymbol.value : replaySymbol.value
     paperAccount.value = mode.value === 'live' ? 'live' : null
@@ -305,6 +318,7 @@ export function useMarketChart(container) {
     waiting.value = false
     replay.value = null
     const token = ++generation
+    chartSession.value = token
     presetSaving.value = false
     clearTimeout(retry)
     socket?.close()
@@ -529,7 +543,9 @@ export function useMarketChart(container) {
     lastEnded: computed(() => candles.value.findLast(c => coverage.value[c.time]?.ended)),
     completed: computed(() => Object.values(coverage.value).filter(c => c.ended)),
     hoveredCandle: computed(() => hover.value && candles.value.find(c => c.time === hover.value.time)),
-    captureVisibleChart,
+    captureVisibleChart, chartSession, chartRevision, changeChartSnapshot,
+    askDeskAgent: (question, { includeChart = false, capture = includeChart ? captureVisibleChart : undefined, conversationId, strategy } = {}) =>
+      requestDeskAgent(question, capture, conversationId, mode.value, strategy),
     visibleRange: () => chart?.timeScale().getVisibleRange(),
     saved, start, end, replaySymbol, chooseSymbol, replay, playing, waiting, next, togglePlayback, paperAccount,
     configured, presets, presetSaving, togglePreset, tab, selectTab, chartStudies, editedWindows, availableTypes, indicatorType, indicatorName, indicatorSettings,

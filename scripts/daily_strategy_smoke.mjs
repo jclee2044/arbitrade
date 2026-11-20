@@ -1,0 +1,198 @@
+import assert from 'node:assert/strict'
+import { resolve } from 'node:path'
+import { writeFileSync } from 'node:fs'
+import { chromium } from '../frontend/node_modules/playwright-core/index.mjs'
+
+const output = process.argv[2]
+const browser = await chromium.launch({ ...(process.env.ARBITRADE_CHROMIUM === 'playwright' ? {} :
+  { executablePath: process.env.ARBITRADE_CHROMIUM || '/usr/bin/chromium' }), headless: true, chromiumSandbox: !process.env.CI })
+const page = await browser.newPage({ viewport: { width: 1440, height: 1120 } })
+const errors = []
+page.on('pageerror', e => errors.push(String(e)))
+const base = 'http://127.0.0.1:15264'
+const root = page.getByRole('region', { name: 'Daily strategy backtest' })
+const panel = root.getByRole('region', { name: 'Desk Assistant' })
+async function send(question, tool, chat = panel) {
+  await chat.getByRole('textbox').fill(question)
+  const response = page.waitForResponse(r => r.url().endsWith('/api/desk-agent'))
+  await chat.getByRole('button', { name: 'Send', exact: true }).click()
+  const http = await response
+  const reply = await http.json()
+  assert.equal(reply.status, 'ok', JSON.stringify(reply))
+  assert.deepEqual(reply.tool_results.map(t => t.name), [tool])
+  const turn = chat.locator('.desk-chat-turn').last()
+  await turn.getByText(reply.answer, { exact: true }).waitFor()
+  await turn.getByText('Tools and results').click()
+  assert.deepEqual(JSON.parse(await turn.locator('pre').innerText()), reply.tool_results[0].result)
+  await turn.getByText('Tools and results').click()
+  return { capture: http.request().postDataJSON().capture, reply, result: reply.tool_results[0].result }
+}
+
+try {
+  await page.goto(base)
+  await page.getByRole('button', { name: 'Backtest', exact: true }).click()
+  const filter = root.getByLabel('What else must be true before buying?')
+  const date = root.getByLabel('Review session')
+  assert.equal(await filter.inputValue(), 'baseline')
+  assert.equal(await root.getByRole('region', { name: 'Historical outcomes' }).count(), 0)
+  await root.getByRole('button', { name: 'Compare entry filters' }).click()
+  await filter.selectOption('sma200')
+  await root.getByText('Orders and account details', { exact: true }).click()
+  const skipped = root.getByRole('row').filter({ hasText: 'Skipped entry' }).filter({ hasText: '2025-06-06' })
+  await skipped.getByRole('button').click()
+  const r = await (await page.request.get(base + '/api/backtests/daily?variant=sma200')).json()
+  const facts = r.facts.find(f => f.cutoff.startsWith('2025-06-06'))
+  assert.equal(facts.reason, 'entry_filter_failed')
+  await root.getByText('Session facts', { exact: true }).click()
+  assert.deepEqual(JSON.parse(await root.locator('.backtest-reading pre').innerText()), facts)
+  await root.getByText('Session facts', { exact: true }).click()
+  await root.getByText('Orders and account details', { exact: true }).click()
+  await root.getByRole('button', { name: 'Compare entry filters' }).click()
+  assert((await root.locator('.backtest-reading').innerText()).includes('crossed above'))
+  assert((await root.locator('.backtest-reading').innerText()).includes('$203.92, below the 200-day simple average of $225.12'))
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await page.screenshot({ path: resolve(output, 'signal-review.png'), fullPage: true })
+  await root.getByRole('button', { name: 'Ask about this signal' }).click()
+  const clean = await send('Explain the daily strategy rules.', 'lookup_trading_rules')
+  const slider = root.getByRole('slider', { name: 'Scroll through trading sessions' })
+  const period = root.locator('.plot-period')
+  const signalIndex = r.facts.findIndex(f => f.cutoff === facts.cutoff)
+  const timeline = root.getByRole('region', { name: 'Simulated trade timeline' })
+  await timeline.getByText('No trade opened on this signal. There is no exit fill.').waitFor()
+  assert.equal(await root.locator('.trade-marker.entry,.trade-marker.exit').count(), 0)
+  await root.getByRole('button', { name: 'Ask about this signal' }).click()
+  await root.getByRole('button', { name: 'What happened next?' }).click()
+  const outcomes = root.getByRole('region', { name: 'Historical outcomes' })
+  const observedOutcomes = []
+  for (const [days, day, close, move, pnl] of [
+    [1, '2025-06-09', '$201.45', '-1.21%', '-$2.94'],
+    [5, '2025-06-13', '$196.45', '-3.66%', '-$7.94'],
+    [20, '2025-07-08', '$210.01', '2.99%', '-$7.19'],
+  ]) {
+    const cells = await outcomes.getByRole('row').filter({ hasText: day }).getByRole('cell').allTextContents()
+    assert.equal(cells[0], String(days))
+    assert.equal(cells[2], close)
+    assert.equal(cells[3], move)
+    assert.equal(cells[4], '$0.00')
+    assert.equal(cells[5], pnl)
+    observedOutcomes.push({ days, date: cells[1], close, move, account_change: cells[4], baseline_trade_pnl: pnl })
+  }
+  await slider.press('Home')
+  await period.getByText(new RegExp(r.bars[signalIndex - 50].date)).waitFor()
+  await slider.press('End')
+  await period.getByText(new RegExp(r.bars[signalIndex + 50].date)).waitFor()
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await page.screenshot({ path: resolve(output, 'signal-outcomes.png'), fullPage: true })
+  await root.getByRole('button', { name: 'Ask about this signal' }).click()
+  const reading = await send('Why did this crossover get skipped?', 'read_strategy_facts')
+  assert.deepEqual(reading.result.strategy_facts, facts)
+  assert.equal(reading.capture.image, clean.capture.image)
+  assert(reading.reply.answer.includes(facts.close.toFixed(2)))
+  const pending = page.waitForResponse(r => r.url().endsWith('/api/decisions/strategy'))
+  await root.getByRole('button', { name: 'Get AI assessment' }).click()
+  const http = await pending
+  const request = http.request().postDataJSON()
+  assert.equal(request.capture.candle_timestamp, facts.cutoff)
+  assert.equal(request.capture.visible_candles, clean.capture.visible_candles)
+  assert.equal(request.capture.image, clean.capture.image)
+  assert.deepEqual(Object.keys(request.strategy).sort(), ['dataset_id','variant'])
+  const manual = await http.json()
+  if (!http.ok()) { writeFileSync(resolve(output, 'rejected.png'), Buffer.from(request.capture.image.split(',')[1], 'base64')); throw Error('Strategy decision HTTP ' + http.status() + ' ' + JSON.stringify(manual.detail)) }
+  assert.deepEqual(manual.strategy_facts, facts)
+  assert.equal(manual.choice, 'buy')
+  assert.equal(manual.agrees_with_strategy, false)
+  assert.equal(manual.answer.probabilities[0].probability, .65)
+  const savedPNG = await (await page.request.get(base + manual.image_url)).body()
+  assert.deepEqual(savedPNG, Buffer.from(request.capture.image.split(',')[1], 'base64'))
+  await root.getByText('Model disagrees with the measured rule', { exact: true }).waitFor()
+  const assessment = await send('Assess this strategy session.', 'assess_visible_chart')
+  assert.deepEqual(assessment.result.strategy_facts, manual.strategy_facts)
+  assert.equal(assessment.capture.image, clean.capture.image)
+  assert(assessment.reply.answer.includes('wait') && assessment.reply.answer.includes('buy at 65%'))
+  await root.locator('#backtest-decision-probability').getByText(/65%/).waitFor()
+  await page.screenshot({ path: resolve(output, 'strategy.png'), fullPage: true })
+  const failure = await send('Assess this strategy session again.', 'assess_visible_chart')
+  assert.equal(failure.result.status, 'timeout')
+  assert.equal(failure.result.choice, null)
+  assert.deepEqual(failure.result.strategy_facts, facts)
+  assert(failure.reply.answer.includes('controlled_strategy_timeout'))
+  assert.equal(await root.locator('#backtest-decision-probability').count(), 0)
+
+  // A mismatched variant cannot reuse the other variant's chart.
+  const wrong = await page.request.post(base + '/api/decisions/strategy', {
+    data: { ...request, strategy: { ...request.strategy, variant: 'ema200' } } })
+  assert.equal(wrong.status(), 422)
+  assert.equal((await wrong.json()).detail, 'historical_chart_binding_mismatch')
+  await filter.selectOption('ema200')
+  await root.locator('.backtest-reading').getByText(/200-day exponential average of \$215.59/).waitFor()
+  assert.equal(await outcomes.count(), 0)
+  assert.equal(await root.locator('#backtest-decision-result').count(), 0)
+  await filter.selectOption('baseline')
+  await root.locator('#backtest-verdict').getByText(/BUY/).waitFor()
+  await timeline.getByText('2025-06-09 09:30 ET · $204.39', { exact: true }).waitFor()
+  await timeline.getByText('2025-06-17 09:30 ET · $197.20 · -$7.19 on one share', { exact: true }).waitFor()
+  for (const label of ['Signal', 'Entry', 'Exit']) await root.locator('.trade-marker').getByText(label, { exact: true }).waitFor()
+  const bounds = await root.locator('.trade-marker').evaluateAll(nodes => nodes.map(n => n.getBoundingClientRect().x))
+  assert(bounds[0] < bounds[1] && bounds[1] < bounds[2])
+  const colors = await root.locator('.trade-before,.trade-after').evaluateAll(nodes => nodes.map(n => getComputedStyle(n).backgroundColor))
+  assert.notEqual(colors[0], colors[1])
+  const pos = await root.getByRole('img', { name: 'Trade review chart' }).boundingBox()
+  const oldStart = await slider.inputValue()
+  await page.mouse.move(pos.x + pos.width / 2, pos.y + pos.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(pos.x + pos.width / 2 - 140, pos.y + pos.height / 2, { steps: 10 })
+  await page.mouse.up()
+  await page.waitForFunction(old => document.querySelector('.trade-scroll input').value !== old, oldStart, { timeout: 3000 })
+  await root.getByRole('button', { name: 'Center on signal' }).click()
+  await panel.getByText(/Discussing AAPL · 2025-06-06 16:00 ET · 20\/50 baseline/).waitFor()
+  const initial = await send("it doesn't seem like this one had a huge return. why was it worthwhile as a buy signal?", 'read_strategy_facts')
+  const followup = await send('this particular signal', 'read_strategy_facts')
+  assert.equal(initial.result.strategy_facts.verdict, 'buy')
+  assert.deepEqual(initial.result, followup.result)
+  assert(followup.reply.answer.includes('204.27') && followup.reply.answer.includes('203.68'))
+  await slider.press('Home')
+  await root.getByRole('button', { name: 'Center on signal' }).click()
+  await root.locator('.trade-marker.exit').waitFor()
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await page.screenshot({ path: resolve(output, 'trade-window.png'), fullPage: true })
+  await panel.getByRole('button', { name: 'New chat' }).click()
+  const fresh = await send('Which session is selected?', 'read_strategy_facts')
+  assert.deepEqual(fresh.result, followup.result)
+  await timeline.getByRole('button', { name: 'Review exit signal' }).click()
+  await root.getByText('Why the strategy exited').waitFor()
+  await timeline.getByText(/2025-06-17 09:30 ET/).waitFor()
+  await root.getByRole('button', { name: '← Previous signal' }).click()
+  assert.equal(await date.inputValue(), facts.cutoff)
+  await date.selectOption(r.facts.at(-2).cutoff)
+  await root.getByRole('button', { name: 'What happened next?' }).click()
+  assert.equal(await outcomes.getByText('Beyond saved history', { exact: true }).count(), 2)
+  await period.getByText(/50 sessions before and 1 after/).waitFor()
+  await timeline.getByText(/Still open at the end of saved history/).waitFor()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.waitForFunction(() => document.documentElement.scrollWidth <= innerWidth, null, { timeout: 3000 })
+  await page.setViewportSize({ width: 1440, height: 1120 })
+  await page.getByRole('button', { name: 'Backtest', exact: true }).click()
+  await page.getByRole('tab', { name: 'AI', exact: true }).click()
+  await page.getByLabel('Assessment mode').selectOption('sma200')
+  const liveChat = page.getByRole('region', { name: 'Desk Assistant' })
+  const live = await send('Why did the strategy act on this session?', 'read_strategy_facts', liveChat)
+  const previousDay = r.facts.find(f => f.cutoff.startsWith('2026-11-09'))
+  assert.deepEqual(live.result.strategy_facts, previousDay)
+  assert.deepEqual(errors, [])
+  writeFileSync(resolve(output, 'strategy.json'), JSON.stringify({
+    selected_facts: facts, outcomes: observedOutcomes, assessment_candles: request.capture.visible_candles,
+    identical_assessment_images_with_outcomes_open: true,
+    intraday_daily_cutoff: previousDay.cutoff, comparisons: r.comparisons, model_choice: manual.choice,
+    model_probability: .65, failure: failure.result.error_code, answer: assessment.reply.answer,
+  }, null, 2))
+  console.log('PASS: session-aware follow-up and New chat, 50-session scrolling, signal/entry/exit markers, open and skipped trades, cutoff-only AI evidence, outcomes and timeout')
+} catch (error) {
+  console.error('Historical chart DOM', await page.locator('.backtest-chart').evaluate(el => ({
+    host: [el.clientWidth, el.clientHeight], children: el.childElementCount, canvas: [...el.querySelectorAll('canvas')].map(c => [c.width,c.height]),
+    charts: [...document.querySelectorAll('.tv-lightweight-charts')].map(c => c.parentElement.className)
+  })).catch(() => null))
+  await page.screenshot({ path: resolve(output, 'failure.png') }).catch(() => {})
+  throw error
+} finally {
+  await browser.close()
+}

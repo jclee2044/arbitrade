@@ -1,5 +1,7 @@
 import { createApp, h, ref, computed, nextTick } from 'vue'
 import { useMarketChart } from './useMarketChart.js'
+import DailyBacktest from './DailyBacktest.js'
+import { strategyLabels } from './desk-agent.js'
 import DeskNavigation from './DeskNavigation.js'
 import CandleChart from './CandleChart.js'
 import ChartSummary from './ChartSummary.js'
@@ -8,6 +10,7 @@ import PaperTrading from './PaperTrading.js'
 import AutomationPanel from './AutomationPanel.js'
 import DecisionPanel from './DecisionPanel.js'
 import ClassroomDecision from './ClassroomDecision.js'
+import DeskAgentChat from './DeskAgentChat.js'
 import VoicePanel from './VoicePanel.js'
 import './style.css'
 
@@ -24,7 +27,9 @@ createApp({
     const m = useMarketChart(chartHost)
     const tool = ref('chart')
     const menu = ref('indicators')
+    const variant = ref('')
     const isApple = computed(() => m.symbol === 'AAPL')
+    const strategy = computed(() => isApple.value && variant.value ? { variant: variant.value } : undefined)
     const tickerDraft = ref(m.symbol)
     const tickerError = ref('')
     function submitTicker(event) {
@@ -46,6 +51,7 @@ createApp({
     const classroomPanel = ref(null)
     const analysis = ref(null)
     const busy = ref(false)
+    const chatBusy = ref(false)
     const notice = ref(null)
     const automation = ref(null)
     const automationOn = ref(false)
@@ -96,16 +102,27 @@ createApp({
 
     return () => [
       h(DeskNavigation, { tool: tool.value, mode: m.mode, automationOn: automationOn.value, voiceOn: voiceOn.value,
-        onNavigate: navigate, onMode: m.changeMode, onStop: stopAutomation, onVoice: () => openVoice() }),
+        onNavigate: navigate, onMode: value => { m.changeMode(value); if (tool.value === 'backtest') navigate('chart') }, onStop: stopAutomation, onVoice: () => openVoice() }),
       h('main', { id: 'desk', tabindex: -1 }, [
-        h('div', { class: ['workspace', collapsed.value && 'rail-closed', tool.value === 'chart' && 'trade-closed'] }, [
+        tool.value === 'backtest' ? h(DailyBacktest) : null,
+        h('div', { style: tool.value === 'backtest' ? { display: 'none' } : {}, class: ['workspace', collapsed.value && 'rail-closed', tool.value === 'chart' && 'trade-closed'] }, [
           h(IndicatorPanel, { market: m, collapsed: collapsed.value, menu: menu.value,
             onSelect: value => { menu.value = value }, onCollapse: value => { collapsed.value = value } }, {
             default: () => h('div', { class: 'rail-ai', 'aria-label': 'Analysis and voice' }, [
+              isApple.value ? h('label', ['Assessment mode', h('select', { value: variant.value, onChange: event => {
+                variant.value = event.target.value
+                m.changeChartSnapshot()
+              } }, [h('option', { value: '' }, 'Chart image'), ...Object.entries(strategyLabels).map(([key, label]) =>
+                h('option', { value: key }, 'Daily · ' + label))])]) : null,
+              h(DeskAgentChat, { market: m, strategy: strategy.value, decisionBusy: busy.value, onBusy: value => { chatBusy.value = value },
+                onNewChat: () => classroomPanel.value?.clearChatResult(),
+                presentAssessment: (decision, capture, revision) => revision === m.chartRevision &&
+                  classroomPanel.value?.present(decision, capture, revision) }),
               h(ChartSummary, { market: m, decision: selectedAnalysis.value?.decision,
-                busy: busy.value, message: notice.value?.key === currentKey.value ? notice.value.message : '',
+                busy: busy.value || chatBusy.value, message: notice.value?.key === currentKey.value ? notice.value.message : '',
                 proposalOpen: proposalOpen.value, onAnalyze: analyze, onReview: toggleProposal }, {
-                default: () => [h(ClassroomDecision, { ref: classroomPanel, capture: m.captureVisibleChart,
+                default: () => [h(ClassroomDecision, { ref: classroomPanel, capture: m.captureVisibleChart, dataMode: m.mode, strategy: strategy.value,
+                  chartSession: m.chartSession, chartRevision: m.chartRevision,
                   onBusy: value => { busy.value = value } }), view('proposal-view', isApple.value && proposalOpen.value, [h(DecisionPanel, {
                   ref: decisionPanel, chartRange: m.visibleRange, accountId: m.paperAccount, symbol: m.symbol, interval: m.timeframe,
                   candleTimestamp: m.selected?.timestamp, completed: Boolean(m.selectedCoverage?.ended),
