@@ -1,0 +1,1 @@
+go ahead and build this layout. make it clear what triggered each signal, why the strategy bought or waited, and what happened 1, 5, and 20 trading days later. keep those later candles out of the AI assessment.

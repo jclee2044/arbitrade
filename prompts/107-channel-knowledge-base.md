@@ -1,0 +1,1 @@
+i need you to find a way to create a knowledge base for an automated trading agent, using TheOneLanceB's YouTube channel. perviously for another project and chennel, ive used devtools to get the urls for all the videos, then python to loop through the videos, and the youtube api to get the transcript of each one and combine them together. any better ideas?

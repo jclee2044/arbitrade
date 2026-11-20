@@ -2,6 +2,8 @@
 
 A local trading workstation with a Vue frontend, a Python/FastAPI backend, and SQLite market and simulation records. The chart, indicators, AI analysis, and simulated account share the same candle context. [Assignment 4 description](docs/assignment-4.md).
 
+Search the [swing chart-review knowledge base](docs/swing-knowledge.md) for 33 research lessons from 20 videos, source evidence, risk checks and example chart assessments.
+
 ## Demonstration
 
 [Watch or download the Assignment 4.1 demo](demos/Assignment%204.1%20Demo.mov)
@@ -12,12 +14,15 @@ as `report.md` and excluded from Git.
 
 Click the Arbitrade logo to return to the chart home view.
 
-- **Chart** opens with AAPL candlesticks and volume. Hover for OHLC and reported volume, or pin a candle by clicking it or choosing **Inspect candle**. **Follow latest** returns to the most recent candle. Source, age and feed status sit beneath the plot. **Feed details** contains the connection check and source timestamps.
+- **Chart** opens with AAPL candlesticks and volume. In Live mode, enter a U.S. stock ticker in the field beside the instrument name and press Enter or click **Go**. Hover for OHLC and reported volume. Click a candle to pin it for review. The chart fills the screen below the timeframe controls. Open **Feed details** at the bottom of **Indicators** for source timestamps, status, age and the connection check.
 - **Indicators** in the emerald sidebar has a **Moving Averages** grid for SMA and EMA. Toggle 10, 20, 30, 50, 100 or 200 candles independently for 1m, 5m, 15m, 1hr, 1D and 1W. All EMA lines are orange and all SMA lines are blue, including custom averages, Signals and saved chart images. Selections stay on the chart when its timeframe changes. Lines start once the source interval has enough completed candles. Selected buttons have a checkmark and a border matching the chart line. Expand **Rolling price range & custom indicators** to add a named indicator or edit its window. Selections are saved per symbol.
 - **Signals**, the second sidebar tab, shows confirmed SMA crossovers newest first. Choose one to bring its candle into view and inspect both averages. **Crossover windows** sets the strategy pair, initially 20 and 50.
 - **Drawing Tools**, the pencil between Signals and AI, has separate icon rows for Trend Line, Freehand and Eraser. Select a drawing tool and drag on the price chart. Select 1:2, 1:3, or 1:4, then drag between opposite corners on the price chart to size the box. Drag the filled box to move it. The upper and lower handles resize both zones at the selected ratio, and the side handle changes width. Select Eraser and sweep across a drawing to remove it. Command-Z on Mac or Ctrl-Z on Windows and Linux undoes the latest drawing, move, resize, or erasure. Drawings stay with their symbol, timeframe, and mode until page reload.
-- **AI**, the blue diamond in the sidebar, opens the AI summary and voice chat. The summary shows observed candle evidence. **Decision API** captures the visible chart and asks for **long**, **short**, or **wait** using only the PNG and identifying context. The choice and data quality appear first; audit metadata stays under Decision details. Captures are saved without an on-page screenshot. **Review paper proposal** opens the separate position-aware workflow used by paper automation. **Voice chat** discusses those saved paper decisions.
-- **Trade**, the emerald button at the top right, toggles an inset parchment paper account card with a maroon top rule. Closing it expands the desktop chart. **Orders** contains manual orders, fills, and profit and loss. **Automation** contains the bot controls and its decision history. While automation runs, **Stop automation** is also available in the header.
+- **AI**, the blue diamond in the sidebar, opens the AI summary and voice chat. The summary shows observed candle evidence. In its default **Chart image** mode, **Decision API** captures the visible chart and asks for **long**, **short**, or **wait** using only the PNG and identifying context. The choice and data quality appear first; audit metadata stays under Decision details. Captures are saved without an on-page screenshot. **Review paper proposal** opens the separate position-aware workflow used by paper automation. **Voice chat** discusses those saved paper decisions.
+- **Backtest** opens on the latest AAPL daily 20/50 crossover. Use **Previous signal** to step back and see which averages crossed, why the strategy acted, and whether it placed a simulated order. Under **What else must be true before buying?**, try a close above the 200-day simple or exponential average. The selected date stays in place so you can compare the decisions.
+- Drag the backtest chart or use its slider to explore up to **50 daily candles on either side** of the selected session. The dashed line marks the signal. **Entry** and **Exit** mark actual simulated fills. The timeline gives the fill times and prices, including an exit outside the chart window. Use **Review exit signal** to see why the position closed. **What happened next?** shows the 1-, 5- and 20-session results.
+- **Ask about this signal** identifies the ticker, session and entry filter above the chat. Follow-ups use the selected session and recent messages in that conversation. **New chat** starts fresh. Chat and **Get AI assessment** always use the chart through the selected close, even when you scroll forward. [Tested example and screenshot](docs/verification.md#desk-assistant-context-and-trade-timeline).
+- **Trade**, the emerald button at the top right, toggles an inset parchment paper account card with a maroon top rule. Closing it expands the desktop chart. Use **Orders** to buy, sell, or close the selected U.S. stock. **Open positions** shows holdings and valuations across tickers in the same paper account. **Automation** contains the bot controls and its decision history. While automation runs, **Stop automation** is also available in the header.
 
 The main chart is 20% taller across desktop and phone layouts. Timeframe controls
 sit directly below the instrument heading; the separate last-price/change row is removed.
@@ -39,23 +44,31 @@ npm --prefix frontend run dev
 ```
 
 Open [the dashboard](http://127.0.0.1:5173). Stop both commands with Ctrl+C. Run one backend
-worker: its lifespan owns one shared AAPL Yahoo subscription, continuously
-records quotes and closes the feed on shutdown. Multiple browser connections
-share that subscription. Independent backend workers would each subscribe.
+worker. Its lifespan keeps the AAPL Yahoo subscription recording continuously
+and closes it at shutdown. Each other ticker shares one Yahoo subscription
+while a chart is watching it or the live paper account has a pending order
+or an open position. Startup restores subscriptions from the saved paper
+account. Independent backend workers would each subscribe.
 No authentication or credentials are used for Yahoo quotes.
 
-The live subscription is AAPL. The chart defaults to one minute and supports
-1m, 5m, 15m, 30m, 1hr, daily, weekly and monthly candles. Switching
+The live chart defaults to AAPL and one-minute candles. It supports
+1m, 5m, 15m, 30m, 1hr, daily, weekly and monthly candles. Switching ticker or timeframe
 opens a new WebSocket with matching stored history, followed by backend-derived
-updates. The page displays the source, latest source timestamp and age,
-upstream feed status separately from the browser connection, and forming/ended
-and coverage labels for the inspected candle. Unavailable volume is omitted from candle details and hover cards, with a gap
-in the histogram; it is never replaced by zero.
+updates. Feed details displays the source, latest source timestamp and age,
+and upstream feed status separately from the browser connection. The AI summary
+shows interval and coverage status for the selected candle. Unavailable volume
+is omitted from hover cards and leaves a gap in the histogram.
+
+Replay uses its saved-symbol selector and restores the active Live ticker when
+returning to Live mode. Manual orders use the selected ticker's recorded USD
+stock quotes and completed one-minute candles for fills and P&L. Automation
+and the frozen daily backtest use AAPL. Changing the chart symbol stops active
+paper automation, consistent with changing its timeframe or mode.
 
 Volume from saved streaming quotes is the observed change in Yahoo's cumulative
 day counter. Increasing updates sharing a source timestamp are accepted in
 receipt order; resets, decreases and missing baselines remain unavailable.
-Candle details identify this basis. Downloaded Yahoo bar volume is a separate
+The hover card labels this as **Observed volume**. Downloaded Yahoo bar volume is a separate
 measurement; when fresh quotes revise a cached intraday bar, the observed delta
 replaces its volume without adding the two. See [volume evidence](docs/part-41-evidence.md).
 
@@ -76,28 +89,27 @@ It waits up to 90 seconds for a computable observed volume and freezes reception
 for exact database/chart comparisons, then checks upstream disconnection and
 cleans up. The November 16 run verified price354.385 and observed volume1,030.
 
-Drag the chart right to look back, or use **Previous day** and **Go to date · UTC**
-above the plot. Vertical trackpad scrolling and trackpad pinch zoom the horizontal
-candle spacing with an amplified, pointer-centered response; horizontal swipes pan.
+Drag the chart right to look back and load earlier candles. Vertical scrolling over
+the price plot and trackpad pinch zoom the shared time axis with a pointer-centered
+response. Horizontal swipes pan.
 Quick zooms and swipes continue after release with a moderate, gradual slowdown,
-and mouse/touch dragging has momentum too. A new gesture or date/latest navigation
-interrupts the release motion. Drag the right-hand price labels up or down
+and mouse/touch dragging has momentum too. A new gesture interrupts the release motion. Drag the right-hand price labels up or down
 to expand or compress candles vertically; scrolling over those labels also scales
 vertically. Double-click the labels to restore automatic price scaling.
-The volume shares axis expands and compresses from zero at the bottom of its
-pane when scrolling or dragging; double-click restores automatic volume scaling.
+Vertical scrolling over the volume pane scales only volume, keeping zero at the
+bottom and leaving candle prices and the time range fixed. Drag the volume axis
+for the same scaling. Double-click the axis to restore automatic volume scaling.
 The shared right axis reserves label space so volume scaling keeps bars in the
 same horizontal position as the labels change.
-**Latest candles** returns to the live end. Live updates preserve
-an earlier viewport. The date picker lists loaded candle dates (period start
-dates for weekly/monthly bars); replay exposes only dates revealed so far.
-Live AAPL charts use a rolling three-calendar-month window. Hourly bars come
+Pan left to return to newer candles. Live updates preserve an earlier viewport.
+Replay exposes only candles revealed so far.
+Live charts use a rolling three-calendar-month window, with separate caches
+for each ticker and the U.S. regular-session calendar. Hourly bars come
 from Yahoo. Daily bars also supply the weekly and monthly charts, whose first
 and last periods can be partial. The five intraday charts use unadjusted Yahoo
 bars at their native resolution. Yahoo supplies a shorter initial archive for
 1m and 5m–30m. Refreshes retain
-older intraday bars within the window. Use **Go to date** to inspect older
-intraday candles. Replay and paper execution use recorded observations.
+older intraday bars within the window. Pan the chart to inspect those candles. Replay and paper execution use recorded observations.
 
 Refresh all local chart caches with
 `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.backfill_history`.
@@ -127,7 +139,8 @@ trades. Prior observations are retained.
 
 Choose **Replay**, select the saved symbol and inclusive receipt-time range,
 then **Load / restart replay** and **Next observation** or **Play replay**.
-The chart shows Replay, progress, original source time and receipt time.
+The chart shows replay progress, source time and receipt time in Eastern Time.
+The range fields use an explicit Eastern offset and retain receipt precision.
 Saved replay ranges and voice decisions retry automatically after temporary
 connection failures. Voice becomes available when a saved decision has loaded;
 replay begins empty until **Next observation** or **Play replay** advances it.
@@ -207,6 +220,11 @@ when Yahoo is disabled.
 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arbitrade-paper-results
 ```
 
+Run the offline multi-ticker browser and SQLite check with
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.multi_ticker_paper_smoke`.
+It verifies ticker-specific fills and marks, feed tracking with the page closed,
+and Replay account isolation.
+
 Browser/SQLite check passed: buy 4 at $100 → **$600 / 4**, sell 1 at $110 →
 **$710 / 3**, close at $105 → **$1,025 / 0**. Retry added no duplicate; empty sale
 was rejected; exactly **3 fills** survived an actual backend restart. The initial paper feature passed 59 backend tests and the frontend build when added. [Fill rules, API, persistence and test
@@ -265,7 +283,7 @@ and mobile screenshots were inspected. A visual viewport issue found during
 that inspection was fixed: the first streamed candles now fit an initially
 empty chart and new intervals remain visible while following the latest bar.
 
-The current UI SmokeTest exercises all eight timeframes. It uses free ports 8000/5173 by default. Set `ARBITRADE_BACKEND_PORT` and `ARBITRADE_FRONTEND_PORT` to use other local ports.
+The current UI SmokeTest checks the full-height chart on desktop and mobile, Feed details under Indicators, and Eastern hover timestamps and visible OHLCV across all eight timeframes. It uses free ports 8000/5173 by default. Set `ARBITRADE_BACKEND_PORT` and `ARBITRADE_FRONTEND_PORT` to use other local ports.
 
 ```bash
 PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke --output /tmp/arbitrade-ui-results
@@ -459,8 +477,9 @@ correct audio/captions; the physical Mac microphone/speaker check is pending.
 `backend/yahoo_stream.py` reuses yfinance subscription and decoding;
 `backend/main.py` supplies HTTP/WebSocket routes. `backend/history.py`,
 `candles.py`, `timeframes.py` and `observations.py` provide data rules and storage.
-`frontend/src/useMarketChart.js` owns the chart and socket lifecycle. `CandleChart.js` presents the chart, replay and inspection controls.
-`chart-data.js` adapts UTC prices and nullable volume; `vite.config.js` proxies
+`frontend/src/useMarketChart.js` owns the chart and socket lifecycle. `CandleChart.js` presents the chart, hover card and replay controls.
+`chart-data.js` adapts candles and nullable volume and formats Eastern Time for the interface. API timestamps, raw audit payloads and stored records use UTC.
+`vite.config.js` proxies
 both HTTP and WebSocket requests. `scripts/verify_live.py` checks transport;
 `scripts/ui_smoke.py` and `ui_smoke.mjs` run the automated browser checks.
 Major prompts are preserved under `prompts/`, including prompts 08, 08a and the approved 08b UI-testing request.
@@ -468,11 +487,45 @@ The [AI-use record](AI-USE.md) identifies the coding assistance used for the des
 
 Confirmed environment: Linux/Omarchy, Python 3.14.8 at `/usr/bin/python`,
 FastAPI 0.156.8, Uvicorn 0.54.0, Node 26.13.0, npm 11.20.0, Vue 3.5.45,
-Vite 8.3.7, Lightweight Charts 5.3.0, yfinance 1.8.0, websockets 17.4 and
-exchange-calendars 4.13.2. Approved Python additions live in `backend/.packages`
-with pins in `backend/requirements-yahoo.txt` and `requirements-calendar.txt`.
+Vite 8.3.7, Lightweight Charts 5.3.0, yfinance 1.8.0, websockets 16.1.1,
+exchange-calendars 4.13.2, OpenAI 3.52.0 and OpenAI Agents SDK 0.24.0.
+Approved Python additions live in `backend/.packages` with pins in
+`backend/requirements-yahoo.txt`, `backend/requirements-calendar.txt` and
+`backend/requirements-openai.txt`.
 Approved playwright-core 1.65.0 was added to the frontend dev dependencies
 and lockfile. No virtual environment was created. Follow `AGENTS.md` before installing or changing dependencies.
+
+### Arbitrade Desk Assistant
+
+Open **AI → Desk Assistant**, then send a question about the decision rules
+or explicitly ask for a new chart assessment. The assistant asks for
+clarification on messages such as “Should I wait?” Expand **Tools and
+results** to see what actually ran. Chat and the chart's Decision API result
+show the same choice and returned choice probability when available. An older
+snapshot result stays in the chat history with its original chart timestamp.
+Ask for a new assessment and a comparison to use the latest successful
+assessment for the same ticker and Live or Replay mode in that chat.
+**New chat** starts with an empty transcript and assessment history.
+
+`POST /api/desk-agent` accepts a `question` and optional visible-chart
+`capture`. The browser adapter
+`askDeskAgent(question, { includeChart: true })` uses the same PNG capture as
+the classroom Decision API. The endpoint returns `answer` and the actual
+`tool_results`, including structured errors. Chart decisions use the existing
+classroom audit store and are ineligible for orders. The agent uses the
+backend's existing `OPENAI_API_KEY` configuration.
+
+Browser SmokeTest with controlled providers:
+
+```sh
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke
+PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --conversation
+```
+
+The check exercises rule lookup, clarification, chart assessment, timeout,
+and a delayed response. See the
+[verification log](docs/verification.md#desk-assistant-chat--november-17-2026)
+for the real OpenAI check with constructed chart data.
 
 ## Access from the Mac
 

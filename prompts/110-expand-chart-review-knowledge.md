@@ -1,0 +1,1 @@
+this should be much more comprehensive - at least 20 videos. it will be used for a knowledge base for an agent reviewing candlestick charts and deciding how to trade real money. it is high stakes and thus must be very robust

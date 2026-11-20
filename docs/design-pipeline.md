@@ -1,5 +1,7 @@
 # Design pipeline
 
+The [swing chart-review knowledge base](swing-knowledge.md) provides offline topic search and a reviewer packet from 20 videos. The read-only desk agent calls topic search. The full reviewer packet is available through the CLI. Blinded chart evaluation and strategy evaluation remain open.
+
 ## Submission artifacts · November 16, 2026
 
 The supplied [Assignment 4.1 demonstration](../demos/Assignment%204.1%20Demo.mov)
@@ -15,7 +17,7 @@ time/first-receipt order; price-order ambiguity remains independent. Missing
 values, gaps, resets, decreases and invalid/decreasing tied baselines retain
 null volume. No raw observation is replaced or assigned a guessed subsecond time.
 History and replay label the result `volume_provenance=yahoo_quote_counter`;
-Candle details explain that it is observed cumulative change. This does not claim
+The hover card labels this as observed volume, and Feed details explains the basis. This does not claim
 the stream is a complete trade tape or matches downloaded provider bar volume.
 Intraday live overlays use this observed delta rather than dropping it or adding
 it to cached provider volume. The recorded-volume SmokeTest independently queries
@@ -52,9 +54,11 @@ The header wordmark links home to the chart using existing in-app navigation, wi
 
 The main chart height is 20% taller: desktop `clamp(366px, 55.2vh, 588px)` and phone `clamp(306px, 46.8vh, 426px)`.
 
-The default workspace pairs the chart with the Indicators menu. The AI diamond opens a summary of the selected candle. The summary compares its close (or latest price) with its own open, displays its UTC time, and distinguishes a forming interval and partial coverage. Hover inspects OHLC and available share volume without changing the selection. Clicking a candle, selecting its timestamp, or choosing a confirmed crossover pins the candle for review. AI summary and voice chat share the emerald rail on desktop and the expandable tool area above the chart on phones.
+The default workspace pairs the chart with the Indicators menu. The AI diamond opens a summary of the selected candle. The summary compares its close (or latest price) with its own open, displays its Eastern Time, and distinguishes a forming interval and partial coverage. Hover inspects OHLC and available share volume without changing the selection. Clicking a candle or choosing a confirmed crossover pins the candle for review. AI summary and voice chat share the emerald rail on desktop and the expandable tool area above the chart on phones.
 
-Chart history supports dragging, Previous day, a loaded-date picker in UTC, and Latest candles. Dates come from the current subscription's candles, preserving replay visibility. Weekly/monthly choices are period start dates. Live revisions and rollover retain the visible logical range when the reader is away from the tail. Live charts use the provider history described above. Trackpad vertical wheel and ctrl-wheel pinch use an amplified exponential change to the logical horizontal range, anchored under the pointer. Horizontal wheel swipes use the same range controller for panning. Main-chart zoom uses a 0.0088-per-pixel logarithmic coefficient and horizontal wheel pan uses a 0.8 multiplier, both 20% below prompt61; right-axis scaling retains its separate sensitivity. `chart-gestures.js` adds frame-driven exponential decay after wheel/pinch release, using zoom/pan decay times of 300/360ms and a 2.2-second safety limit; each new input replaces the previous release tail, including small OS momentum events. Mouse and touch drags use the library kinetic scrolling. Per-event limits and an eight-interval minimum bound zoom. New input, date jumps, pinned selections, Latest candles, reconnects, blur and unmount cancel custom momentum; animation frames and listeners are cleaned up. The right-hand price axis uses a more sensitive center-preserving vertical transform for pointer dragging and wheel input, through the public price-range API. Pointer capture keeps dragging responsive outside the axis; release/blur cancels the drag, and double-click restores auto scaling. Horizontal time range is preserved during price scaling.
+Chart axes, crosshairs, hover cards and saved chart images use America/New_York. The same zone applies to replay, signals, paper records and backtest displays. Replay bounds show an explicit Eastern offset and retain subsecond precision. APIs, storage and raw audit payloads retain UTC timestamps.
+
+Dragging or horizontal scrolling toward the first loaded candle requests earlier history. Replay retains its receipt-prefix limit. Live revisions and rollover retain the visible logical range when the reader is away from the tail. Live charts use the provider history described above. Vertical wheel input on the price plot and ctrl-wheel pinch use an amplified exponential change to the logical horizontal range, anchored under the pointer. Horizontal wheel swipes use the same range controller for panning. Main-chart zoom uses a 0.0088-per-pixel logarithmic coefficient and horizontal wheel pan uses a 0.8 multiplier, both 20% below prompt61; right-axis scaling retains its separate sensitivity. `chart-gestures.js` adds frame-driven exponential decay after wheel/pinch release, using zoom/pan decay times of 300/360ms and a 2.2-second safety limit; each new input replaces the previous release tail, including small OS momentum events. Mouse and touch drags use the library kinetic scrolling. Per-event limits and an eight-interval minimum bound zoom. New input, pinned selections, reconnects, blur and unmount cancel custom momentum; animation frames and listeners are cleaned up. The right-hand price axis uses a more sensitive center-preserving vertical transform for pointer dragging and wheel input, through the public price-range API. Pointer capture keeps dragging responsive outside the axis; release/blur cancels the drag, and double-click restores auto scaling. Horizontal time range is preserved during price scaling. Vertical wheel input over the volume pane scales only the histogram from zero. Both panes share horizontal panning and pinch zoom.
 
 The emerald sidebar has four keyboard-accessible icon tabs and a collapse button. Indicators toggles 10/20/30/50/100/200-period SMA and EMA overlays and exposes named SMA, EMA and rolling-range settings. Signals focuses the chart on the selected strategy's two SMAs. Its newest-first list, chart marker and evidence card share the pinned candle timestamp. Switching tabs preserves the replay position and restores the chosen overlays.
 
@@ -62,17 +66,17 @@ The chart uses eight exchange-session intervals. Python calculates EMA from an i
 
 The parchment header contains the wordmark, mode and an emerald Trade toggle. It opens an inset parchment paper account card with cream space above and below and a maroon top rule beside the chart, or as a drawer on smaller screens. Closing it restores the full desktop chart width. Orders holds orders and P&L, and Automation holds the controls and audit. The header provides a stop control throughout an active run. Indicators and Signals have panel headings, with smaller SMA and EMA subheadings under Indicators. Moving between Indicators and AI slides past Signals and Drawing Tools in either direction. The green sidebar scrolls independently with a pinned tab bar. The panes share a fixed top edge, and the outgoing pane retains its height until the slide ends. The green sidebar, tab changes, and Trade card use slide transitions that respect reduced motion. The AI tab uses the blue brand diamond. It presents observed prices and indicators immediately. Decision API captures the actual visible chart and requests long/short/wait using pixels and identifying context only. The summary prioritizes the choice/status and compact freshness/volume context; model metadata and saved context/question/answer are under Decision details. A short expandable flow explains the process. Images remain saved without a screenshot preview or image link. Review paper proposal opens the separate frozen-data, position-aware analyst/reviewer workflow; paper automation retains that workflow. Voice chat discusses saved paper decisions by ID. See [classroom contract](classroom-decisions.md).
 
-`main.js` keeps the chart and tool components mounted as navigation changes. Inactive panels leave the tab order, and a mounted chart canvas can still produce the native PNG used by automation. Draft SMA inputs become active strategy windows when the user applies them. The source, upstream feed state and age stay visible under the plot. Detailed source timestamps, FastAPI transport and the health check are available in Feed details.
+`main.js` keeps the chart and tool components mounted as navigation changes. Inactive panels leave the tab order, and a mounted chart canvas can still produce the native PNG used by automation. Draft SMA inputs become active strategy windows when the user applies them. The price and volume panes fill the workspace below the timeframe controls and active study legend. The Indicators tab ends with Feed details, which contains source timestamps, upstream status and age, FastAPI transport, cache status and the health check.
 
 The [assignment](assignment-4.md) allows students to choose navigation. Part 4.1 is demonstrated through the chart, source status, recording, replay and outage evidence. The other panels expose existing later-stage work. Historical strategy backtesting with performance results and the final presentation are separate assignment deliverables.
 
 Implemented flow as of prompt 08:
 
 ```text
-Yahoo AsyncWebSocket.subscribe(AAPL), provider heartbeat and decoder
-  -> continuous receiver owned by FastAPI lifespan (one shared connection)
+Yahoo AsyncWebSocket.subscribe([ticker]), provider heartbeat and decoder
+  -> one shared receiver per ticker (AAPL remains owned by the FastAPI lifespan)
   -> UTC receipt + describe_update -> ObservationStore.record -> SQLite commit
-  -> history_response(source=observations, symbol=AAPL, requested timeframe)
+  -> history_response(source=observations, requested ticker and timeframe)
   -> form_candles: source-time OHLC, valid cumulative-volume deltas
   -> derive_timeframe: regular exchange session aggregation
   -> /api/live: initial snapshot, candle replacements/appends, status heartbeat
@@ -87,8 +91,15 @@ without a new quote. Feed loss is detected from the upstream transport within
 about 250ms plus scheduling; browser status arrives on the next one-second
 update. Reconnect uses a new subscribed client after a three-second backoff.
 
-Vue defaults to 1m. Switching to 5m, 15m, 30m, 1h, 1d, 1w or 1mo opens matching
-history plus live updates. Generation checks discard old subscription events.
+Vue defaults to AAPL at 1m. The Live ticker field normalizes the submitted
+symbol and opens matching history plus live updates for the current timeframe.
+Other tickers have separate Yahoo caches and share their upstream subscription
+between active charts and the live paper account. The chart uses the U.S.
+regular-session calendar.
+Switching to 5m, 15m, 30m, 1h, 1d, 1w or 1mo preserves the active ticker.
+Generation checks discard old subscription events. Replay uses selected saved
+receipts. Manual paper orders use the selected ticker. Automation and the
+frozen daily backtest use AAPL.
 Unknown volume is histogram whitespace. Selected candles show forming/ended
 and complete/partial coverage separately. Chart connection and Yahoo feed
 status are separate. Source age comes from source time and advances locally.
@@ -116,7 +127,7 @@ The automated UI flow is implemented and passed on Omarchy:
 scripts/ui_smoke.py -> disposable SQLite + FastAPI + Vite
   -> scripts/ui_smoke.mjs -> project-scoped playwright-core
   -> system Chromium -> real Vue connection button and timeframe controls
-  -> visible inspector compared with stored-observation aggregation
+  -> visible hover card compared with stored-observation aggregation
   -> same-minute change / rollover / feed disconnect / mobile viewport
   -> screenshots + JSON report -> browser and service cleanup
 ```
@@ -143,7 +154,7 @@ Saved SQLite opened mode=ro -> selected inclusive receipt-time range
  -> one step inserts original observation/receipt into connection-local memory
  -> existing form_candles + derive_timeframe at recorded receipt clock
  -> /api/replay snapshot + source time / receipt time / progress
- -> Vue Replay controls -> existing candle/volume chart and inspector
+ -> Vue Replay controls -> candle/volume chart and hover card
 ```
 
 No replay route writes the saved database. Late arrivals and explicit revisions
@@ -206,7 +217,15 @@ same UI, compares replay/batch/forming outputs and cleans up. See
 [chart-indicators.md](chart-indicators.md) and [verification.md](verification.md).
 
 
-Prompt 15 adds local paper execution:
+Prompt 15 adds local paper execution.
+
+Prompt 120 uses this same path for supported U.S. stock tickers. The broker
+matches order and quote tickers, and marks each open position from its own
+completed one-minute candle. A FastAPI background task catches up to committed
+receipts and advances completed marks without a browser. Startup restores
+subscriptions from pending orders and open positions in the live account.
+The last chart can close while an order or position is still active. Replay
+orders match that session's saved ticker and receipt boundary.
 
 ```text
 Vue buy/sell/close/hold/wait + stable request UUID
@@ -390,7 +409,7 @@ Yahoo/image-model observations and deferred physical voice check remain as
 recorded. See workstation-smoke-test.md and verification.md.
 
 
-Unknown-volume labels are hidden in the chart inspector, hover card, chart key
+Unknown-volume labels are hidden in the hover card, chart key
 and decision summary. Available volume still appears; missing volume remains null
 and leaves a histogram gap. The volume pane and decision context are retained.
 
@@ -410,3 +429,107 @@ clears its outage message; voice loads the selected record before enabling
 Start voice. If Replay was selected before its range arrived, range recovery
 connects that replay automatically. Unmount clears retry timers. Explicitly
 entered replay ranges are preserved when a delayed list arrives.
+
+### Read-only Desk Assistant
+
+Browser request → FastAPI validates the question and optional visible chart
+PNG/context → Agents SDK holds the capture in request-local tool context.
+`lookup_trading_rules(topic)` returns the existing paper strategy rules and
+swing research search results. `assess_visible_chart()` sends only the bound
+capture through the existing classroom Decision API service. Repeated calls
+in the same run share one assessment. The service validates and archives the
+result, and the agent endpoint returns each tool's payload alongside the
+assistant answer. Credentials remain in the backend. The Desk Assistant
+panel in the AI rail captures the visible chart when a message is sent.
+Rule questions use rule lookup alone. An ambiguous request prompts a
+question about intent before any tool call. The panel exposes actual tool
+records and uses the chart result's context, choice and probability for its
+assessment summary. A result updates the chart's Decision API display only
+when its ticker, interval and timestamps match the submitted capture and
+the chart is still on that snapshot. Delayed results remain in the chat
+transcript with their original context.
+
+Each chat uses a separate conversation ID. Successful chat decisions are
+associated with that ID, the captured ticker and the selected Live or Replay
+mode in the existing decision database. The next turn retrieves the latest
+matching assessment and gives its original result and candle time to the
+agent as evidence. The chart receives the new result only. Failed
+assessments do not replace the comparison baseline. New chat clears the
+transcript and starts a separate history.
+
+## Daily crossover backtest and shared assessment evidence
+
+The frozen [AAPL daily file](../backend/data/research/aapl-daily-2026-11-16.json)
+is independent of live quote receipts, replay storage and the shorter chart caches.
+The loader verifies its digest and regular-session coverage with the NASDAQ
+calendar. The indicator engine uses as-returned closes, a full-window SMA seed
+for EMA, and the last non-equal side for 20/50 crossovers. All three simulations
+start flat on the same first eligible session. Each close can create one
+simulated market order. Only a subsequent regular-session open can fill it.
+The shared weighted-average fill arithmetic tracks realized cost. The close
+marks open positions for equity and peak-to-trough drawdown.
+
+`GET /api/backtests/daily?variant=sma200` returns the selected ledger, as-of
+facts and a comparison with baseline and EMA 200. The rule version, input
+digest, ticker, variant and UTC close identify a reproducible decision.
+Indicators, simulated shares, cash, P&L, rule verdict and reason are available
+at that cutoff. Subsequent fills and full-run statistics stay outside the
+assessment packet. Runs are deterministic and reconstructed from the frozen
+file. Decision requests persist the actual facts, image and provider result
+in the existing SQLite audit.
+
+The historical chart draws only prices and studies through the selected
+session. Its PNG embeds the dataset, rule, ticker, variant and cutoff. The
+Decision API checks that binding before sending the image and server-computed
+facts to its provider. In the ordinary chart's daily strategy mode, the visible
+bar end and capture or replay clock bound the latest available daily close.
+The frozen dataset ends November 16, 2026. After the next regular session
+closes, the daily study has a gap and the strategy tool reports missing history.
+
+The SDK registers `read_strategy_facts` in strategy mode. General rule
+questions use the lookup tool. Requests for a new assessment use the existing
+`assess_visible_chart` tool and the same service as `POST /api/decisions/strategy`.
+A provider decision can disagree with the simulated action. Conversation
+comparisons select successful assessments from the same chat, ticker, data mode,
+variant, version and dataset through the current chart time. The simulation
+runs locally and has no model or paper-order dependency.
+
+### Reviewing a signal and its outcome
+
+The Backtest view starts at the latest actionable or skipped crossover in the
+selected run. An entry-filter change preserves the review date. The explanation
+reads the simulated action, account position and moving averages from that
+session's facts. The chart, date selector and signal navigation share this
+selection.
+
+The optional outcome view counts 1, 5 and 20 rows forward in the saved daily
+bars. Price change uses the signal close as its reference. Account change uses
+the selected run's equity at each close and includes any intervening trades.
+For a filtered-out buy, the per-trade comparison uses the baseline's actual
+next-open fill and values one share at each later close until its exit fills.
+From that sale onward the comparison holds the proceeds in cash. Unavailable
+horizons are marked explicitly.
+
+A separate chart instance renders the later candles for human review. Both AI
+entry points capture the decision-time chart, which receives only bars and
+indicator rows through the selected close. The server supplies the facts for
+that cutoff. The outcome table, later candles and account results stay local
+to the review screen.
+
+The review chart receives up to 50 saved sessions on each side of the signal.
+Dragging and the keyboard-accessible slider move a 31-candle viewport. The
+signal line uses the decision close. Entry and exit lines map actual fill
+timestamps to their daily candles. The timeline displays Eastern fill times
+and prices, including fills outside the window. With no fill, the tint changes
+at the selected signal. A skipped trade's baseline comparison stays in the
+outcome table.
+
+The SDK receives validated current-session facts with its instructions and
+can return the same evidence via the fact tool. The backend saves completed
+question/answer pairs in local SQLite. Each new turn reads up to 12 recent
+pairs from its conversation, ticker, mode, interval, rule variant and dataset
+at or before the selected chart time. Earlier questions are stamped with
+their own chart time. An earlier selection cannot inherit a later session's
+turns. A new chat uses a new conversation ID. The Decision API continues to
+receive only the selected chart capture and its computed facts.
+[Browser evidence](verification.md#desk-assistant-context-and-trade-timeline)

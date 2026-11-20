@@ -1,0 +1,1 @@
+Go ahead and make manual paper trading work for any supported U.S. stock ticker I enter. Use that ticker’s prices for fills and P&L, and keep tracking open positions and pending orders when I switch charts.

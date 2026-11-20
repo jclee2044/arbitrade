@@ -4377,3 +4377,1024 @@ screenshots, market-data evidence and prompt records, to
 https://github.com/jclee2044/arbitrade.git on main, excluding report.md. This
 resolves the destination-authorization blocker above. Next execution: push
 and independently compare remote main to HEAD before updating local report.
+
+
+## Standalone report video link · November 16, 2026
+
+Prompt105: attached report matched ignored workspace report byte for byte.
+Replaced only the relative demo URL with
+https://github.com/jclee2044/arbitrade/blob/main/demos/Assignment%204.1%20Demo.mov
+so submitting the Markdown alone does not require a sibling demos directory.
+`/usr/bin/python`3.14.8 inline assertions PASS exact replacement;
+`git cat-file -e 'HEAD:demos/Assignment 4.1 Demo.mov'` PASS;
+`git ls-files -- report.md` empty and `git check-ignore -q report.md` exit0
+PASS. Prior session successfully pushed main and verified remote
+e40aa4de9829091bd8e9ea85c90fecfc22e26b4e. Web open of GitHub video returned
+cache miss, so unauthenticated public access/playback was not verified today.
+No application/dependency changes or new commit/push.
+
+## Server startup and opening · November 17, 2026
+
+Request: prompt106; existing prompt55 startup workflow reused. Inspected AGENTS,
+README Run, handoff instructions/current state, Vite config, frontend manifest
+and available lockfile/requirements paths. Git initially had modified verification
+and handoff plus untracked prompt105; preserved. Linux, /usr/bin/python3.14.8,
+Node26.13.0, npm11.20.0; FastAPI0.156.8 and Uvicorn0.54.0 imports PASS using
+`PYTHONPATH=backend/.packages /usr/bin/python`. No installs or dependency edits.
+
+Initial sandbox `ss -ltnp` could not open netlink; initial localhost curl checks
+failed. Started README backend and frontend commands using detached subprocesses
+with local-network permission: backend PID2120033, npm PID2120034. Logs:
+`/tmp/arbitrade-start-backend.log`, `/tmp/arbitrade-start-frontend.log`.
+`urllib.request.urlopen` checks expected HTTP200 and observed HTTP200 for
+backend `/api/health`, frontend root, proxied `/api/health`, and backend `/docs`.
+App and API docs open requests through open_in_codex both returned queued;
+client rendering is unverified. These are startup checks, not a full SmokeTest;
+no new live-feed/volume claim. Services intentionally left running for user.
+No application source changes or commit.
+
+## Channel knowledge base feasibility · November 17, 2026
+
+Checked Google's uploads playlist guide and captions.download reference. Download requires video edit permission. Located the creator's channel and losing-trades review video. In /usr/bin/python with sqlite3.connect(':memory:'), ran `create virtual table kb using fts5(note)`, inserted 'trade review' and selected rows matching 'review'. Expected and observed one matching note. Transcript coverage, ingestion and retrieval quality remain untested. Advisory work only.
+
+## OpenAI SDK setup blocked · November 17, 2026
+
+### CHECK
+
+Read AGENTS.md, the README launch command, the current handoff, the two
+backend requirements files, and the frontend manifest and lockfile. Git
+reported an existing repository on `main` with work in progress. The backend
+launch uses `PYTHONPATH=backend/.packages /usr/bin/python -m uvicorn backend.main:app`.
+`/usr/bin/python --version` returned 3.14.8 on Omarchy 4.5.0. Both Python
+prefixes were `/usr`, and the system interpreter was externally managed.
+Distribution metadata in the backend environment showed FastAPI 0.156.8 and
+Uvicorn 0.54.0 in system site-packages, with websockets 17.4 and yfinance
+1.8.0 in the existing ignored `backend/.packages` directory. Both SDKs were
+absent. `node --version` returned v26.13.0 and `npm --version` returned 11.20.0.
+
+`PYTHONPATH=backend/.packages /usr/bin/python -m pip check` initially failed
+with `No module named pip`. The uv shim did not have an installed binary
+and its automatic setup failed on a read-only filesystem. For the pip check,
+downloaded the previously documented pip 26.3 wheel into a temporary
+directory and ran it directly. pip was not installed.
+
+```sh
+check_dir=$(mktemp -d /tmp/arbitrade-sdk-check.XXXXXXXX)
+curl -fsSL --max-time 20 -o "$check_dir/pip-26.3-py3-none-any.whl" https://files.pythonhosted.org/packages/07/25/ee8c38ae72d66b844ce8eb9711ba905dba21ca1a8a0c960057c41cd23337/pip-26.3-py3-none-any.whl
+printf '%s  %s\n' f3b60b20ffaadd4415ed7957212a38ac63fa4c5fa375bd0f4a797777940fad13 "$check_dir/pip-26.3-py3-none-any.whl" | sha256sum --check -
+export PYTHONPATH=backend/.packages:/tmp/arbitrade-sdk-check.xzwTJX5q/pip-26.3-py3-none-any.whl
+/usr/bin/python -m pip --version
+/usr/bin/python -m pip check
+```
+
+Expected a matching checksum, pip running under Python 3.14, and a baseline
+dependency report. The checksum passed, pip reported 26.3, and the baseline
+check exited 0 with `No broken requirements found.` It also reported that
+the user cache was disabled because it was unwritable in the sandbox.
+
+Read the exact public PyPI release metadata with
+`curl -fsSL --max-time 15 https://pypi.org/pypi/openai/3.52.0/json` and
+`curl -fsSL --max-time 15 https://pypi.org/pypi/openai-agents/0.24.0/json`.
+The initial sandboxed requests could not resolve PyPI. Both returned metadata
+with network access. Both releases require Python >=3.10 and have
+platform-independent wheels. Agents 0.24.0 accepts OpenAI >=3.0.0,<4
+and requires websockets >=15.0,<17. The existing Yahoo requirement pins
+websockets to 17.4.
+
+### TAKE ACTION
+
+Checked whether pip could resolve both SDKs while retaining the existing pins:
+
+```sh
+PYTHONPATH=backend/.packages:/tmp/arbitrade-sdk-check.xzwTJX5q/pip-26.3-py3-none-any.whl /usr/bin/python -m pip --isolated --disable-pip-version-check --no-cache-dir install --dry-run --only-binary=:all: --target backend/.packages --index-url https://pypi.org/simple -r backend/requirements-yahoo.txt -r backend/requirements-calendar.txt 'openai-agents==0.24.0' 'openai==3.52.0'
+```
+
+Expected the resolver to report the incompatible websockets requirements.
+It exited 1 with `ResolutionImpossible` and named those exact requirements.
+The existing installation target is `backend/.packages`. No install command
+was proposed for approval because the required pins cannot be resolved there.
+No packages, environments, dependency manifests, or lockfiles changed.
+
+### VERIFY
+
+Ran an inline script with `PYTHONPATH=backend/.packages /usr/bin/python -` to
+execute `from openai import AsyncOpenAI` and
+`from agents import Agent, Runner, function_tool` separately, and print both
+versions via `importlib.metadata.version`. Expected the requested imports
+and versions for a completed setup. The script exited 1, reporting
+`No module named 'openai'`, `No module named 'agents'`, and both
+distributions absent. The requested SDK imports remain unverified.
+
+Reran `PYTHONPATH=backend/.packages:/tmp/arbitrade-sdk-check.xzwTJX5q/pip-26.3-py3-none-any.whl /usr/bin/python -m pip --no-cache-dir check`.
+Expected the current environment to match the baseline. It exited 0 and
+again reported `No broken requirements found.` The requested SDKs still
+cannot coexist with the current websockets pin. A decision on how to resolve
+that conflict is required before installation and post-install verification.
+No backend restart was needed, and no application SmokeTest ran.
+
+## Swing knowledge pilot · November 17, 2026
+
+Checked Git status, dependency manifests, Omarchy Linux, system Python 3.14.8 outside a venv, Node v26.13.0 and npm 11.20.0. Used the existing SQLite FTS5 module. The direct swing-strategies watch page was throttled and requests for two companion pages returned HTTP 403 or redirected to an inaccessible page. Used indexed creator chapters and publicly accessible syndicated descriptions and transcript passages. Full caption and chart verification remain open.
+
+Smallest repeatable retrieval smoke command is `/usr/bin/python -m scripts.swing_knowledge "overnight gap"`. Expected and observed first ID gap, chapter start 100 seconds, attributed JSON. An additional system-Python assertion loop called search with weekly regime, short breakdown, capitulation, relative volume and buying power. First IDs matched alignment, continuation, reversal, features and capacity respectively. Unsupported keyword ichimoku and punctuation-only input produced empty results. No performance backtest, order execution or UI SmokeTest performed for this CLI pilot.
+
+## Read-only Desk Agent · November 17, 2026
+
+### CHECK
+
+Prompt 111. Read AGENTS.md, the handoff, launch instructions, backend
+requirements, frontend package files, existing swing lookup, chart capture,
+and Decision API service. Git had existing documentation and research work in
+progress. `/usr/bin/python --version` returned 3.14.8, Node reported v26.13.0,
+and npm 11.20.0. In the backend environment, WebSockets was 17.4 and both
+SDKs were absent. The checksum-verified pip 26.3 wheel from prompt 109 was
+still available. Baseline command returned `No broken requirements found.`
+
+```sh
+PYTHONPATH=backend/.packages:/tmp/arbitrade-sdk-check.xzwTJX5q/pip-26.3-py3-none-any.whl /usr/bin/python -m pip --no-cache-dir check
+```
+
+Queried the three package release endpoints under
+`https://pypi.org/pypi/{openai-agents,openai,websockets}/json` using
+`/usr/bin/python` and `urllib.request.urlopen`. The latest Agents SDK was
+0.24.0 and required WebSockets >=15,<17. The following read-only resolver
+check exited 0 and selected the CPython 3.14 WebSockets 16.1.1 wheel and
+missing SDK dependencies. The dry-run override let pip resolve against the
+externally managed interpreter without changing it. An installed-metadata
+scan found one active requirement on WebSockets, yfinance 1.8.0's >=13, which
+accepts 16.1.1.
+
+```sh
+PYTHONPATH=backend/.packages:/tmp/arbitrade-sdk-check.xzwTJX5q/pip-26.3-py3-none-any.whl /usr/bin/python -m pip --isolated --disable-pip-version-check --no-cache-dir install --dry-run --break-system-packages --only-binary=:all: --index-url https://pypi.org/simple 'openai-agents==0.24.0' 'openai==3.52.0' 'yfinance==1.8.0' 'websockets>=15,<17'
+```
+
+### TAKE ACTION
+
+The student approved both SDK pins, WebSockets 16.1.1, staging and installation
+into the existing project package path, and the named manifest edits.
+The following approved command exited 0 and staged the two SDKs, WebSockets
+and 17 missing SDK dependencies.
+
+```sh
+sdk_stage=$(mktemp -d /tmp/arbitrade-sdk-stage.XXXXXXXX)
+PYTHONPATH=backend/.packages:/tmp/arbitrade-sdk-check.xzwTJX5q/pip-26.3-py3-none-any.whl /usr/bin/python -m pip --isolated --disable-pip-version-check --no-cache-dir install --only-binary=:all: --no-deps --target "$sdk_stage" --index-url https://pypi.org/simple openai-agents==0.24.0 openai==3.52.0 websockets==16.1.1 PyJWT==2.15.1 attrs==26.1.0 cryptography==50.0.2 griffelib==2.4.1 httpcore2==2.16.2 httpx2==2.16.2 jiter==0.19.0 jsonschema==4.26.0 jsonschema-specifications==2025.9.1 mcp==2.3.0 mcp-types==2.3.0 python-multipart==0.0.34 referencing==0.37.0 rpds-py==2026.9.1 sniffio==1.3.1 sse-starlette==3.7.0 truststore==0.10.5
+```
+
+The staging directory was `/tmp/arbitrade-sdk-stage.CNxcoI6t`. Prepended it to
+`PYTHONPATH` for the pip and import checks, which passed. Used
+`/usr/bin/python -` with `shutil.move`, `copytree` and `copy2` to back up
+the 17.4 module, metadata and command in
+`/tmp/arbitrade-websockets-backup.dr7s18r1` and copy 46 staged paths into
+`backend/.packages`. Preflight found only the expected WebSockets overlaps.
+Pinned both SDKs in `backend/requirements-openai.txt` and synchronized
+WebSockets in `backend/requirements-yahoo.txt` and the CI smoke workflow.
+System Python and its package directories were reused without changes.
+
+### VERIFY
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -` imported
+  `openai.AsyncOpenAI`, `agents.Agent`, `agents.Runner`,
+  `agents.function_tool`, `yfinance.AsyncWebSocket`, and
+  `websockets.asyncio.client.connect`. Distribution metadata matched all
+  expected versions: OpenAI 3.52.0, Agents 0.24.0, WebSockets 16.1.1,
+  yfinance 1.8.0. Post-install pip check used the baseline command and again
+  returned `No broken requirements found.`
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest -v backend.test_desk_agent`
+  verifies the SDK-generated names, descriptions and strict input schemas.
+  The rules tool needs only a topic string; the chart tool takes no model
+  arguments. The first run failed because ToolContext was imported from the
+  SDK package root. Corrected its import to `agents.tool_context`. A sandbox
+  rerun stalled, so reran with local socket access and the three tests
+  passed. The real SDK runner used controlled model outputs. It returned
+  existing lookup results and the exact persisted Decisions result, reused a
+  repeated chart assessment, kept the PNG out of the orchestration model
+  input, and returned missing capture, malformed image, provider timeout and
+  invalid tool argument errors.
+- Full backend discovery initially failed with `-t .` because the backend
+  directory is a namespace package. `PYTHONPATH=backend/.packages /usr/bin/python -X faulthandler -m unittest discover -s backend`
+  exited 0 with 118 passing tests and existing pandas deprecation warnings.
+  `npm --prefix frontend run build` passed with 33 transformed modules.
+- `PYTHONPATH=.:backend/.packages /usr/bin/python /tmp/arbitrade-desk-agent-browser/run.py`
+  launched disposable FastAPI and Vite services on 18164 and 15264 and
+  Chromium. The real browser composable posted a chart PNG and context to
+  `/api/desk-agent`. The controlled model called both registered tools.
+  The response returned attributed rule matches and the actual classroom
+  decision. The saved PNG matched the submitted bytes, one assessment was
+  saved, a request without the capture returned `chart_capture_required`,
+  and paper records matched the pre-test snapshot. Both service ports were
+  closed afterward. Vite emitted its Vue feature-flag warning during the
+  development probe.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.classroom_smoke --output /tmp/arbitrade-desk-classroom-regression`
+  passed browser rendering, all six controlled decision results and errors,
+  stored image identity and paper ledger checks.
+  `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke --output /tmp/arbitrade-desk-sdk-recorded-volume`
+  passed saved-Yahoo SQL/HTTP/WebSocket/chart comparison. Both SmokeTests
+  cleaned up their disposable services and storage.
+- After a concurrent research corpus expansion, reran the browser probe and
+  `PYTHONPATH=backend/.packages /usr/bin/python -m unittest -v backend.test_desk_agent scripts.test_swing_knowledge`.
+  The browser probe and all seven targeted tests passed again.
+
+The existing backend on port 8000 returned HTTP 200 for health, but its
+`/openapi.json` had no `/api/desk-agent` path. Restart it to load the new
+source and WebSockets package. A real OpenAI run still needs to exercise
+model tool selection and the downstream chart Decision API with backend
+credentials. No live provider call or chat UI was part of this check.
+
+## Chart-review knowledge base expansion · November 17, 2026
+
+Prompt 110 expanded the offline corpus to 33 unique lessons and 20 distinct channel video IDs. Twenty-three lessons have chapter-start locators and ten have video-level locators. The source index records the creator descriptions, chapter headings, syndicated transcript passages or creator articles consulted. Direct watch-page lookups for several videos returned cache misses and one returned HTTP 429. Used indexed creator descriptions and companion material where available. No full-video transcript or frame-by-frame review is claimed.
+
+Before edits, `/usr/bin/python -m scripts.swing_knowledge "overnight gap"` retrieved the original gap record. During expansion OR matching returned a continuation card for “Does Ichimoku work?” on a generic word. Changed to significant-word AND matching, filtered common question words and reran the checks. The absence of topic hits signals a retrieval miss. It does not prove a subject is absent from a video.
+
+- `/usr/bin/python -m unittest -v scripts.test_swing_knowledge` expected source coverage, valid locators, topic relevance, abstention on unsupported keyword combinations and independent inclusion of review constraints. Observed four test methods passed, including 16 first-hit cases, capitulation in top three, five empty-result cases and two packet cases.
+- `/usr/bin/python -m scripts.swing_knowledge --review "short breakdown"` expected a research packet with chart and risk references. Observed continuation and shortstructure matches plus horizon, range, gap, limit and shortcost in the standing context.
+- `git diff --check` passed for tracked changes. No dependencies installed or application runtime modified. This command-line retrieval check does not evaluate a model on chart images. Independent source/frame audit, live-model chart evaluation, execution-quality data, after-cost holdout and prospective performance remain outstanding.
+- The concurrent read-only desk agent imports topic search. A sandbox SDK test stalled. Reran with local socket access using `PYTHONPATH=backend/.packages /usr/bin/python -m unittest -v backend.test_desk_agent scripts.test_swing_knowledge`. All seven passed with controlled providers, including the returned lesson payload. The CLI reviewer packet is separate from the existing topic-lookup tool.
+
+## Desk Assistant chat · November 17, 2026
+
+Prompt 112. Inspected Git status, AGENTS.md, the prior handoff, the installed
+SDK agent, chart capture, Decision API result and existing browser fixtures.
+`/usr/bin/python --version` returned 3.14.8, Node v26.13.0, and npm 11.20.0.
+Backend distribution metadata reported OpenAI Agents SDK 0.24.0 and OpenAI
+3.52.0 using `PYTHONPATH=backend/.packages`. No dependencies or manifests
+changed for the chat. Checked only whether backend credentials were
+configured. The browser sent the message and capture.
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest -v backend.test_desk_agent`
+  passed all three tool and SDK runner checks.
+  `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest discover -s backend`
+  passed all 118 backend tests.
+  `npm --prefix frontend run build` passed with 34 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --output /tmp/arbitrade-desk-chat-final`
+  passed against the actual Vue UI, FastAPI endpoint, SDK runner and
+  controlled providers. The rule question invoked only rule lookup. “Should
+  I wait?” asked about intent and returned zero tool calls. The successful
+  assessment returned AAPL, 1m, 2026-11-10 15:06 UTC, LONG and 72% in the
+  tool, chat summary and chart result. The assistant text matched the HTTP
+  response and the expanded tool records matched their raw JSON. The saved
+  PNG matched browser bytes. The controlled timeout appeared in chat and
+  the chart display without a replacement choice or probability. One
+  delayed response arrived after switching 1m → 5m → 1m. It appeared in
+  chat marked as older, while the chart result stayed clear. At phone
+  width the page did not overflow. Exactly three decisions were saved
+  and paper records matched the original snapshot.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --live --output /tmp/arbitrade-desk-chat-live-final`
+  passed against real OpenAI agent orchestration and the real Decision API
+  using a constructed, stale AAPL chart and disposable databases. Three
+  HTTP responses were 200. Rule-only called lookup once. The ambiguous
+  question clarified without tools. The chart tool returned WAIT with 100%
+  probability for AAPL 1m at 2026-11-10 15:06 UTC. The assistant answer,
+  expanded tool payload, chart choice, and probability agreed and the
+  stored image matched the captured PNG. Exactly one chart decision was
+  saved. Paper records were unchanged. The injected timeout was tested
+  with the controlled provider.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.classroom_smoke --output /tmp/arbitrade-desk-chat-classroom-final`
+  passed the existing six controlled decision results, desktop/mobile
+  layout and audit details, saved chart bytes, and paper ledger comparison.
+  Initial runs exposed a regression where a resize hid a published manual
+  result. Preserved published manual results through same-session resizing
+  while retaining stricter current-snapshot binding for chat results.
+  Some immediate probe retries hit `Address already in use` after shutdown.
+  Set `SO_REUSEADDR` in both smoke preflights and reran successfully. The
+  tests closed their browsers and services and removed temporary databases.
+- The retained workstation on port 8000 initially lacked the new route.
+  Verified the Arbitrade backend process, workspace and inactive paper
+  automation before sending SIGTERM. Relaunched using the prior command
+  and environment with `/usr/bin/python` and `backend/.packages` on
+  `PYTHONPATH`. Backend PID 1854463 was replaced by 2146083, with
+  log `/tmp/arbitrade-desk-chat-backend.log`. Read-only requests returned
+  HTTP 200 for backend health on 8000, Vite on 5173, and the new frontend
+  module. OpenAPI includes `POST /api/desk-agent`. Existing services were
+  left running. No Git commit.
+
+## Desk Assistant conversation comparison · November 17, 2026
+
+Prompt 113. Checked Git status, AGENTS.md, the handoff, installed runtime,
+chat request path, and existing decision audit storage before changes.
+`/usr/bin/python --version` returned 3.14.8 and `node --version` returned
+v26.13.0. No dependency or lockfile changes.
+
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --conversation --output /tmp/arbitrade-conversation-controlled`
+ran the actual Vue interface, FastAPI and Agents SDK against controlled
+providers. The browser used a disposable AAPL 1m Replay and clicked
+**Next observation** between the two assessments. All three prompts used
+the same conversation ID. The browser received HTTP 200 on every turn.
+
+| User operation | Observed tool and display |
+| --- | --- |
+| “What does WAIT mean in this app?” | Only `lookup_trading_rules` ran. It returned the paper rules and the assistant said WAIT remains flat. The chart still had no decision. |
+| “Run the decision on the chart I'm looking at. What do you recommend?” | Only `assess_visible_chart` ran. The tool, assistant and chart showed LONG at 72% for 2026-11-10 15:00 UTC. There was no earlier assessment in the response. |
+| “Run a new decision for this chart and compare it with the earlier assessment.” | Only `assess_visible_chart` ran. The assistant named 15:00 UTC LONG at 72% and 15:01 UTC SHORT at 64%. The previous result matched the original tool result, and the chart displayed the new decision ID, time, choice and probability. |
+| **New chat**, then request a new decision and comparison | The transcript and chart result cleared. The fresh request used a different conversation ID and the assistant reported that there was no earlier assessment. |
+
+The expanded tool records matched the HTTP payloads. Both saved comparison
+PNGs matched their respective browser captures byte for byte. No mismatch
+was observed with the controlled providers. Three successful assessments
+were linked to the Replay mode, including the fresh-chat assessment. Paper
+orders and fills matched the pre-test records. Screenshots are in
+[controlled browser evidence](screenshots/desk-comparison-2026-11-17/controlled/).
+
+Automatic review rejected the optional real-provider command with
+`--conversation --live` before execution because it would send the prompts
+and constructed chart PNGs to OpenAI without specific authorization.
+The controlled browser test completed without sending that evidence.
+
+### Approved live OpenAI check
+
+The user subsequently authorized sending the three test prompts and two
+generated replay chart PNGs to OpenAI. Ran
+`PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --conversation --live --output /tmp/arbitrade-conversation-live-approved`.
+The run exited 0. All three requests used the same conversation and
+returned HTTP 200.
+
+| Prompt | Tool and observed result |
+| --- | --- |
+| What does WAIT mean in this app? | Only `lookup_trading_rules` ran. OpenAI explained remaining flat and the paper strategy's crossover rules. The chart had no decision. |
+| Run the decision on the chart I'm looking at. What do you recommend? | Only `assess_visible_chart` ran. AAPL 1m, 2026-11-10 15:00 UTC, WAIT at 100%. The assistant cited one visible candle, stale data and unavailable volume. |
+| Run a new decision for this chart and compare it with the earlier assessment. | Only `assess_visible_chart` ran. At 15:01 UTC it again returned WAIT at 100%. The reply named both candle times, correctly said the probabilities were unchanged, and noted the additional candle and available volume. |
+
+No mismatch was observed between model text, expanded tool records and
+chart display. The displayed decision ID updated to the second result.
+Both saved PNGs matched the submitted chart bytes. New chat cleared the
+transcript and chart result. Two successful Replay decisions were recorded,
+paper orders and fills were unchanged, and the test cleaned up the browser,
+services and disposable databases. Saved the
+[rule](screenshots/desk-comparison-2026-11-17/live/01-wait-rule.png),
+[first assessment](screenshots/desk-comparison-2026-11-17/live/02-first-assessment.png)
+and [comparison](screenshots/desk-comparison-2026-11-17/live/03-comparison.png)
+screenshots.
+
+- The single-turn browser regression
+  `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --output /tmp/arbitrade-conversation-regression`
+  passed rule, clarification, assessment, timeout and delayed-reply paths.
+  Both successful browser runs closed their browsers and services and
+  removed their temporary databases.
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest discover -s backend`
+  passed 119 tests, including history separation by ticker, mode and
+  conversation, and keeping a prior valid result after a failed assessment.
+  `npm --prefix frontend run build` passed with 34 transformed modules.
+- After finding no active paper automation run, restarted the retained
+  backend on port 8000 with the prior environment and `/usr/bin/python`.
+  PID 2146083 was replaced by 2180621. OpenAPI now lists the conversation
+  and data mode fields. The backend log is
+  `/tmp/arbitrade-desk-comparison-backend.log`. No commit.
+
+## Book-informed strategy evaluation review · November 17, 2026
+
+Prompt 114 requested a recommendation and proposed codification. Inspected
+existing Git state, `docs/swing-knowledge.md`, the FTS lookup and review
+packet, Desk Assistant, and the classroom Decision API capture and payload.
+The agent currently retrieves topic notes. The full review packet is a local
+CLI/Python function. The classroom chart decision takes a PNG and capture
+context. A book-informed strategy evaluator is separate and remains at
+design stage.
+
+`pdfinfo` and `pdftotext -layout` extracted the four user-supplied PDFs
+locally. Reviewed the contents, relevant strategy, confirmation, failure,
+and risk sections, and selectively rendered figures with
+`pdftoppm -f PAGE -l PAGE -r 85 -singlefile -png`. Expected readable text and
+charts. All four extracts opened, with 442, 465, 280, and 234 PDF pages
+respectively. The page map below uses the attached PDF viewer's numbering.
+
+| Source | Relevant locations checked |
+| --- | --- |
+| Weinstein | PDF 41 for the Mansfield 30-week weighted average, 47–55 for stages and Chart 2-1, 103–111 for sector context, 143–152 for volume and relative strength. |
+| O'Neil | PDF 119–125 for base, handle, pivot, and volume, 240–241 for the CAN SLIM recap, 247–253 for entry-relative loss control. Rendered the schematic on PDF 120. |
+| McDowell | PDF 97–98 for standard impulse validity and the diagonal exception, 167–174 for examples, 226 for the approximate Fibonacci range table and its anchors. Checked PDF 226 visually against garbled OCR. |
+| Grimes | PDF 39–41 for pivots and when they become observable, 76–85 for four setup categories and failure modes. PDF 86–88 contain divider pages and the next text begins at Chapter 11. Chapters 3–10 listed by Wiley are absent. Used Grimes's published failure-test and Fibonacci posts as separate sources. |
+
+Checked [Wiley's contents](https://www.wiley-vch.de/en/areas-interest/finance-economics-law/the-art-science-of-technical-analysis-978-1-118-11512-1),
+[Grimes on failure tests](https://www.adamhgrimes.com/failure-test/),
+[Grimes on Fibonacci tests](https://www.adamhgrimes.com/fibonacci-conclusions-22/)
+and [Sullivan, Timmermann and White on data snooping](https://onlinelibrary.wiley.com/doi/10.1111/0022-1082.00163).
+An attempted NBER abstract fetch returned HTTP 403 and was unnecessary for
+the findings. The books and author examples supplied hypotheses. No strategy
+performance was measured and no profitability or probability was verified.
+
+CHECK showed system Python 3.14.8, Node v26.13.0, npm 11.20.0, installed
+Poppler tools and existing backend/frontend manifests. Installed nothing.
+`/usr/bin/python -m unittest -v scripts.test_swing_knowledge` passed all four
+tests. `/usr/bin/python -m scripts.swing_knowledge --review 'short breakdown'`
+returned research-only status, the continuation and shortstructure matches,
+and the five standing context/risk records. These checks verify retrieval only.
+No app code, market data, or manifests changed. No new UI SmokeTest or backtest
+ran. No PDFs or full extracted text were added to the project or sent to a
+model provider.
+
+## Class transcript strategy readiness review · November 17, 2026
+
+Prompt 115. Read relevant portions of the Nov 3, 5, 10, 12 and 17 class
+transcripts locally. The recurring themes were simulated P&L, timeframe-aware
+SMA and crossover, an OHLCV dashboard, a bounded Decision API with verifiable
+guardrails, timestamped trade review, and an agent that can show its tools
+and compare decisions. Entry, exit, holding time and sizing inform the stock
+roadmap. Treat examples of recent-crossover bars and percentage extension
+limits as hypotheses. The user placed options in future scope.
+
+Reviewed `docs/assignment-4.md`, the README, history, replay, indicators,
+paper execution, automation and Desk Assistant. The checked-in assignment
+requires a historical simulation in Part 4.2 beyond the receipt replay.
+The current live feed and paper broker are AAPL-only, and replay uses saved
+receipt prefixes. The live chart's provider history cache is a separate
+input. Chart-only LONG/SHORT/WAIT results cannot submit orders. The reviewed
+SMA paper execution path is separate and recorded by the account ledger.
+No batch strategy backtest with after-cost holdout results was found.
+
+Read `backend/data/observations.sqlite3` with `backend.replay.selections`,
+which opens SQLite in read-only mode. Observed one AAPL selection with
+99,328 receipts, spanning Nov 10 to Nov 17 Eastern at inspection. Read
+`backend/data/observations.history.json`; used `backend.provider_history.validate`
+and `backend.timeframes.exchange_sessions` to compare cached dates with
+NASDAQ close times. Observed 128 valid AAPL daily OHLCV rows, all closed as
+of the cache fetch. Dates were 2026-05-13 through 2026-11-12. There were 25
+fully covered completed weeks (2026-05-18 through 2026-11-06). This permits a
+small daily-breakout correctness trial and falls below the 30-week warm-up.
+No fresh source observations or strategy returns were measured.
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest -v scripts.test_swing_knowledge backend.test_replay backend.test_indicators`
+  expected causal replay, indicator and retrieval checks to pass. Observed
+  all ten passed, with an existing pandas deprecation warning.
+- `./scripts/smoke-test --output /tmp/arbitrade-transcript-readiness`
+  expected browser and SQLite agreement for controlled replay, chart analysis,
+  reviewed paper fills, and Stop. Passed. Three fixture fills ended with
+  cash 1,025, zero shares and realized P&L 25. Duplicate apply and reviewer
+  veto added no fill. All disposable processes stopped. The result checks the
+  existing workflow, with constructed prices and stubbed model replies.
+
+Recommended next work begins with a versioned historical SMA baseline and
+frozen daily inputs, followed by a read-only breakout comparison, deterministic
+risk rules, assistant evidence tools and broader stock coverage. A longer
+point-in-time dataset and benchmarks are necessary for meaningful filter
+evaluation. No app, market data, dependency manifest, or lockfile edits.
+No external provider calls or commit.
+
+## Book-informed Part 4.2 scope · November 17, 2026
+
+Prompt 116 supplies the Part 4.2 indicators, simulated accounting,
+historical backtest, verification and submission rubric. Read the current
+handoff, Git status, checked-in assignment summary, swing research
+specification, workflow and test coverage. The linked Canvas overview
+was inaccessible through the browser tool. Used the supplied requirements
+and local assignment summary.
+
+`PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_indicators backend.test_paper backend.test_pnl`
+expected the existing reference SMA, crossover, accounting, replay-prefix
+and persistence checks to pass. Observed 17 passes. The existing stock
+workstation SmokeTest passed in prompt 115. Neither check establishes
+historical strategy performance.
+
+Proposed Part 4.2 scope is a frozen completed-daily-bar SMA crossover
+backtest and explainable orders, fills, ledger and equity curve. Grimes's
+trade review supplies the trigger, failure and exit evidence. An
+O'Neil-inspired extension limit can be one separately named optional
+experiment after the baseline passes. The previously inspected AAPL
+cache has 25 completed weeks and cannot initialize the 30-week Weinstein
+variant. Full CAN SLIM, Elliott Wave, and options are deferred. No
+implementation, app restart, dependency changes, backtest result,
+submission upload, or commit.
+
+## Daily 200-period history and assistant plan · November 17, 2026
+
+Prompt 117 changes the proposed weekly regime overlay to daily SMA 200
+and EMA 200 and asks for an explicit implementation order that includes
+the Desk Assistant and Decision API. Checked Git, handoff, cached bars,
+existing daily history limits, indicator registry, chart presets, decision
+payload and agent tools. Interpreter was /usr/bin/python 3.14.8 with
+yfinance 1.8.0, Node v26.13.0 and npm 11.20.0. The prior AAPL chart cache
+contained 128 daily bars and the current chart merge defaults to three
+months. The 200-candle SMA and EMA calculations and presets already exist.
+
+Fetched public daily AAPL history with the existing yfinance package:
+`yf.Ticker('AAPL').history(start='2023-11-17', end='2026-11-18', interval='1d', auto_adjust=False, actions=True, prepost=False, timeout=15)`.
+The end was exclusive. The first strict validation failed. A diagnostic
+refetch returned 752 rows and found one invalid row, Nov 17, with missing
+close and adjusted close. No imputation was performed. Reused the
+diagnostic response, limited it through Nov 16, and verified exact closed
+session coverage with `exchange_sessions('NASDAQ', ...)`, valid OHLCV with
+the provider validator, unique dates, and finite adjustment/action fields.
+Saved 751 rows (Nov 17, 2023 to Nov 16, 2026), 12 dividend events and zero
+split events to the new Git-ignored
+`backend/data/backtest-aapl-1d-2026-11-16.history.json`. The saved data
+includes provider as-returned OHLCV, adjusted close and action fields.
+SHA-256 is
+`340ffdb8ed3685fd75f7192542b37b1bfd349a427e1de3917e60570d18396b99`.
+The old cache and Yahoo receipts were not edited by this task.
+
+VERIFY used `PYTHONPATH=backend/.packages /usr/bin/python -` with
+`backend.indicators.indicator_rows` to compare the first and latest SMA 200
+and EMA 200 outputs to a separate Decimal calculation. Exact dataset hash,
+199 warm-up gaps, shared SMA seed, latest values, and an appended unfinished
+bar test all passed. First 200-day values were on 2024-09-05, with 551 bars
+after the initial 200. No source edit, dependency change, runtime restart,
+automated historical execution, model call, or commit.
+
+Planned follow-up starts with a local daily-history loader and shared
+as-of strategy snapshot. It uses the current 20/50 SMA crossover as the
+baseline and evaluates SMA 200 and EMA 200 as independent long-entry
+filters, leaving crossover exits in place. A thin offline backtest supplies
+run IDs, trades and ledger metrics. A strategy-specific Decision API mode
+and Desk Assistant tools consume identical frozen facts, with existing
+chart-only behavior and paper-account restrictions preserved. Then verify
+the three variants and the complete browser/accounting/assistant flow with
+fixtures. New programmatic wiring and strategy performance remain pending.
+
+## Daily crossover backtest and shared assessment evidence
+
+Prompt 118 authorized building the daily 20/50 baseline and testing SMA 200
+and EMA 200 independently. Reused Omarchy, /usr/bin/python 3.14.8,
+backend/.packages, Node 26.13.0, npm 11.20.0, the installed Agents SDK and
+the existing locked browser tools. No installation or manifest/lockfile edit.
+The [751-session reproducible input](../backend/data/research/aapl-daily-2026-11-16.json)
+matches the locally staged Yahoo file byte for byte, SHA-256
+`340ffdb8ed3685fd75f7192542b37b1bfd349a427e1de3917e60570d18396b99`.
+The calculation uses provider OHLC as returned with auto-adjust disabled,
+and archives dividend/action fields separately. Rule version is `daily-sma20-50-v1`.
+
+All three runs start with $1,000 and zero shares on September 5, 2024.
+Signals use completed daily closes and enter or exit one share at the next
+regular session open. The gate requires a strictly higher close only on a new
+upward crossover. An unaffordable fill is rejected and a last-bar order stays
+pending. Results are price-only, with zero costs, slippage or dividend credit.
+Each run ended November 16, 2026 holding one share with $20.25 unrealized.
+
+| Variant | Fills | Skipped entries | Final cash | Realized P&L | Final equity | Return | Max daily-close drawdown |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 20/50 baseline | 15 | 0 | $690.92 | $23.45 | $1,043.70 | 4.37% | 6.28% |
+| SMA 200 | 11 | 2 | $651.02 | −$16.45 | $1,003.80 | 0.38% | 7.16% |
+| EMA 200 | 11 | 2 | $651.02 | −$16.45 | $1,003.80 | 0.38% | 7.16% |
+
+Both filters skipped June 6 and July 11, 2025. A known-price fixture puts the
+close between the two thresholds, proving they can produce different orders.
+These results describe one revised vendor-history sample. They do not establish
+forward returns, real execution prices, or performance on another ticker.
+The frozen history needs a new validated release for sessions after November 16.
+
+### Commands and observed results
+
+- `sha256sum backend/data/backtest-aapl-1d-2026-11-16.history.json` and a loader read with `PYTHONPATH=backend/.packages /usr/bin/python` verified the digest and 751 completed sessions. Resumption check `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_indicators backend.test_pnl` passed 10 tests.
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_daily_strategy` passed four reference, prefix, filter, accounting and cutoff tests. Compared every available average and crossover with pandas rolling means and seeded pandas EWM. An independent one-bar-at-a-time rolling calculation matched. Rebuilding multiple prefixes reproduced the same facts. Tested holiday early close, forming/incomplete inputs, missing sessions, expired coverage, next-open gaps and run-ending pending orders.
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest discover -s backend -p 'test_*.py'` passed all 124 tests, including earlier-assessment scope, filtering future chat evidence, legacy paper/decision behavior and weighted-average accounting. The first sandboxed async commands stalled. The same tests passed with local socket access and the two stalled processes were stopped.
+- `npm --prefix frontend run build` passed with 35 modules.
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m scripts.desk_chat_smoke --strategy --output /tmp/arbitrade-118-final` passed in Chromium with the real Vue UI, FastAPI, SDK runner, controlled model and controlled Decisions provider. Configured the same command for the existing push workflow using its Playwright browser and the existing pinned SDK manifest. Local socket access was required to launch the disposable app.
+- The browser selected the June 6 SMA-filtered row. SMA 20 was 204.2710, SMA 50 was 203.6794, close was 203.92, SMA 200 was 225.1178 and EMA 200 was 215.5895. The rule produced WAIT. A general question ran only rule lookup. A skipped-entry question ran only `read_strategy_facts`. A new chat assessment ran `assess_visible_chart`. The selected chart facts, backtest response, raw SDK tool result, direct Decisions provider input and persisted decision facts matched field for field. Provider-bound PNG digests matched SQLite images. A deliberate model BUY at 65% appeared as a disagreement. The timeout returned an error and no model choice or probability. Reusing the chart image for the wrong variant returned HTTP 422 before a provider call. Switching to the baseline on the same date displayed BUY. A November 10 intraday chart identified the November 9 completed daily facts. The simulator and assistant left all paper records intact.
+- The first browser pass exposed a detached historical chart canvas. Its 58×30 capture was rejected. Added stable Vue keys and verified a full chart image. Fixed narrow-screen grid overflow and rechecked at 390 px. The final run stopped the disposable services. [Browser screenshot](evidence/daily-strategy-2026-11-17/strategy.png) and [machine-readable evidence](evidence/daily-strategy-2026-11-17/strategy.json).
+- `./scripts/smoke-test --output /tmp/arbitrade-118-workstation` passed the existing browser and SQLite paper accounting example. Final cash was $1,025, realized P&L was $25, position was flat and duplicate/vetoed actions created no extra fills. `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m scripts.desk_chat_smoke --conversation --output /tmp/arbitrade-118-classroom` passed the existing image-only conversation regression, including LONG at 72%, then SHORT at 64%, and New chat.
+- The retained workstation reported inactive paper automation. Restarted the verified backend with its prior command and environment. Vite on 5173 proxied the updated API on 8000 and returned HTTP 200, 751 bars and the expected last close. No live OpenAI call was made for this new strategy payload. Hosted Actions remain unverified before the reviewed commit and push.
+
+## Dashboard startup verification · November 17, 2026
+
+Reused prompt 106 for the repeated startup request. Inspected Git status,
+README Run, the handoff, and existing dependency manifests and lockfile.
+Linux, /usr/bin/python 3.14.8, Node v26.13.0 and npm 11.20.0 were available.
+FastAPI 0.156.8, Uvicorn 0.54.0, yfinance 1.8.0, Agents and exchange calendars
+imported from the existing Python environment. No installation was needed.
+
+Sandbox loopback probes failed and `ss` could not open netlink. Host-side
+`ss -ltnp '( sport = :8000 or sport = :5173 )'` confirmed existing Arbitrade
+processes in the expected working directories. Direct and proxied
+`curl -fsS http://127.0.0.1:<port>/api/health` both returned the expected
+`{"status":"ok"}`. Dashboard HTML contained the title Arbitrade. Paper
+account and automation returned HTTP 200 and automation was disabled.
+All three daily backtest variants returned 751 session facts through the
+Vite proxy. A Python WebSocket client received an AAPL 1m snapshot with 256
+candles. The latest regular-session candle was November 17 at 3:59 p.m.
+Eastern. At the check, the upstream feed reported stale (about 75 seconds
+since the last source timestamp), with historical data ready.
+
+`scripts/smoke-test --output /tmp/arbitrade-startup-20261117` expected the
+offline Chromium and SQLite audit to pass. Observed PASS for chart drawings,
+replay and indicators, stubbed chart analysis, decision persistence, and
+simulated automation and ledger reconciliation. The runner stopped its
+disposable services. Live OpenAI and physical audio were outside this check.
+
+The in-app browser was unavailable to automation. Codex queued the preview,
+and host `xdg-open http://127.0.0.1:5173/` exited successfully. The desktop
+tab itself could not be inspected. Existing app services were left running.
+
+## Live ticker field · November 17, 2026
+
+[Prompt 119](../prompts/119-live-ticker-field.md) replaces the fixed AAPL
+selection in the Live chart with a compact text field. Enter or Go applies a
+normalized U.S. stock ticker. The chart resets its prior data and subscribes
+to the new symbol at the current timeframe. Separate history caches and
+recording filters keep symbols isolated. Returning from Replay restores the
+Live ticker. Existing paper workflows and the frozen strategy data use AAPL.
+Changing symbol stops an active automation run under its existing
+chart-selection rule.
+
+Git reported a repository on `main` with pre-existing changes. The recorded
+dashboard health probes on ports 8000 and 5173 could not connect in the
+sandbox. Verified Omarchy 4.5.0, `/usr/bin/python` 3.14.8 with the system
+prefix, Node v26.13.0, npm 11.20.0, Chromium and the existing installed
+FastAPI 0.156.8, yfinance 1.8.0 and Uvicorn 0.54.0. Reused the local package
+directory and frontend dependencies. Package manifests and lockfiles were
+inspected and left as found.
+
+| Command | Expected result | Observed result |
+| --- | --- | --- |
+| `npm --prefix frontend run build` | Production build compiles | Passed, 35 modules transformed |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_live backend.test_provider_history backend.test_daily_strategy backend.test_yahoo_stream` | Per-symbol recording and history, AAPL regressions and strategy checks pass | Passed, 19 tests. Pandas emitted its timezone conversion deprecation warning |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-ticker-smoke` | Start isolated FastAPI and Vite, use Chromium to switch symbols, and compare visible prices with saved ticker history | Initial sandbox attempt hit socket EPERM. Rerun with local socket access passed. A malformed entry kept AAPL. Lowercase MSFT loaded two stored candles with closes of 400 and 403 and observed volume of 15 on the second. The chart preserved MSFT at 5m, loaded its saved Replay receipts, restored MSFT in Live, and switched back to AAPL via Go. No browser errors. Services stopped and disposable data removed |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke --output /tmp/arbitrade-ticker-recorded-volume` | Existing frozen Yahoo SQL, HTTP, WebSocket and visible chart volume agree | First launch found the ticker SmokeTest still holding the shared ports. Retried after cleanup and passed using the saved AAPL capture. Services stopped and disposable data removed |
+| `git diff --check` | Diff has no whitespace errors | Passed |
+
+The MSFT browser check used constructed data. A fresh Yahoo quote and provider
+history download for the new ticker remain unverified. The volume regression
+used saved Yahoo data. No dependencies were installed and no commit was made.
+
+## Multi-ticker manual paper trading · November 17, 2026
+
+[Prompt 120](../prompts/120-multi-ticker-manual-paper-trading.md) enables
+manual trading for supported USD U.S. stocks. The broker matches quotes and
+completed one-minute valuations to each ticker. The chart and the live
+paper account share ticker subscriptions. Persisted pending orders and open
+positions keep their feeds active while the backend runs. FastAPI restores
+their subscriptions on startup and processes receipts without a browser.
+Replay uses a separate account restricted to its saved ticker. Manual
+treatment of multiple symbols does not extend automation, which uses AAPL.
+
+Git reported a repository on `main` with pre-existing work. Reused Omarchy
+4.5.0, `/usr/bin/python` 3.14.8 with matching system prefixes, FastAPI 0.156.8,
+Uvicorn 0.54.0, yfinance 1.8.0, Node 26.13.0, npm 11.20.0, Vite 8.3.7 and
+Chromium 155.0.8059.84. Inspected installed packages, manifests and the
+existing lockfile. No dependency edits or installations.
+
+| Command | Expected result | Observed result |
+| --- | --- | --- |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_live.LiveTests.test_alternate_symbol_records_and_subscribes_independently` | Prior handoff's alternate-symbol check still passes | Passed before edits |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m unittest discover -s backend` | Broker, P&L, calendar, indicator, Replay and automation regressions pass | 126 passed with host execution. The initial focused sandbox run stalled in async executor shutdown and was interrupted. The first discovery invocation with `-t .` failed because the backend is a namespace package |
+| `npm --prefix frontend run build` | Vue production build | Passed, 35 modules transformed |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.multi_ticker_paper_smoke --output /tmp/arbitrade-multi-ticker-paper` | Isolated FastAPI/Vite and Chromium verify two-ticker manual execution, retention, P&L, Replay and SQLite receipts | Passed with constructed Yahoo transport. Startup opened the feed for a persisted IBM order. With no MSFT chart or open browser page, AAPL and non-USD MSFT quotes left the MSFT buy pending. The USD MSFT quote filled 2 at 400 and the next completed MSFT mark at 410 produced 20 unrealized. AAPL independently marked at 105 with 5 unrealized. After the MSFT partial sale and next mark, visible P&L was 15 realized, 10 unrealized. Closing yielded 27 realized and the unused MSFT subscription closed. MSFT Replay rejected an AAPL order and used its own next eligible receipt. Disposable services stopped |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.paper_smoke --output /tmp/arbitrade-multi-ticker-paper-regression` | Preserve AAPL execution, retry, actual backend restart, replay account isolation and responsive Trade layout | Passed in Chromium and SQLite. Exactly three AAPL fills and cash 1,025 persisted across restart. Services stopped |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke --output /tmp/arbitrade-multi-ticker-recorded-volume` | Preserve saved Yahoo volume parity | Passed for frozen AAPL receipts through SQL, HTTP, WebSocket and chart. Services stopped |
+| `git diff --check` | No whitespace errors | Passed |
+
+The browser checks used disposable storage. No production ledger or market
+observations were edited during verification. No new live Yahoo multi-ticker
+fill was verified. Changes are ready for student review before committing.
+
+## Restart after multi-ticker paper trading · November 17, 2026
+
+Reused prompt 58. Inspected Git and handoff. The recommended broker and P&L
+check, `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_paper backend.test_pnl`,
+expected a clean exit. Observed all 13 tests passed, with pandas deprecation
+warnings. Host probes confirmed the prior service listeners on 8000 and 5173.
+The browser preview address on port 59278 did not accept connections on the
+project host. Confirmed the two listeners belonged to Arbitrade and paper
+automation was inactive before sending SIGTERM and relaunching via README Run.
+
+Direct and proxied GET `/api/health` returned HTTP 200 and status ok.
+GET / contained the Arbitrade title. Proxied paper account and daily backtest
+returned HTTP 200. The chart WebSocket returned 256 AAPL one-minute candles,
+with Yahoo waiting at the time of the check. Fresh quotes and visible
+rendering in the queued Codex preview remain unverified. Services left
+running. Runtime logs are in /tmp/arbitrade-restart-id1welxo. No app edits,
+dependency changes, or commit.
+
+## Backtest layout research · November 17, 2026
+
+Prompt 120 requested platform research and redesign priorities. Inspected DailyBacktest, the saved browser screenshot and the strategy engine. Read the official TrendSpider, TradingView and QuantConnect guides. [Research, proposed copy and first-use test](backtest-layout-research.md). Recomputed June 6 for all three variants using backend.daily_strategy.backtest. Baseline filled one share on June 9 at $204.39. Both filters stayed flat. The proposed interactive preview uses these results. A local Node VM check exercised the signal disclosure and both filter transitions. Human usability and browser rendering of the preview remain untested.
+
+The command `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_daily_strategy backend.test_live.LiveTests.test_alternate_symbol_records_and_subscribes_independently` passed five tests. This research changed documentation only in the repository. No package installation, hosted AI call, production UI edit or commit.
+
+## Signal review and trading-day outcomes
+
+November 17, 2026. Prompt 121 requested the signal-review layout and a way to
+inspect subsequent prices while keeping future candles out of both AI paths.
+The test used the frozen AAPL sample and disposable services and storage.
+
+| Command | Expected | Observed |
+| --- | --- | --- |
+| `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_daily_strategy` | Daily strategy reference, accounting, history and cutoff checks pass | Four tests passed |
+| `npm --prefix frontend run build` | Production frontend compiles | Build passed, 37 modules transformed |
+| `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m scripts.desk_chat_smoke --strategy --output /tmp/arbitrade-121-browser` | Chromium can review a signal, inspect outcomes, and exercise both AI paths with the original cutoff | The sandbox initially denied the local socket. Rerunning with local service access passed the browser, provider-input and SQLite audit checks. |
+
+On June 6, 2025 at 20:00 UTC, the AAPL 20-day SMA ($204.27) crossed above the
+50-day SMA ($203.68). The close ($203.92) was below the 200-day SMA ($225.12)
+and the 200-day EMA ($215.59). Both filtered variants waited. Switching to the
+baseline on that date showed BUY. Next signal selected the exit, and Previous
+signal returned to the June 6 entry.
+
+| Trading days later | Session | Close | Price change from signal | Filtered account change | Baseline one-share gain/loss |
+| --- | --- | ---: | ---: | ---: | ---: |
+| 1 | June 9 | $201.45 | −1.21% | $0.00 | −$2.94 |
+| 5 | June 13 | $196.45 | −3.66% | $0.00 | −$7.94 |
+| 20 | July 8 | $210.01 | +2.99% | $0.00 | −$7.19 |
+
+The baseline bought at the June 9 open ($204.39), then sold at the June 17
+open ($197.20). Its day-20 result reflects that completed trade. The browser
+matched all three dates, prices, percentage changes, simulated account changes
+and per-trade results, and plotted the chosen horizon. At the penultimate
+session it marked 5 and 20 days as beyond saved history. At a 390-pixel
+viewport the page fit the screen.
+
+With July 8 visible, the browser sent the same 90-candle PNG bytes to the
+strategy lookup, direct Decision API and chat assessment as it had sent before
+opening the outcome view. The last candle and the server-computed facts still
+identified June 6. Every controlled provider packet and PNG digest matched its
+saved decision audit. The UI displayed the controlled provider's BUY at 65%
+alongside the rule's WAIT and handled a subsequent controlled timeout. A
+mismatched chart and variant returned HTTP 422. Paper orders and fills stayed
+unchanged.
+
+The existing Vite workstation served the new frontend module and helper. Its
+proxied health endpoint returned HTTP 200. The test used the installed SDKs
+and controlled providers. A fresh hosted OpenAI response and a hosted GitHub
+Actions run were not exercised for this change.
+
+[Signal review](evidence/signal-review-2026-11-17/signal-review.png) ·
+[Later candles and outcomes](evidence/signal-review-2026-11-17/signal-outcomes.png) ·
+[Observed values](evidence/signal-review-2026-11-17/strategy.json)
+
+## Desk Assistant context and trade timeline
+
+November 17, 2026. The earlier chat displayed previous turns in Vue but sent
+only the newest question to the SDK. The conversation ID retrieved successful
+assessments and did not retrieve ordinary questions and replies. Checked the
+installed SDK runner's message-list input and the official OpenAI documentation
+on conversation state. [OpenAI conversation state](https://developers.openai.com/api/docs/guides/conversation-state)
+
+| Check | Observed result |
+| --- | --- |
+| `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest -v backend.test_desk_agent backend.test_daily_strategy backend.test_classroom_decisions` | 14 passed with local socket access. Initial sandboxed async runs stalled and were stopped. The tests checked prior message roles and content, isolated rule variants, and rewinding to an earlier chart. |
+| `npm --prefix frontend run build` | Production bundle built with 37 modules. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m scripts.desk_chat_smoke --strategy --output /tmp/arbitrade-122-browser` | Chromium reproduced the two-turn follow-up, dragged the price chart, reached both 50-session boundaries with the slider, and matched the markers and fill timeline. Open, closed, and skipped trades, the partial window at dataset end, mobile width, and cutoff-only AI capture all passed. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m scripts.desk_chat_smoke --conversation --output /tmp/arbitrade-122-conversation` | Ordinary replay chat still compared separate 15:00 and 15:01 UTC assessments. New chat cleared the previous assessment. |
+
+For the June 6 AAPL baseline buy, the controlled SDK model received both the
+prior question about a modest return and its answer when the user sent “this
+particular signal”. Both turns called only `read_strategy_facts` and the
+explanation matched the 20-day average of $204.27 and the 50-day average of
+$203.68. New chat retained the selection and sent only its new question.
+
+The June 6 20:00 UTC signal, June 9 13:30 UTC entry at $204.39 and June 17
+13:30 UTC exit at $197.20 appeared in order on the price chart. The closed
+one-share loss was $7.19. Selecting the 200-day SMA filter on June 6 showed
+WAIT and no entry or exit. The latest still-open position showed no exit
+fill. At the penultimate session, only one later candle was available.
+
+Scrolling to the 50th later candle left the cutoff-only image byte-identical.
+The controlled Decision provider inputs and stored audit images and facts
+matched. The runs left simulated orders and fills unchanged and shut down
+their disposable services. The production backend on port 8000 was gracefully
+restarted after checking that paper automation had no run. The existing Vite
+workstation's proxied health check returned HTTP 200. A separate read-only
+Chromium session on port 5173 selected the June 6 baseline, opened its chat,
+and found the correct session label, all three vertical markers and the June
+17 exit time in the running workstation. No packages changed.
+Live OpenAI wording and a hosted CI run were not tested for this change.
+[Signal, fills and assistant follow-up](evidence/desk-trade-window-2026-11-17/trade-window.png)
+
+## Dashboard startup · November 19, 2026
+
+Reused [prompt 106](../prompts/106-start-server-open-everything.md). Checked
+Git status, the startup instructions, dependency manifests and lockfile, and
+the current handoff. Existing changes were present. Omarchy 4.5.0 has
+`/usr/bin/python` 3.14.8, Node 26.13.0, and npm 11.20.0. The initial Python
+package probe without the documented path could not find yfinance.
+With `PYTHONPATH=backend/.packages`, the package probe found FastAPI 0.156.8,
+Uvicorn 0.54.0, yfinance 1.8.0, OpenAI 3.52.0, and exchange-calendars 4.13.2,
+and importing `backend.main:app` succeeded.
+`./frontend/node_modules/.bin/vite --version` reported Vite 8.3.7.
+The existing tools and packages were sufficient.
+
+The sandbox denied netlink access and its loopback probes failed. Host
+`ss -ltnp '( sport = :8000 or sport = :5173 )'` found both listeners, with
+working directories matching the backend project root and frontend directory.
+Host `curl -fsS` requests to `/api/health` on both ports returned the expected
+`{"status":"ok"}`. Both processes were left running. The backend `/docs`
+served the expected Arbitrade Swagger UI HTML. Host `xdg-open` returned zero
+for `http://127.0.0.1:8000/docs` and `http://127.0.0.1:5173/`.
+
+A host `node --input-type=module` check used the installed Playwright and
+Chromium against Vite. The AAPL 1m heading and chart canvas were visible,
+and the WebSocket delivered 256 candles with the feed reporting live and
+historical coverage ready. Clicking Backtest displayed the review session
+control and returned 751 session facts. Clicking Trade displayed the panel
+and its paper account endpoint returned HTTP 200. The validation browser
+closed with no page errors. The desktop tabs were launched separately and
+were not inspected by Playwright.
+
+`PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_desk_agent backend.test_daily_strategy`
+expected the focused resumption checks to pass. Observed nine passes. The
+full isolated workstation SmokeTest, live AI requests and trade execution
+were outside this startup check. No application or dependency edits.
+
+## Eastern Time and chart cleanup · November 19, 2026
+
+[Prompt 123](../prompts/123-eastern-time-and-chart-cleanup.md). The desk now
+formats display timestamps in `America/New_York`. Main, frozen and backtest
+charts use the zone for ticks and crosshairs. History navigation groups Eastern
+dates. Replay pre-fills bounds with explicit Eastern offsets and preserves
+receipt microseconds. API, SQLite and raw audit JSON retain UTC timestamps.
+The chart footer no longer includes the latest candle row, Inspect candle
+picker or Candle details disclosure. Plot hover shows OHLC and known volume,
+click pins a candle, and Latest candles resumes following the latest data.
+
+- Environment check found Omarchy 4.5.0, `/usr/bin/python` 3.14.8, Node 26.13.0,
+  npm 11.20.0 and installed Chromium 155.0.8059.84. The default Python import
+  check could not find `exchange_calendars` until using the existing
+  `PYTHONPATH=backend/.packages`. With it, the imports passed for FastAPI
+  0.156.8, Uvicorn 0.54.0 and exchange-calendars 4.13.2. Existing lockfile and
+  installed Vue, Vite, Lightweight Charts and Playwright were reused.
+- A Node assertion check passed all six cases. It compared summer and winter
+  09:30 opens, a summer axis tick, an Eastern date crossing midnight UTC and
+  both repeated 01:30 times during the fall DST transition. Both offsets
+  kept all six fractional digits. `npm --prefix frontend run build`,
+  `node --check` for the edited browser drivers and `git diff --check` passed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.recorded_volume_smoke
+  --output /tmp/arbitrade-et-volume` passed. A browser set to Pacific Time
+  pinned the 10:17 ET candle and showed the SQL-verified 67,670-share delta
+  and matching close. Visually checked the screenshot for Eastern axis ticks
+  and crosshair and the shorter footer. The first sandboxed attempt could
+  not create a local socket. Running with local socket access passed and
+  cleaned up. This used the frozen capture.
+- `ARBITRADE_BACKEND_PORT=18153 ARBITRADE_FRONTEND_PORT=15253
+  PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke
+  --output /tmp/arbitrade-et-ui` passed all eight timeframes, exact hover
+  OHLCV, Eastern labels, minute revisions, mobile rendering and feed recovery.
+- `/usr/bin/python -m scripts.replay_smoke --constructed
+  --output /tmp/arbitrade-et-replay` passed two browser replays with Eastern
+  input bounds, receipt times and intact SQLite counts.
+- `/usr/bin/python -m scripts.history_smoke --output /tmp/arbitrade-et-history`
+  and `/usr/bin/python -m scripts.provider_history_smoke
+  --output /tmp/arbitrade-et-provider-history` passed chart navigation,
+  historical range and ticker checks.
+- `./scripts/smoke-test --output /tmp/arbitrade-et-workstation` passed click
+  pinning, drawings, replay, frozen image review, voice and simulated trades
+  with SQLite verification. `PYTHONPATH=backend/.packages /usr/bin/python
+  -m scripts.desk_chat_smoke --strategy --output /tmp/arbitrade-et-strategy`
+  passed summer entry and exit times, selected-session times, chart capture
+  and audit checks using controlled providers.
+- The existing Omarchy backend and Vite proxy both returned healthy status.
+  Vite served the updated Eastern chart modules. No dependencies changed.
+  Fresh live Yahoo data, real model calls and remote CI were outside these
+  checks. Student review is pending.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.pnl_smoke
+  --output /tmp/arbitrade-et-pnl` initially failed because two browser
+  assertions still expected UTC in P&L table cells. Updated the assertions
+  and reran the same command with `--output /tmp/arbitrade-et-pnl-retry`.
+  Eastern event and price times, five ledger rows and three fills matched
+  expectations through a fixture backend restart. Test services were stopped.
+- The workstation rerun at `/tmp/arbitrade-et-workstation-final` passed after
+  adding an assertion for the voice decision cutoff. The strategy rerun first
+  failed because its controlled model expected a UTC timestamp in a prior
+  reply. Updated the fixture to expect Eastern Time. The next attempt was
+  interrupted by a Vite reload during the test. The stable rerun at
+  `/tmp/arbitrade-et-strategy-stable` passed.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest -v
+  backend.test_desk_agent backend.test_voice` passed nine tests with local
+  socket access. The original sandboxed test process produced no output and
+  was stopped. The updated Desk Assistant and voice model instructions apply
+  on the retained backend's next restart.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke
+  --conversation --output /tmp/arbitrade-et-chat` found an assertion using
+  the raw UTC hour for the formatted capture label. Updated the browser
+  expectation and reran with `--output /tmp/arbitrade-et-chat-retry`.
+  Both compared times displayed in ET, the source timestamps matched the
+  captured instants and New chat cleared the previous assessment.
+
+## Full-height chart and volume scrolling · November 19, 2026
+
+[Prompt 124](../prompts/124-full-height-chart-and-volume-scroll.md). The
+main chart fills the workspace beneath the controls and active study legend.
+The date navigation and feed status strip were removed. The Indicators tab
+ends with Feed details, including source and transport status, history cache
+messages and the health check. The lower pane handles its own vertical wheel
+input over the bars and axis. It scales from zero while keeping the price
+pane fixed. Horizontal panning and pinch zoom share the time scale.
+
+- Environment check confirmed Omarchy 4.5.0, `/usr/bin/python` 3.14.8,
+  FastAPI 0.156.8, Uvicorn 0.54.0, exchange-calendars 4.13.2 in
+  `backend/.packages`, Node 26.13.0, npm 11.20.0 and Chromium 155.0.8059.84.
+  Reused installed frontend packages and the existing dependency manifests.
+  `npm --prefix frontend run build` and `git diff --check` passed.
+- `ARBITRADE_BACKEND_PORT=18153 ARBITRADE_FRONTEND_PORT=15253
+  PYTHONPATH=backend/.packages /usr/bin/python -m scripts.ui_smoke
+  --output /tmp/arbitrade-full-chart-ui` passed. At 1280×1000 desktop and
+  390×844 mobile with the sidebar collapsed, the chart ended at the viewport
+  bottom. Checked screenshots at both sizes. Feed details was last in
+  Indicators and its connection check passed. All eight timeframes and
+  connection recovery passed.
+- `/usr/bin/python -m scripts.history_smoke
+  --output /tmp/arbitrade-full-chart-history` passed. Horizontal panning
+  loaded older history. Scrolling over the volume plot reduced the rendered
+  histogram height from 162px to 129px with a 0px baseline gap, unchanged
+  candle height, and an unchanged time range. Scrolling the volume axis and
+  dragging/resetting it also passed. Repeated wheel movement kept the plot
+  width fixed at 988px. The price axis, zoom, drag, ticker and replay checks
+  passed.
+- `/usr/bin/python -m scripts.recorded_volume_smoke
+  --output /tmp/arbitrade-full-chart-volume` passed. The frozen Yahoo
+  capture's SQL delta matched the HTTP and WebSocket candle and its visible
+  hover. The capture was loaded into disposable storage.
+- `/usr/bin/python -m scripts.provider_history_smoke
+  --output /tmp/arbitrade-full-chart-provider` passed. Older candles were
+  still reachable and the retry/cache status appeared in Feed details.
+  `scripts.history_smoke.verify` with `scripts/chart_latency_smoke.mjs`
+  passed at `/tmp/arbitrade-full-chart-latency`, retaining all 360 loaded
+  candles through a forced disconnect and reconnect.
+- `./scripts/smoke-test --output /tmp/arbitrade-full-chart-workstation`
+  passed chart drawings and replay, frozen image review, voice, simulated
+  trades and SQLite checks. Test services were stopped.
+- The retained Omarchy backend and frontend health checks passed. The
+  running Vite instance served the moved Feed details component. No new
+  live Yahoo observation, real model call or remote CI run was verified
+  for this change. Student review is pending.
+- The named-indicator browser check initially hit Lightweight Charts'
+  rapid-click suppression when pinning two different candles in succession.
+  The browser helper now retries a consumed click and checks the selected
+  timestamp. `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.indicator_smoke
+  --output /tmp/arbitrade-full-chart-indicators-retry` passed the indicator,
+  independent rail scrolling, replay and mobile checks.
+- The SMA browser check first found an ambiguous panel selector and a
+  second run hit a pointer coordinate before the replay plot finished
+  resizing. Scoped the selector to Signals and made the browser helper
+  wait for the requested candle under the pointer. `PYTHONPATH=backend/.packages
+  /usr/bin/python -m scripts.sma_smoke --output /tmp/arbitrade-full-chart-sma-stable`
+  passed the replay prefixes, both crossover selections, mobile view,
+  timeframe change and SQLite immutability check.
+- The final UI SmokeTest rerun at `/tmp/arbitrade-full-chart-ui-final`
+  passed after the pointer-driver changes and cleaned up its services.
+
+## Part 4.2 submission readiness · November 19, 2026
+
+[Prompt 125](../prompts/125-part-42-submission-readiness.md) asks what remains
+before submission. Inspected the assignment against the working tree, existing
+report and demo, source and evidence, and push workflow. Reused Omarchy,
+`/usr/bin/python` 3.14.8, `backend/.packages`, Node 26.13.0, npm 11.20.0 and
+the existing Chromium and locked frontend packages.
+
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_daily_strategy backend.test_indicators backend.test_pnl backend.test_paper backend.test_automation`
+  passed 32 focused tests with local socket access. The sandboxed invocation
+  stalled after 22 test markers and was stopped. The suite includes pandas
+  reference, online calculation and historical-prefix parity, candle cutoffs,
+  known-price fills and accounting, and guarded paper automation.
+- `./scripts/smoke-test --output /tmp/arbitrade-part42-audit-workstation-retry`
+  passed in Chromium with controlled market data and stubbed analyst/reviewer.
+  The browser and SQLite agreed on $1,025 cash, zero shares, $25 realized P&L
+  and $0 unrealized after the three fills. The earlier partial sale showed
+  $10 realized and $30 unrealized. The first attempt failed at socket creation
+  inside the sandbox. The successful retry stopped its test services.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.sma_smoke --output /tmp/arbitrade-part42-audit-sma`
+  passed the seven-row hand reference, all replay prefixes, and two visible
+  crossover markers. The forming candle withheld the down signal until it
+  ended. The test verified database immutability and cleaned up its services.
+- `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m scripts.desk_chat_smoke --strategy --output /tmp/arbitrade-part42-audit-strategy`
+  passed the historical signal/entry/exit, trade outcomes, cutoff evidence,
+  saved decisions and unchanged paper-ledger checks with controlled providers.
+- The GitHub connector confirmed `jclee2044/arbitrade` is public. `gh run list --repo jclee2044/arbitrade --workflow smoke-test.yml --event push --limit 4 --json headSha,conclusion,status,url,createdAt`
+  initially failed in the network sandbox. The read-only retry found a
+  [successful push run](https://github.com/jclee2044/arbitrade/actions/runs/43979780251)
+  for `e40aa4de9829091bd8e9ea85c90fecfc22e26b4e`. That run predates the working
+  tree's daily reference and backtest browser workflow steps.
+
+Outstanding: review the Part 4.2 commit scope, publish the application and
+supporting evidence, verify a successful push run for the submitted version,
+prepare the Part 4.2 `report.md`, and link a playable 30–60-second Part 4.2
+video. The current `report.md` and checked-in demo are for Part 4.1. The final
+report needs the GitHub URL, full submitted SHA, and accessible evidence and
+video links. Canvas receives only `report.md`. Application code, dependencies,
+the existing report and Git history were untouched during this audit.
+
+## Three-tier latency assessment · November 19, 2026
+
+For [prompt 126](../prompts/126-three-tier-latency-assessment.md), inspected
+the lecture, chart snapshot reuse, provider history, SQLite recording, daily
+simulation and Vue tab lifetime. `git status --short --branch` showed existing
+tracked and untracked work on main. The November 15 local WebSocket timings
+above are historical measurements and exclude rendering.
+
+- On Omarchy, `node -v` returned v26.13.0. With
+  `PYTHONPATH=backend/.packages /usr/bin/python` (3.14.8), checked
+  `importlib.util.find_spec` for pandas, pyarrow, fastparquet, duckdb and
+  polars. Only pandas was found. No installation or manifest change.
+- `PYTHONPATH=backend/.packages /usr/bin/python -m unittest backend.test_daily_strategy`
+  was expected to pass. Four tests passed with pandas deprecation warnings.
+- In one fresh Python process using the same path, timed two consecutive
+  `backtest('baseline')` calls with `time.perf_counter()` after module import,
+  then timed `json.dumps(data, separators=(',', ':'), allow_nan=False).encode()`
+  after each call. Expected repeat reuse and the same payload size. Observed
+  builds of 579.2 ms and 0.0 ms (rounded to 0.1 ms), encodes of 6.5 ms and
+  6.2 ms, both 533,343 bytes. This probe excludes HTTP, Vue and chart paint.
+- Proposed first slice is click-to-paint measurement and bounded reuse for
+  common chart switches and Backtest. Proposed next slice is indexed recent
+  bars and a validated read path from older Parquet partitions. New browser
+  latency measurements, archive parity and recovery tests await implementation.
+
+
+## Modular commit review · November 19, 2026
+
+[Prompt 128](../prompts/128-modular-commits-and-push.md) requests modular commits and a GitHub push. The opening inventory contained 114 changed or new files. The proposed series covers swing lessons, multi-ticker market data and paper accounting, the daily strategy backend, the desk agent API, the trading workspace, the assistant and backtest UI, and project records. Review patches use the opening file versions plus this task's records. A concurrent Part 4.2 report draft has its own prompt and log entries.
+
+| Check | Expected | Observed |
+| --- | --- | --- |
+| `git status --short --branch` and `git ls-remote --heads origin main` | Identify the push base | Local and GitHub main both at `e40aa4de9829091bd8e9ea85c90fecfc22e26b4e`. Remote lookup required host network access after sandbox DNS failed. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -W ignore -m unittest backend.test_daily_strategy backend.test_desk_agent backend.test_live backend.test_provider_history scripts.test_swing_knowledge` | Focused suites pass | The sandbox run stalled after four tests and was interrupted. All 24 passed on the host. |
+| `npm --prefix frontend run build` | Frontend bundles compile | Passed for the working tree and for isolated copies of both proposed UI revisions. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.desk_chat_smoke --strategy --output <temporary-output>` | Browser evidence matches stored decisions | Passed with a controlled provider, cutoff-only captures and matching saved facts and image hashes. |
+| `PYTHONPATH=backend/.packages /usr/bin/python -m scripts.multi_ticker_paper_smoke --output <temporary-output>` | Visible positions and fills match SQLite | Passed with constructed quotes, including an MSFT fill with the chart closed, partial sale, close and replay. |
+| `git diff --check` and `git check-ignore report.md` | Clean tracked diff and local-only report | Both passed. |
+
+Student review, committing, pushing and checking the remote SHA are pending at this review checkpoint.

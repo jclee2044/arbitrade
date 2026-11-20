@@ -1,0 +1,1 @@
+go ahead and build this in that order. keep the 20/50 crossover as the baseline, test the 200-day SMA and EMA filters separately, and verify that the chatbot and Decision API use the same facts as the backtest.

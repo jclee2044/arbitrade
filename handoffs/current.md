@@ -1,3 +1,409 @@
+# Modular commit review · November 19, 2026
+
+Arbitrade is the Vue/FastAPI/SQLite workstation at `/home/jlrj/Documents/arbitrade`. [Prompt 128](../prompts/128-modular-commits-and-push.md) requested a modular GitHub push. Seven review patches cover the original 114 paths and this task's records. Separate report-draft edits arrived during preparation. The base is `e40aa4d` on local and remote main. The focused tests, builds and both controlled browser checks passed. See the [verification record](../docs/verification.md#modular-commit-review--november-19-2026).
+
+At this checkpoint, student review is pending. Resume by checking Git status, the remote tip and the reviewed patches before committing or pushing. Keep the separate report task's changes local and preserve the original Yahoo receipts.
+
+# Three-tier latency assessment · November 19, 2026
+
+Arbitrade in `/home/jlrj/Documents/arbitrade` is a Vue/FastAPI/SQLite market
+workstation on Omarchy. [Prompt 126](../prompts/126-three-tier-latency-assessment.md)
+requested scope, difficulty and time estimates. The prompt, this handoff and
+the [verification log](../docs/verification.md#three-tier-latency-assessment--november-19-2026)
+record the assessment. Four daily strategy tests passed and a local backtest
+probe measured about 579 ms for first calculation and below 0.1 ms on reuse.
+Browser latency and the archive design still need end-to-end validation.
+If implementation is chosen, measure chart switches and Backtest tab opens
+first. Resume with Git status and the focused daily strategy check. Keep
+Yahoo receipts immutable and seek student approval for a Parquet dependency
+and review before commit. Application and package files were untouched.
+
+# Part 4.2 submission readiness · November 19, 2026
+
+Reviewed Arbitrade at `/home/jlrj/Documents/arbitrade`, the Vue/FastAPI/SQLite
+workstation, against [Prompt 125](../prompts/125-part-42-submission-readiness.md).
+Recorded commands, access retries and outcomes in the
+[verification log](../docs/verification.md#part-42-submission-readiness--november-19-2026).
+Using `/usr/bin/python` with `backend/.packages`, 32 focused tests and the
+workstation accounting, hand-reference SMA and daily-strategy Chromium checks
+passed. GitHub is public. The successful hosted run covers `e40aa4d` and the
+daily strategy workflow steps are local. Only the prompt, verification log
+and handoff changed. Existing application work and Part 4.1 artifacts remain.
+
+On resumption check Git status and rerun the smallest relevant focused check.
+Next, identify the Part 4.2 commit scope for student review, prepare the Part
+4.2 report and demo, and verify a successful push workflow and working links
+for the submitted SHA. No dependency changes, commit, push or Canvas upload.
+
+# Full-height chart and volume scrolling · November 19, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` runs on Omarchy with Vue,
+FastAPI and SQLite. [Prompt 124](../prompts/124-full-height-chart-and-volume-scroll.md)
+removed the chart date navigation and status strip, moved Feed details to
+the end of Indicators, and expanded the plot to the bottom of the workspace.
+Vertical wheel input over volume scales that pane from zero. Time panning
+and pinch align both panes. Work was in the chart, rail, CSS and chart gesture
+modules plus browser drivers and documentation. No dependency changes.
+
+Chromium passed desktop/mobile height, Feed details and health, history
+paging, price and volume scaling, recorded Yahoo SQL/HTTP/WebSocket/hover,
+and the offline workstation. The running Vite instance served the updated
+UI. See [commands and remaining checks](../docs/verification.md#full-height-chart-and-volume-scrolling--november-19-2026).
+On resumption, inspect Git status, check both local health URLs and rerun
+the history SmokeTest for gestures. Review the diff with the student
+before committing.
+
+# Eastern Time and chart cleanup · November 19, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` runs on Omarchy with FastAPI,
+Vue and SQLite. [Prompt 123](../prompts/123-eastern-time-and-chart-cleanup.md)
+updated chart axes and time labels, replay fields, paper records, backtest
+and AI surfaces to Eastern Time. The main chart footer drops the latest
+candle row, Inspect candle and Candle details. Hover and click remain
+available. API/saved audit records retain UTC. Edited Vue chart and panel
+modules, Desk Assistant and voice instructions, browser drivers, README
+and the design pipeline. Reused the existing dependencies and interpreter.
+
+Browser checks passed for all eight chart timeframes, recorded Yahoo SQL
+and volume, replay, date navigation, paper P&L and the offline workstation.
+See [commands, retries and remaining checks](../docs/verification.md#eastern-time-and-chart-cleanup--november-19-2026).
+The running Vite instance served the updated UI and both health endpoints
+passed. The retained backend will load the updated model instructions on
+its next restart. On resumption, check Git status and both health URLs and
+rerun the recorded volume SmokeTest if verifying the chart. Review the
+diff with the student before committing.
+
+# Dashboard startup · November 19, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` runs on Omarchy with FastAPI,
+Vue, and SQLite. Reused prompt 106. The existing Uvicorn and Vite listeners
+were healthy on ports 8000 and 5173 and were left running. Opened the
+dashboard and FastAPI docs with the host's default browser. A separate
+Chromium check saw 256 AAPL one-minute candles with Yahoo reporting live,
+751 daily backtest session facts, and the Trade panel with a healthy paper
+account response. Nine focused desk-agent and strategy unit tests passed.
+See [commands and remaining checks](../docs/verification.md#dashboard-startup--november-19-2026).
+Only this handoff and the verification log changed. On resumption check
+Git status and both health URLs. The trade timeline and assistant work
+still await student review before committing.
+
+# Desk Assistant context and trade timeline · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` now binds each chat turn to the
+verified session and replays recent eligible question/answer pairs. Prompt
+122 changed the desk agent, local SQLite chat storage, the backtest chart
+and timeline, chat labels and their regression tests. The human review
+covers up to 50 sessions on either side, with decision and fill markers. Both
+AI captures still end at the selected close. Fourteen unit tests, the frontend
+build, and the strategy and replay conversation browser tests passed. The
+retained backend was restarted and its proxied health passed. See [commands,
+example, screenshot and remaining checks](../docs/verification.md#desk-assistant-context-and-trade-timeline).
+Review the layout and changes with the student before committing. No package
+change. Live model wording remains unverified. On resumption read AGENTS.md,
+inspect Git status and rerun the focused SDK and daily strategy tests with
+`/usr/bin/python` and `backend/.packages`.
+
+# Signal review and trading-day outcomes · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` now has the implemented daily
+backtest layout. Prompt 121 added plain-language entry filters, signal
+navigation and reasons, and an optional 1/5/20-session outcome view. The
+frontend uses separate charts for reviewing later prices and capturing the
+as-of AI image. Changes are in DailyBacktest.js, SignalChart.js,
+signal-review.js, style.css and the daily strategy browser smoke. README and
+the design pipeline document the behavior.
+
+The four daily strategy tests, production build, Chromium and SQLite checks
+passed. Both AI paths submitted the same cutoff-only image with later prices
+visible. The existing development service served the updated modules and its
+proxied health check passed. See [commands, screenshots, observed outcomes
+and limits](../docs/verification.md#signal-review-and-trading-day-outcomes).
+No dependency changes. A hosted AI run and remote CI were not exercised.
+On resumption, inspect Git status and rerun the daily strategy checks with
+`/usr/bin/python` and `backend/.packages`. Student layout review is next.
+Preserve the existing work and review changes with the student before a commit.
+
+# Backtest layout research · November 17, 2026
+
+Arbitrade in /home/jlrj/Documents/arbitrade has a design proposal for the daily backtest and contextual AI review. Read [research and first-use test](../docs/backtest-layout-research.md) and [verification](../docs/verification.md#backtest-layout-research--november-17-2026). Prompt 120 and research notes were added. The running app still has the three-button layout. Five focused tests passed and the June 6 historical example was checked against each simulation. The interactive concept is for review. Usability testing and production redesign are pending. No package or Git commit. Preserve ongoing edits and student review before commit.
+
+# Restart after multi-ticker paper trading · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Reused prompt 58. Gracefully restarted Uvicorn on 8000 and Vite on
+5173 with the README commands. Both health probes, dashboard HTML, account
+and backtest endpoints passed. The AAPL chart WebSocket returned 256
+candles. Yahoo was waiting at inspection. The broker/P&L regression passed
+13 tests. Services remain running and the Codex preview was queued.
+See [verification](../docs/verification.md#restart-after-multi-ticker-paper-trading--november-17-2026).
+No dependency or app source changes. On resumption recheck Git and the
+two service ports. Preserve current implementation work for student review.
+
+# Multi-ticker manual paper trading · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Prompt 120 enables manual USD stock orders from the chart ticker.
+The live account shares cash across tickers and stores fills, positions and
+P&L by ticker. Fills use the next eligible receipt for the order ticker.
+Completed one-minute marks use the matching stock's observations. Live
+subscriptions persist for pending orders and open positions across chart
+switches and page close. Startup reads the saved ledger to restore these
+subscriptions. A replay account accepts only its own ticker.
+
+Changed the broker, live subscription management, FastAPI lifespan, a
+valuation-only observation filter, Vue Trade panel and automation start
+guard. The new offline Chromium/SQLite SmokeTest uses the production
+lifespan with a constructed Yahoo transport. Test evidence and commands
+are in [verification](../docs/verification.md#multi-ticker-manual-paper-trading--november-17-2026).
+The suite passed 126 backend tests, Vite build, multi-ticker browser/SQLite,
+AAPL paper restart regression and the frozen Yahoo volume regression.
+Fresh Yahoo multi-ticker fills remain unverified. Existing work, state DB
+schema and dependencies were preserved. No commit. On resumption inspect
+Git status and rerun the broker and P&L tests using `/usr/bin/python` and
+`backend/.packages`. Student review is required before a commit.
+
+# Live ticker field · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Prompt 119 adds a compact Live ticker field with Enter and Go.
+The selected U.S. stock follows timeframe changes and returns after Replay.
+FastAPI shares a feed per active ticker and preserves the default AAPL
+recorder. Yahoo history caches are isolated by ticker. Paper orders,
+automation and the frozen daily backtest use AAPL.
+
+Changed the chart header, market state and paper proposal visibility in Vue,
+the live WebSocket and Yahoo history in Python, the focused tests, and the
+history SmokeTest fixture and assertions. README and design pipeline updated.
+Existing work preserved. No dependency changes or commit. Vite build, 19
+focused tests, Chromium ticker SmokeTest and saved-Yahoo AAPL volume
+regression passed. Both SmokeTests cleaned up their disposable services.
+Fresh Yahoo MSFT data remains unverified. Review the changes before committing.
+On resumption inspect Git status and rerun the alternate-symbol live unit test.
+See [commands and results](../docs/verification.md#live-ticker-field--november-17-2026).
+
+# Dashboard startup verification · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Reused prompt 106. The existing backend on 8000 and Vite on 5173
+were healthy and left running. The AAPL WebSocket returned 256 candles
+and all three daily backtest variants returned 751 session facts each.
+Yahoo reported stale after hours, with historical data ready. Paper
+automation was disabled. The offline workstation Chromium and SQLite
+SmokeTest passed and stopped its disposable services.
+
+The dashboard preview was queued in Codex and desktop `xdg-open` exited
+successfully. The actual desktop tab could not be inspected. No source,
+dependency, or trading changes. Updated this handoff and the
+[verification log](../docs/verification.md#dashboard-startup-verification--november-17-2026).
+Resume by checking Git status and both local health endpoints. Preserve
+the in-progress application work and obtain student review before any commit.
+
+# Daily crossover backtest and shared AI evidence · November 17, 2026
+
+Arbitrade at /home/jlrj/Documents/arbitrade has a running Backtest screen,
+frozen AAPL daily data, a shared as-of strategy engine and a read-only
+strategy mode for Decisions and the SDK assistant. The approved baseline is
+daily 20/50. SMA 200 and EMA 200 are separate entry filters. The
+2024-09-05–2026-11-16 runs ended at $1,043.70, $1,003.80 and $1,003.80
+respectively on $1,000. Options stay deferred. No dependencies installed.
+
+New sources are backend/daily_history.py, backend/daily_strategy.py, the frozen
+backend/data/research file, frontend/src/DailyBacktest.js and strategy tests.
+Existing decision, chart, chat, P&L, smoke and push workflow files were updated.
+[Verification, commands and evidence](../docs/verification.md#daily-crossover-backtest-and-shared-assessment-evidence).
+124 backend tests, Vite build, strategy browser/SQLite parity, image-only chat
+comparison and paper workstation SmokeTest passed. Fixed capture DOM binding
+and mobile overflow during browser verification. Restarted the retained backend
+on port 8000 after checking automation, and verified the updated route via 5173.
+The newest eligible frozen session is November 16, 2026. A new provider call
+and hosted CI run are outstanding. Preserve dirty work and have the student
+review before committing. Resume with git status, the four daily strategy unit
+tests and the offline strategy SmokeTest. No commit or external submission.
+
+# Daily 200-period history and assistant plan · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Prompt 117 replaces the proposed 30-week overlay with daily SMA 200
+and EMA 200 and asks for the implementation order, including Desk Assistant
+and Decisions. Saved 751 validated completed AAPL daily bars from Yahoo,
+2023-11-17 through 2026-11-16, at
+`backend/data/backtest-aapl-1d-2026-11-16.history.json`. The local file is
+Git-ignored. Yahoo's Nov 17 bar lacked both close values and was excluded.
+All expected NASDAQ sessions remain covered through Nov 16. The existing
+indicator functions matched an independent Decimal calculation and
+ignored a forming test bar. No dependency or application code changes.
+
+Plan is a frozen daily facts service, a thin SMA backtest using existing
+accounting where appropriate, and an explicit strategy assessment mode for
+the Decision API and Desk Assistant. Keep the existing SMA crossover as
+baseline and test the two 200-day entry filters separately. Options are
+deferred. The new dataset is staged locally, not loaded by the running
+chart or assistant. See [verification](../docs/verification.md#daily-200-period-history-and-assistant-plan--november-17-2026).
+No commit or backtest performance result.
+
+# Book-informed Part 4.2 scope · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Prompt 116 supplies the Part 4.2 rubric. Recommended a deterministic
+SMA crossover backtest on frozen completed daily bars, with Grimes-informed
+trade review, signal/fill audit and expectancy. Optional controlled
+comparison: an O'Neil-inspired rule that skips overly extended entries.
+The prior cache inventory falls below Weinstein's 30-week warm-up. Full
+CAN SLIM, Elliott Wave, and options remain outside this milestone.
+
+Existing indicator, paper and P&L suite passed 17 tests. The Canvas overview
+could not be opened through the browser tool. Used the user-supplied rubric
+and checked-in assignment summary. No app changes, installs, or commit.
+See [verification](../docs/verification.md#book-informed-part-42-scope--november-17-2026).
+
+# Class transcript strategy readiness review · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI, Vue and
+SQLite. Prompt 115 asks what the current app can test and which features to
+build next. Reviewed five class transcripts against Assignment 4, source,
+tests and local saved data. Options are explicitly future scope.
+
+Existing offline browser/SQLite workstation SmokeTest and ten targeted
+replay, indicator and lookup tests passed. Default saved Yahoo data had
+99,328 AAPL receipts at inspection and 128 validated closed AAPL daily
+cache bars, with 25 fully covered completed NASDAQ weeks. A 20-session
+breakout can be prototyped against the cache. A 30-week filter lacks warm-up
+and neither rule has a completed performance backtest. Live chart history
+and receipt replay use different inputs. Proposed order is a repeatable SMA
+backtest for Part 4.2, a read-only breakout comparison, then testable risk
+rules, evidence in the Desk Assistant, and broader frozen data. No app code,
+dependencies, or trading behavior changed. No commit.
+See [verification](../docs/verification.md#class-transcript-strategy-readiness-review--november-17-2026).
+
+# Book-informed strategy evaluation review · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI and Vue.
+Prompt 114 requested an assessment of how to use four trading books in
+strategy evaluation. Reviewed relevant PDF sections and figures locally.
+The Grimes attachment omits Chapters 3–10. Checked Wiley's contents and
+Grimes's own supplementary writing. Proposed a read-only, versioned
+research evaluator using completed-bar facts, a price-only baseline,
+separately tested filters and an evidence-linked assistant explanation.
+Grimes supplies setup classification and failure tests, Weinstein supplies
+weekly regime, and chart-observable O'Neil rules are candidate filters.
+Full CAN SLIM needs point-in-time non-chart data. McDowell wave counts stay
+experimental. No evaluator or integration was implemented.
+
+Existing swing retrieval passed four tests and the review CLI. No
+dependencies, runtime changes, provider calls with the PDFs, or commit.
+See [verification](../docs/verification.md#book-informed-strategy-evaluation-review--november-17-2026).
+Resume with Git status and the chapter/page map if implementation is requested.
+
+# Desk Assistant conversation comparison · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI and Vue.
+Prompt 113 keeps the latest successful chart assessment for the same chat,
+ticker and Live or Replay mode. New chat starts a new history. The backend
+stores the association in the decision database and provides the original
+tool result to the agent. No dependency or trading changes.
+
+Controlled browser replay verified all three prompts and New chat.
+AAPL 1m changed from LONG 72% at 15:00 UTC to SHORT 64% at 15:01 UTC.
+The agent, tool record and current chart agreed. 119 backend tests,
+frontend build and single-turn browser regression passed. Screenshots and
+commands are in [verification](../docs/verification.md#desk-assistant-conversation-comparison--november-17-2026).
+The user subsequently authorized the three prompts and two generated replay
+PNGs for a live OpenAI test. That browser run passed. AAPL 1m returned WAIT
+at 100% at both 2026-11-10 15:00 UTC and 15:01 UTC. OpenAI identified both
+times, and the chart updated to the newer decision. Saved live screenshots
+and verification findings. Backend restarted and verified on port 8000 in
+the implementation turn. No commit. Resume by checking Git and service state.
+
+# Desk Assistant chat · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI and Vue.
+Prompt 112 connected the AI rail chat to the existing SDK endpoint. The
+panel captures the chart on send, displays actual tool results and errors,
+and publishes only matching snapshot results to the chart Decision API
+display. The agent clarifies ambiguous intent before using tools. No
+dependency or trading-action changes.
+
+Controlled browser and real OpenAI checks passed on disposable app services
+and constructed market data. Live rule-only and clarification paths passed,
+and the live chart returned AAPL 1m WAIT at 100% for November 10 15:06 UTC.
+Controlled timeout and delayed replies passed. PNGs and paper records were
+checked. The manual classroom browser regression and frontend build passed.
+Restarted the retained backend after checking inactive automation. Port 8000
+now serves the route, the frontend remains on 5173, and disposable services
+stopped. No commit. Resume with [verification](../docs/verification.md#desk-assistant-chat--november-17-2026)
+and actual Git and service state.
+
+# Expanded swing chart-review corpus · November 17, 2026
+
+Arbitrade at /home/jlrj/Documents/arbitrade uses Python/FastAPI/Vue. Prompt 110 expanded the JSON corpus, Python search and documentation; added offline regression tests and source index. Thirty-three lessons from twenty videos, with source and experimental claims distinguished. The chart review packet is callable offline. Existing classroom and paper APIs are separate. No new dependencies, orders or commits. Prior working tree edits remain. The review CLI and seven corpus/controlled desk-agent tests passed in system Python. The read-only desk tool imports topic search. See [verification](../docs/verification.md#chart-review-knowledge-base-expansion--november-17-2026) and the [source index and evaluation criteria](../docs/swing-knowledge.md). Before any capital use, independent source/chart audit, blinded evaluation and point-in-time trading validation are outstanding. Resume with the assertions and CLI listed in verification.
+
+# Read-only Desk Assistant · November 17, 2026
+
+Arbitrade at `/home/jlrj/Documents/arbitrade` uses Python, FastAPI and Vue.
+Prompt 111 added `POST /api/desk-agent` and the browser chart adapter.
+The two SDK tools reuse the swing lookup, current paper strategy rules and
+classroom chart decisions. Results include actual payloads and errors.
+With student approval, installed Agents 0.24.0 and OpenAI 3.52.0 in
+`backend/.packages`, and changed WebSockets 17.4 to 16.1.1. Baseline and
+follow-up pip checks and version/import checks passed. This resolves the SDK
+setup blocker below. The real SDK ran against controlled providers. All
+118 backend tests, frontend build, browser PNG binding and saved-Yahoo
+regression passed. Disposable services stopped. The prior backend on port
+8000 needs a restart to pick up the feature. Next verify actual OpenAI tool
+selection and the downstream Decision API before adding chat UI. Preserve
+the swing research files that supply the rule lookup. No commit.
+See [commands and verification](../docs/verification.md#read-only-desk-agent--november-17-2026).
+
+# Swing knowledge pilot · November 17, 2026
+
+Arbitrade, /home/jlrj/Documents/arbitrade. Prompt 108 produced the JSON corpus, offline Python search and [research specification](../docs/swing-knowledge.md). README and pipeline link to the pilot. Six retrieval topics and two empty-result cases passed in system Python. Source coverage and untested strategy assumptions are documented. Next research task is chronological simulation with gap and cost modeling. No software installation or commit. See [verification](../docs/verification.md#swing-knowledge-pilot--november-17-2026).
+
+# OpenAI SDK setup blocked · November 17, 2026
+
+Arbitrade is a Python/FastAPI/Vue app at `/home/jlrj/Documents/arbitrade`.
+Prompt 109 requested `openai-agents==0.24.0` and `openai==3.52.0` in
+the existing `/usr/bin/python` 3.14.8 environment with `backend/.packages`.
+Verified PyPI metadata and ran a pip dry run with both existing backend
+requirements files. pip reported `ResolutionImpossible` because Agents
+requires websockets >=15,<17 and the Yahoo manifest pins 17.4.
+Baseline and follow-up pip checks both passed using a checksum-verified
+temporary pip wheel. Both SDK distributions and imports were absent.
+Recorded the prompt and [commands and results](../docs/verification.md#openai-sdk-setup-blocked--november-17-2026).
+No install, manifest edit, restart, or commit. Resume by inspecting Git
+and the backend environment, then obtain approval for a compatible
+dependency change before installation. Preserve unrelated work.
+
+# Channel knowledge base feasibility · November 17, 2026
+
+Arbitrade at /home/jlrj/Documents/arbitrade uses Python/FastAPI/Vue. Prompt 107 requested design advice. Confirmed SQLite full-text search with system Python and checked official YouTube discovery and caption access requirements. See [verification](../docs/verification.md#channel-knowledge-base-feasibility--november-17-2026). Only prompt, verification and handoff records updated. Proposed next step is a small timestamped retrieval pilot once a usable source of notes or captions is chosen. No ingestion, dependency changes or commits. Prior startup observations below are historical.
+
+# Server started and opening requested · November 17, 2026
+
+Arbitrade remains Python/FastAPI/Vue at /home/jlrj/Documents/arbitrade.
+Started README services detached: backend PID2120033 port8000, npm PID2120034
+port5173; logs /tmp/arbitrade-start-{backend,frontend}.log. Backend health,
+frontend root, proxied health and API docs all HTTP200. Codex dashboard and
+API docs opening returned queued; client rendering unverified. Services kept
+running for user; no full SmokeTest or new live-data check. No installs,
+dependency/source changes or commit. Existing documentation edits preserved.
+Prompt106, verification and this handoff updated. See
+[verification](../docs/verification.md#server-startup-and-opening--november-17-2026).
+Resume using create-handoff.md, actual Git/services and smallest HTTP checks.
+
+# Standalone report link updated · November 16, 2026
+
+Prompt105 replaces the ignored local report's relative video link with the
+absolute GitHub blob/main URL for demos/Assignment%204.1%20Demo.mov. Attached
+report matched workspace copy before edit; only link changed. Exact edit,
+committed video existence and report ignore/untracked checks PASS. Web fetch
+cache miss: public access/playback not freshly verified. No application edits,
+dependencies or commit/push. Prior session did successfully push the four
+commits and verify remote main e40aa4de9829091bd8e9ea85c90fecfc22e26b4e;
+this supersedes pending push notes below. User should copy updated report
+to submission device (chat local links open file rather than download).
+See [verification](../docs/verification.md#standalone-report-video-link--november-16-2026).
+Resume via create-handoff.md and actual Git status.
+
 # Destination approval received · November 16, 2026
 
 Student explicitly approved uploading the four commits and their demo,
